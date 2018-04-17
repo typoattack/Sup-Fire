@@ -45,6 +45,8 @@ public class controllerP1 : MonoBehaviour
     private Rigidbody rigid;
     private float angle = 0f;
 
+    public Vector3 recoil;
+
     private GameObject player;
 
     void SetBig()
@@ -116,7 +118,7 @@ public class controllerP1 : MonoBehaviour
 
         float h_axis = Input.GetAxis("Horizontal");
 
-        Vector3 recoil = 25.0f * -direction;
+        recoil = 25.0f * -direction;
 
         rigid.velocity = new Vector3(Accelrate * h_axis, 0f, 0f);
         if(h_axis != 0)
