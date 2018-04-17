@@ -43,7 +43,7 @@ public class bulletMove : MonoBehaviour {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
 	}
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "wall")
         {
