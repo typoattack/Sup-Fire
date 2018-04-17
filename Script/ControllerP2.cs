@@ -46,6 +46,7 @@ public class ControllerP2 : MonoBehaviour
     private float angle = 0f;
 
     public Vector3 recoil;
+    public float recoilIntensity;
 
     private GameObject player;
 
@@ -122,7 +123,7 @@ public class ControllerP2 : MonoBehaviour
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
-        recoil = 25.0f * -direction;
+        recoil = recoilIntensity * -direction;
 
         if (direction.magnitude >= 0.9)
         {
