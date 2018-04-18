@@ -45,6 +45,9 @@ public class ControllerP1_joystick : MonoBehaviour {
     private Rigidbody rigid;
     private float angle = 0f;
 
+    public Vector3 recoil;
+    public float recoilIntensity;
+
     private GameObject player;
 
     void SetBig()
@@ -119,6 +122,8 @@ public class ControllerP1_joystick : MonoBehaviour {
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
+        recoil = recoilIntensity * -direction;
+
         if (direction.magnitude >= 0.9)
         {
             transform.GetChild(1).rotation = rotation;
@@ -172,7 +177,8 @@ public class ControllerP1_joystick : MonoBehaviour {
                     newBullet2.bulletSpeed = bulletSpeed;
                     newBullet2.SendMessage("SetMulti", true);
 
-                    CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
+                    //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
+                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
 
                 }
@@ -203,13 +209,14 @@ public class ControllerP1_joystick : MonoBehaviour {
                             ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
-                            CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
+                            //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
+                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
                         }
                         else
                         {
-                            CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
-
                         }
                     }
 
