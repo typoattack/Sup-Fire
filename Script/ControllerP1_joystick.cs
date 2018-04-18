@@ -76,7 +76,7 @@ public class ControllerP1_joystick : MonoBehaviour {
         isMulti = false;
         isMissile = true;
         audioR.Play();
-        special = 5;
+        special = 3;
 
     }
 
@@ -104,6 +104,7 @@ public class ControllerP1_joystick : MonoBehaviour {
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
+        //transform.GetChild(1).Rotate(0f, 90f, 0f);
     }
 
 
@@ -141,7 +142,7 @@ public class ControllerP1_joystick : MonoBehaviour {
 
         rigid.velocity = new Vector3(Accelrate * h_axis, 0f, 0f);
 
-        if (Input.GetAxis("Fire2") < 0 && remainAmmo >= 1) //fire
+        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
         {
             isFireing = true;
         }
@@ -167,14 +168,12 @@ public class ControllerP1_joystick : MonoBehaviour {
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
                     newBullet1.transform.Rotate(new Vector3(0f, 0f, -5f));
-                    newBullet1.transform.Rotate(0f, 90f, 90f);
                     newBullet1.bulletSpeed = bulletSpeed;
                     newBullet1.SendMessage("SetMulti", true);
 
                     newBullet2.gameObject.SetActive(true);
                     newBullet2.transform.Translate(new Vector3(-0.2f, 0f, 0f));
                     newBullet2.transform.Rotate(new Vector3(0f, 0f, 5f));
-                    newBullet2.transform.Rotate(0f, 90f, 90f);
                     newBullet2.bulletSpeed = bulletSpeed;
                     newBullet2.SendMessage("SetMulti", true);
 
@@ -198,7 +197,6 @@ public class ControllerP1_joystick : MonoBehaviour {
                     {
                         bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
                         newBullet.gameObject.SetActive(true);
-                        newBullet.transform.Rotate(0f, 90f, 90f);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
                         {
