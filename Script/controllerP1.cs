@@ -119,7 +119,7 @@ public class controllerP1 : MonoBehaviour
 
         float h_axis = Input.GetAxis("Horizontal");
 
-        recoil = recoilIntensity * -direction;
+        recoil = recoilIntensity * -direction.normalized;
 
         rigid.velocity = new Vector3(Accelrate * h_axis, 0f, 0f);
         if(h_axis != 0)

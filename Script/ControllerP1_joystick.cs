@@ -122,7 +122,7 @@ public class ControllerP1_joystick : MonoBehaviour {
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
-        recoil = recoilIntensity * -direction;
+        recoil = recoilIntensity * -direction.normalized;
 
         if (direction.magnitude >= 0.9)
         {
