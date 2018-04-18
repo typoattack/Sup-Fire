@@ -9,6 +9,12 @@ public class bulletMove : MonoBehaviour {
     public GameObject comeFrom;
     public bool isMulti;
     public bool isBig;
+    
+    //projectile parameters
+    private LineRenderer lineRenderer;
+    private int posCount;
+    private Vector3 velocity;
+
 
     GameObject[] sparks;
     GameObject[] explosion;
@@ -25,8 +31,19 @@ public class bulletMove : MonoBehaviour {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
-        transform.Rotate(0f, 90f, 90f);
+        transform.Rotate(0f, 0f, 90f);
 
+        //parabola calculation part
+        lineRenderer = GetComponent<LineRenderer>();
+        velocity = transform.rotation * Vector3.right * bulletSpeed * Time.deltaTime;
+        posCount = 1;
+        for ( Vector3 p = transform.position, v = velocity;  p.y > -4.0f && p.x >= -8.4f && p.x <= 8.4f; posCount++)
+        {
+            p += v;
+            v += Physics.gravity * Time.deltaTime * Time.deltaTime;
+        }
+        //Debug.Log(posCount); 
+        
     }
 
     void SetMulti(bool multi)
@@ -41,7 +58,23 @@ public class bulletMove : MonoBehaviour {
 
     void FixedUpdate () {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
-	}
+
+        //draw parabola
+        if (posCount > 0)
+        {
+            posCount--;
+            velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
+        }
+        lineRenderer.positionCount = posCount;
+
+        Vector3 p = transform.position, v = velocity;
+        for (int i = 0; i < posCount; i++)
+        {
+            lineRenderer.SetPosition(i, p);
+            p += v;
+            v += Physics.gravity * Time.deltaTime * Time.deltaTime;
+        }
+    }
 
     private void OnTriggerStay(Collider other)
     {
