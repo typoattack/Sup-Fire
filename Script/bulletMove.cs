@@ -54,7 +54,7 @@ public class bulletMove : MonoBehaviour {
             if (isBig)
             {
                 newSparks.transform.localScale = new Vector3(2f, 2f, 2f);
-                CameraShaker.Instance.ShakeOnce(3f, 4f, 0f, 3f);
+                CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 3f);
             }
             else
             {
