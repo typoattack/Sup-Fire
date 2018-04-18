@@ -58,7 +58,7 @@ public class bulletMove : MonoBehaviour {
             }
             else
             {
-                CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.0f);
             }
             comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f: 1f);
             Destroy(gameObject);
@@ -75,7 +75,7 @@ public class bulletMove : MonoBehaviour {
             expSound.pitch = Random.Range(0.7f, 1.5f);
             expSound.Play();
 
-            CameraShaker.Instance.ShakeOnce(isBig ? 6f : 3f, 20f, 0f, 1f);
+            CameraShaker.Instance.ShakeOnce(isBig ? 6f : 3f, 20f, 0f, 0.5f);
             comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             Destroy(gameObject);
             Destroy(newExplosion, 2.0f);
