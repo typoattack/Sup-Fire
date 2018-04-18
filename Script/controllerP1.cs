@@ -49,6 +49,7 @@ public class controllerP1 : MonoBehaviour
     public float recoilIntensity;
 
     private GameObject player;
+    private bool SetScore = false;
 
     void SetBig()
     {
@@ -249,6 +250,12 @@ public class controllerP1 : MonoBehaviour
         {
             StartCoroutine(DelayTime(0.3f));
             Time.timeScale = 0.2f;
+            GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
+            if (!SetScore)
+            {
+                score[0].SendMessage("rightPlus");
+                SetScore = !SetScore;
+            }
 
         }
 
@@ -257,6 +264,7 @@ public class controllerP1 : MonoBehaviour
             isBig = false;
             isMulti = false;
             isMissile = false;
+
         }
 
         SpeCount.SendMessage("SetSpe", special);

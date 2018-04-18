@@ -49,6 +49,7 @@ public class ControllerP1_joystick : MonoBehaviour {
     public float recoilIntensity;
 
     private GameObject player;
+    private bool SetScore = false;
 
     void SetBig()
     {
@@ -261,6 +262,12 @@ public class ControllerP1_joystick : MonoBehaviour {
         {
             StartCoroutine(DelayTime(0.3f));
             Time.timeScale = 0.2f;
+            GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
+            if (!SetScore)
+            {
+                score[0].SendMessage("rightPlus");
+                SetScore = !SetScore;
+            }
         }
         if (special <= 0)
         {
