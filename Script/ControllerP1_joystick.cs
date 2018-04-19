@@ -11,7 +11,7 @@ public class Boundary
 
 public class ControllerP1_joystick : MonoBehaviour {
 
-
+    public Boundary boundary;
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;

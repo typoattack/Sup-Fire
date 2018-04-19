@@ -11,7 +11,7 @@ public class Boundary
 
 public class controllerP1 : MonoBehaviour
 {
-
+    public Boundary boundary;
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
