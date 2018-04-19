@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
+[System.Serializable]
 public class Boundary
 {
     public float xMin, xMax, yMin, yMax, zMin, zMax;
