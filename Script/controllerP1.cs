@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
-[System.Serializable]
-public class Boundary
-{
-    public float xMin, xMax, yMin, yMax, zMin, zMax;
-}
-
 public class controllerP1 : MonoBehaviour
 {
 
@@ -118,12 +112,6 @@ public class controllerP1 : MonoBehaviour
     {
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        rigid.position = new Vector3
-        (
-            Mathf.Clamp(rigid.position.x, boundary.xMin, boundary.xMax),
-            Mathf.Clamp(rigid.position.y, boundary.yMin, boundary.yMax),
-            Mathf.Clamp(rigid.position.z, boundary.zMin, boundary.zMax)
-        );
         Vector3 pos = rigid.position;
         Vector3 direction = mousePos - pos;
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
