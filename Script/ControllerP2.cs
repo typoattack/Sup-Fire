@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
-[System.Serializable]
-public class Boundary
-{
-    public float xMin, xMax, yMin, yMax, zMin, zMax;
-}
-
 public class ControllerP2 : MonoBehaviour
 {
 
@@ -115,12 +109,7 @@ public class ControllerP2 : MonoBehaviour
 
     void FixedUpdate()
     {
-        rigid.position = new Vector3
-        (
-            Mathf.Clamp(rigid.position.x, boundary.xMin, boundary.xMax),
-            Mathf.Clamp(rigid.position.y, boundary.yMin, boundary.yMax),
-            Mathf.Clamp(rigid.position.z, boundary.zMin, boundary.zMax)
-        );
+
         Vector3 pos = rigid.position;
 
         float v_dir = Input.GetAxis("J-V-Direct");

@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
-[System.Serializable]
-public class Boundary
-{
-    public float xMin, xMax, yMin, yMax, zMin, zMax;
-}
-
 public class ControllerP1_joystick : MonoBehaviour {
 
 
@@ -115,12 +109,7 @@ public class ControllerP1_joystick : MonoBehaviour {
 
     void FixedUpdate()
     {
-        rigid.position = new Vector3
-        (
-            Mathf.Clamp(rigid.position.x, boundary.xMin, boundary.xMax),
-            Mathf.Clamp(rigid.position.y, boundary.yMin, boundary.yMax),
-            Mathf.Clamp(rigid.position.z, boundary.zMin, boundary.zMax)
-        );
+
         Vector3 pos = rigid.position;
 
         float v_dir = Input.GetAxis("J2-V-Direct");
