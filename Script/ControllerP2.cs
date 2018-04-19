@@ -3,8 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
+[System.Serializable]
+public class Boundary2Stick
+{
+    public float xMin, xMax, yMin, yMax, zMin, zMax;
+}
+
 public class ControllerP2 : MonoBehaviour
 {
+    public Boundary2Stick boundary2stick;
 
     public float Accelrate;
     public float MaxSpeed;
@@ -109,7 +116,12 @@ public class ControllerP2 : MonoBehaviour
 
     void FixedUpdate()
     {
-
+        rigid.position = new Vector3
+        (
+            Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
+            Mathf.Clamp(rigid.position.y, boundary2stick.yMin, boundary2stick.yMax),
+            Mathf.Clamp(rigid.position.z, boundary2stick.zMin, boundary2stick.zMax)
+        );
         Vector3 pos = rigid.position;
 
         float v_dir = Input.GetAxis("J-V-Direct");
@@ -140,7 +152,7 @@ public class ControllerP2 : MonoBehaviour
         }
 
 
-        rigid.velocity = new Vector3(Accelrate * h_axis, 0f, 0f);
+        rigid.velocity = new Vector3(Accelrate * h_axis, rigid.velocity.y, 0f);
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
