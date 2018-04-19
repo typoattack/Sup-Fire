@@ -4,14 +4,15 @@ using UnityEngine;
 using EZCameraShake;
 
 [System.Serializable]
-public class Boundary
+public class Boundary1Stick
 {
     public float xMin, xMax, yMin, yMax, zMin, zMax;
 }
 
 public class ControllerP1_joystick : MonoBehaviour {
 
-    public Boundary boundary;
+    public Boundary1Stick boundary1stick;
+
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
@@ -117,9 +118,9 @@ public class ControllerP1_joystick : MonoBehaviour {
     {
         rigid.position = new Vector3
         (
-            Mathf.Clamp(rigid.position.x, boundary.xMin, boundary.xMax),
-            Mathf.Clamp(rigid.position.y, boundary.yMin, boundary.yMax),
-            Mathf.Clamp(rigid.position.z, boundary.zMin, boundary.zMax)
+            Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
+            Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
+            Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
         );
         Vector3 pos = rigid.position;
 
