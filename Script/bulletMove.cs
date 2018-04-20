@@ -9,6 +9,7 @@ public class bulletMove : MonoBehaviour {
     public GameObject comeFrom;
     public bool isMulti;
     public bool isBig;
+    public bool isFrozen;//
 
     GameObject[] sparks;
     GameObject[] explosion;
@@ -18,7 +19,7 @@ public class bulletMove : MonoBehaviour {
     public AudioSource expSound;
     public AudioSource hitSound;
 
-
+    private bool damagded = false;
 
 
     void Start () {
@@ -37,6 +38,10 @@ public class bulletMove : MonoBehaviour {
     void SetBig(bool big)
     {
         isBig = big;
+    }
+    void SetFrozen(bool Frozen)//
+    {
+        isFrozen = Frozen;
     }
 
     void FixedUpdate () {
@@ -72,6 +77,11 @@ public class bulletMove : MonoBehaviour {
             {
                 newExplosion.transform.localScale = new Vector3(2f, 2f, 2f);
             }
+            else if (isFrozen)//
+            {
+                other.transform.parent.SendMessage("Buff_Time", Time.time);
+
+            }
             expSound.pitch = Random.Range(0.7f, 1.5f);
             expSound.Play();
 
@@ -80,7 +90,12 @@ public class bulletMove : MonoBehaviour {
             Destroy(gameObject);
             Destroy(newExplosion, 2.0f);
             Destroy(newDelay, 2.0f);
-            other.transform.parent.SendMessage("SetLife", isBig ? -2 : -1);
+            if (!damagded)
+            {
+                other.transform.parent.SendMessage("SetLife", isBig ? -2 : -1);
+                damagded = !damagded;
+
+            }
         }
 
         

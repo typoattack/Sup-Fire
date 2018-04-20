@@ -37,6 +37,14 @@ public class controllerP1 : MonoBehaviour
     public bool isBig;
     public bool isMulti;
     public bool isMissile;
+    public bool isFrozen;//
+    public bool buff_frozen;//
+    public float buff_exist_time;//
+    public float buff_begin_time;//
+    public float buff;//
+
+    public Material ice;//
+    public Material normal;//
 
     public float maxLife;
     public float remainLife;
@@ -56,6 +64,7 @@ public class controllerP1 : MonoBehaviour
         isBig = true;
         isMulti = false;
         isMissile = false;
+        isFrozen = false;//
         audioR.Play();
         special = 5;
 
@@ -66,6 +75,17 @@ public class controllerP1 : MonoBehaviour
         isBig = false;
         isMulti = true;
         isMissile = false;
+        isFrozen = false;//
+        audioR.Play();
+        special = 5;
+
+    }
+    void SetFrozen()//
+    {
+        isBig = false;
+        isMulti = false;
+        isMissile = false;
+        isFrozen = true;//
         audioR.Play();
         special = 5;
 
@@ -76,9 +96,29 @@ public class controllerP1 : MonoBehaviour
         isBig = false;
         isMulti = false;
         isMissile = true;
+        isFrozen = false;//
         audioR.Play();
         special = 3;
 
+    }
+    void Buff_Time(float buff_begin)//
+    {
+        buff_begin_time = buff_begin;
+
+
+    }
+    void testbuff()
+    {
+        if (buff_begin_time != 0)
+        {
+            if (Time.time - buff_begin_time >= buff_exist_time)
+            {
+                buff_frozen = false;
+                buff_begin_time = 0;
+            }
+            else
+                buff_frozen = true;
+        }
     }
 
     void SetLife(int change)
@@ -122,8 +162,18 @@ public class controllerP1 : MonoBehaviour
 
         //recoil = recoilIntensity * -direction.normalized;
         recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
-
-        rigid.velocity = new Vector3(Accelrate * h_axis, 0f, 0f);
+        testbuff();
+        if (buff_frozen)//
+        {
+            gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
+            buff = 0.6f;
+        }
+        else
+        {
+            gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
+            buff = 1f;
+        }
+        rigid.velocity = new Vector3(buff*Accelrate * h_axis, 0f, 0f);
         if(h_axis != 0)
         {
             MoveAnim.Play("body Animation");
@@ -201,6 +251,15 @@ public class controllerP1 : MonoBehaviour
                             rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
 
                         }
+                        else if (isFrozen)//
+                        {
+                            special -= 1;
+                            newBullet.SendMessage("SetFrozen", true);
+                            newBullet.transform.GetChild(0).gameObject.SetActive(true);
+                            newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
+                            //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            audioS.pitch = Random.Range(1f, 5f);
+                        }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
@@ -265,6 +324,7 @@ public class controllerP1 : MonoBehaviour
             isBig = false;
             isMulti = false;
             isMissile = false;
+            isFrozen = false;//
 
         }
 
