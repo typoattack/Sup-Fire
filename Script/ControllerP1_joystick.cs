@@ -3,8 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
+[System.Serializable]
+public class Boundary1Stick
+{
+    public float xMin, xMax, yMin, yMax, zMin, zMax;
+}
+
 public class ControllerP1_joystick : MonoBehaviour {
 
+    public Boundary1Stick boundary1stick;
 
     public float Accelrate;
     public float MaxSpeed;
@@ -149,7 +156,12 @@ public class ControllerP1_joystick : MonoBehaviour {
 
     void FixedUpdate()
     {
-
+        rigid.position = new Vector3
+        (
+            Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
+            Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
+            Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
+        );
         Vector3 pos = rigid.position;
 
         float v_dir = Input.GetAxis("J2-V-Direct");
