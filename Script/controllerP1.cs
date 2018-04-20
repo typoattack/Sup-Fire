@@ -175,6 +175,7 @@ public class controllerP1 : MonoBehaviour
 
         //recoil = recoilIntensity * -direction.normalized;
         recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+
         testbuff();
         if (buff_frozen)//
         {
@@ -186,8 +187,8 @@ public class controllerP1 : MonoBehaviour
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
-        rigid.velocity = new Vector3(buff*Accelrate * h_axis, 0f, 0f);
-        if(h_axis != 0)
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+        if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
         }

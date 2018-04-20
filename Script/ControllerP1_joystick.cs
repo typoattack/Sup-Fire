@@ -201,9 +201,10 @@ public class ControllerP1_joystick : MonoBehaviour {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
-        rigid.velocity = new Vector3(buff*Accelrate * h_axis, 0f, 0f);
 
-        if (Input.GetAxis("Fire2") < 0 && remainAmmo >= 1) //fire
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
+
         {
             isFireing = true;
         }
