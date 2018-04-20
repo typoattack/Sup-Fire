@@ -267,7 +267,7 @@ public class ControllerP1_joystick : MonoBehaviour {
                             special -= 1;
                             newBullet.transform.localScale = new Vector3(1f, 1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
-                            ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
+ //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);

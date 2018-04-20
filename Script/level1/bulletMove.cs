@@ -21,9 +21,12 @@ public class bulletMove : MonoBehaviour {
 
     private bool damagded = false;
 
-
-    void Start () {
+    private void Awake()
+    {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
+
+    }
+    void Start () {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
@@ -50,6 +53,7 @@ public class bulletMove : MonoBehaviour {
 
     private void OnTriggerStay(Collider other)
     {
+
         if (other.tag == "wall")
         {
             hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);

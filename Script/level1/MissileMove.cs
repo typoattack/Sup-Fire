@@ -23,16 +23,20 @@ public class MissileMove : MonoBehaviour {
     GameObject[] delay;
     GameObject[] MissileTrail;
     GameObject newMissileTrail;
-    bool hit = false;
+ //   bool hit = false;
 
     public AudioSource expSound;
     public AudioSource hitSound;
 
     float startTime;
 
-    void Start()
+    private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
+
+    }
+    void Start()
+    {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
 
@@ -79,7 +83,7 @@ public class MissileMove : MonoBehaviour {
  //           if (!hit)
             {
                 comeFrom.SendMessage("SetAmmo", 1f);
-                hit = true;
+ //               hit = true;
             }
             Destroy(gameObject);
             Destroy(newSparks, 0.5f);
@@ -96,11 +100,11 @@ public class MissileMove : MonoBehaviour {
 
             CameraShaker.Instance.ShakeOnce(3f, 20f, 0f, 1f);
 
-//            if (!hit)
+ //           if (!hit)
             {
                 other.transform.parent.SendMessage("SetLife", -1);
                 comeFrom.SendMessage("SetAmmo", 1f);
-                hit = true;
+ //               hit = true;
             }
 
             Destroy(gameObject);

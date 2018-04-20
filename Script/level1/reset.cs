@@ -20,7 +20,8 @@ public class reset : MonoBehaviour {
     {
         if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Joystick1Button7))
         {
-            Application.LoadLevel(scene.name);
+ //           Application.LoadLevel(scene.name);
+            SceneManager.LoadScene(scene.name);
         }
     }
 }
