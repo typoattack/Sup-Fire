@@ -74,6 +74,7 @@ public class ControllerP1_joystick : MonoBehaviour {
         isFrozen = false;//
         audioR.Play();
         special = 5;
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.6f, 0.6f, 0.3f);
     }
 
     void SetMulti()
@@ -84,7 +85,7 @@ public class ControllerP1_joystick : MonoBehaviour {
         isFrozen = false;//
         audioR.Play();
         special = 5;
-
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
     }
 
     void SetMissile()
@@ -95,7 +96,7 @@ public class ControllerP1_joystick : MonoBehaviour {
         isFrozen = false;//
         audioR.Play();
         special = 3;
-
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
     }
     void SetFrozen()//
     {
@@ -105,7 +106,7 @@ public class ControllerP1_joystick : MonoBehaviour {
         isFrozen = true;//
         audioR.Play();
         special = 5;
-
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
     }
     void Buff_Time(float buff_begin)//
     {
@@ -344,6 +345,7 @@ public class ControllerP1_joystick : MonoBehaviour {
             isMulti = false;
             isMissile = false;
             isFrozen = false;//
+            gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         }
 
         SpeCount.SendMessage("SetSpe", special);

@@ -59,6 +59,7 @@ public class controllerP1 : MonoBehaviour
 
     private Rigidbody rigid;
     private float angle = 0f;
+    private int activeTurret = 1;
 
     public Vector3 recoil;
     public float recoilIntensity;
@@ -74,7 +75,7 @@ public class controllerP1 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
-
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.6f, 0.6f, 0.3f);
     }
 
     void SetMulti()
@@ -85,6 +86,11 @@ public class controllerP1 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(2).gameObject.SetActive(true);
+        activeTurret = 2;
+        this.firepoint = transform.GetChild(2).GetChild(5).GetComponent<Transform>();
 
     }
     void SetFrozen()//
@@ -95,6 +101,7 @@ public class controllerP1 : MonoBehaviour
         isFrozen = true;//
         audioR.Play();
         special = 5;
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 
     }
 
@@ -106,6 +113,7 @@ public class controllerP1 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 3;
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 
     }
     void Buff_Time(float buff_begin)//
@@ -169,7 +177,7 @@ public class controllerP1 : MonoBehaviour
         Vector3 direction = mousePos - pos;
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
-        transform.GetChild(1).rotation = rotation;
+        transform.GetChild(activeTurret).rotation = rotation;
 
         float h_axis = Input.GetAxis("Horizontal");
 
@@ -228,7 +236,6 @@ public class controllerP1 : MonoBehaviour
                     newBullet2.bulletSpeed = bulletSpeed;
                     newBullet2.SendMessage("SetMulti", true);
 
-                    //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
                     rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
@@ -260,7 +267,6 @@ public class controllerP1 : MonoBehaviour
  //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
-                            //CameraShaker.Instance.ShakeOnce(5f, 4f, 0f, 3f);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
                             rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
 
@@ -339,6 +345,7 @@ public class controllerP1 : MonoBehaviour
             isMulti = false;
             isMissile = false;
             isFrozen = false;//
+            gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 
         }
 
