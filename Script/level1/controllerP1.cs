@@ -314,7 +314,7 @@ public class controllerP1 : MonoBehaviour
         }
         AmmoCount.SendMessage("SetAmmo", Mathf.Floor(remainAmmo));
 
-        float liftRatio = (4f / maxLife) * remainLife / maxLife + 1f/ maxLife;
+        float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f/ maxLife;
 
         transform.GetChild(0).transform.localScale = new Vector3(1.5f * liftRatio, 0.3f, 0.5f);
 
