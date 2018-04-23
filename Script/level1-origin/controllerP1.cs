@@ -75,7 +75,9 @@ public class controllerP1 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
-        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.6f, 0.6f, 0.3f);
+        UseTurret1();
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.5f, 0.5f, 0.3f);
+        this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
 
     void SetMulti()
@@ -87,12 +89,9 @@ public class controllerP1 : MonoBehaviour
         audioR.Play();
         special = 5;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-        gameObject.transform.GetChild(1).gameObject.SetActive(false);
-        gameObject.transform.GetChild(2).gameObject.SetActive(true);
-        activeTurret = 2;
-        this.firepoint = transform.GetChild(2).GetChild(5).GetComponent<Transform>();
-
+        UseTurret2();
     }
+
     void SetFrozen()//
     {
         isBig = false;
@@ -102,6 +101,8 @@ public class controllerP1 : MonoBehaviour
         audioR.Play();
         special = 5;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(true);
+        UseTurret1();
 
     }
 
@@ -114,14 +115,16 @@ public class controllerP1 : MonoBehaviour
         audioR.Play();
         special = 3;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-
+        UseTurret3();
     }
+
     void Buff_Time(float buff_begin)//
     {
         buff_begin_time = buff_begin;
 
 
     }
+
     void testbuff()
     {
         if (buff_begin_time != 0)
@@ -157,6 +160,41 @@ public class controllerP1 : MonoBehaviour
         }
     }
 
+    private void UseTurret1()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(true);
+        gameObject.transform.GetChild(2).gameObject.SetActive(false);
+        gameObject.transform.GetChild(3).gameObject.SetActive(false);
+        activeTurret = 1;
+        this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
+        this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
+        this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
+    }
+
+    private void UseTurret2()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(2).gameObject.SetActive(true);
+        gameObject.transform.GetChild(3).gameObject.SetActive(false);
+        activeTurret = 2;
+        this.firepoint = transform.GetChild(2).GetChild(2).GetComponent<Transform>();
+        this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
+        this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
+        this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+    }
+
+    private void UseTurret3()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(2).gameObject.SetActive(false);
+        gameObject.transform.GetChild(3).gameObject.SetActive(true);
+        activeTurret = 3;
+        this.firepoint = transform.GetChild(3).GetChild(2).GetComponent<Transform>();
+        this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
+        this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
+        this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+    }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
@@ -181,7 +219,6 @@ public class controllerP1 : MonoBehaviour
 
         float h_axis = Input.GetAxis("Horizontal");
 
-        //recoil = recoilIntensity * -direction.normalized;
         recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
         testbuff();
@@ -239,10 +276,10 @@ public class controllerP1 : MonoBehaviour
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
                     rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
-
+                    anim.Play("Double gun Animation");
                 }
                 else
-                {
+                {   
 
                     if (isMissile)
                     {
@@ -250,7 +287,7 @@ public class controllerP1 : MonoBehaviour
                         MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
-
+                        anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
@@ -282,15 +319,13 @@ public class controllerP1 : MonoBehaviour
                         }
                         else
                         {
-                            //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
                             audioS.pitch = Random.Range(1f, 5f);
                             rigid.AddForce(recoil, ForceMode.Impulse);
 
                         }
+                        anim.Play("Gun Animation");                    
                     }
-
-
                 }
 
                 SetAmmo(-1);
@@ -309,7 +344,6 @@ public class controllerP1 : MonoBehaviour
                     audioM.pitch = Random.Range(0.8f, 1.2f);
                     audioM.Play();
                 }
-                anim.Play("Gun Animation");
             }
         }
         else
@@ -346,7 +380,8 @@ public class controllerP1 : MonoBehaviour
             isMissile = false;
             isFrozen = false;//
             gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-
+            this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+            UseTurret1();
         }
 
         SpeCount.SendMessage("SetSpe", special);
