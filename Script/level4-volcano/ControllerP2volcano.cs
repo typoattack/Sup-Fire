@@ -4,14 +4,14 @@ using UnityEngine;
 using EZCameraShake;
 
 [System.Serializable]
-public class Boundary2StickVolcano
+public class Boundary2Stick
 {
     public float xMin, xMax, yMin, yMax, zMin, zMax;
 }
 
-public class ControllerP2volcano : MonoBehaviour
+public class ControllerP2 : MonoBehaviour
 {
-    public Boundary2StickVolcano boundary2stick;
+    public Boundary2Stick boundary2stick;
 
     public float Accelrate;
     public float MaxSpeed;
@@ -75,7 +75,6 @@ public class ControllerP2volcano : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
-        UseTurret1();
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.5f, 0.5f, 0.3f);
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
@@ -197,7 +196,7 @@ public class ControllerP2volcano : MonoBehaviour
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
+        //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
     }
 
 
@@ -249,7 +248,7 @@ public class ControllerP2volcano : MonoBehaviour
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y > 0f ? 0f : rigid.velocity.y, 0f);
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y > 0f? 0f : rigid.velocity.y, 0f);//
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
@@ -336,8 +335,8 @@ public class ControllerP2volcano : MonoBehaviour
                             audioS.pitch = Random.Range(1f, 5f);
 
                         }
+                        anim.Play("Gun Animation");
                     }
-                    anim.Play("Gun Animation");
                 }
 
                 SetAmmo(-1);
@@ -398,6 +397,7 @@ public class ControllerP2volcano : MonoBehaviour
         SpeCount.SendMessage("SetSpe", special);
 
     }
+
     IEnumerator DelayTime(float duration)
     {
         yield return new WaitForSeconds(duration);

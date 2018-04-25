@@ -4,14 +4,14 @@ using UnityEngine;
 using EZCameraShake;
 
 [System.Serializable]
-public class Boundary1StickVolcano
+public class Boundary1Stick
 {
     public float xMin, xMax, yMin, yMax, zMin, zMax;
 }
 
-public class ControllerP1volcano_joystick : MonoBehaviour {
+public class ControllerP1_joystick : MonoBehaviour {
 
-    public Boundary1StickVolcano boundary1stick;
+    public Boundary1Stick boundary1stick;
 
     public float Accelrate;
     public float MaxSpeed;
@@ -117,13 +117,13 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         UseTurret3();
     }
-
     void Buff_Time(float buff_begin)//
     {
         buff_begin_time = buff_begin;
 
 
     }
+
     void testbuff()
     {
         if (buff_begin_time != 0)
@@ -193,11 +193,13 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
         transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
     }
+
 
     void FixedUpdate()
     {
@@ -248,8 +250,7 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y > 0f ? 0f : rigid.velocity.y, 0f);
-
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y > 0f? 0f : rigid.velocity.y, 0f);
         if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
 
         {
@@ -398,6 +399,7 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         SpeCount.SendMessage("SetSpe", special);
 
     }
+
     IEnumerator DelayTime(float duration)
     {
         yield return new WaitForSeconds(duration);
