@@ -203,7 +203,7 @@ public class ControllerP2volcano : MonoBehaviour
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y > 0f ? 0f : rigid.velocity.y, 0f);
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
