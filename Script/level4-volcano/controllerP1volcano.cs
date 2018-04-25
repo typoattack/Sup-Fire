@@ -187,7 +187,7 @@ public class controllerP1volcano : MonoBehaviour
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y > 0f? 0f : rigid.velocity.y, 0f);
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
