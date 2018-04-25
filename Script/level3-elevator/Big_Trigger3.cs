@@ -16,6 +16,8 @@ public class Big_Trigger3 : MonoBehaviour {
         capCo.enabled = false;
         Destroy(gameObject, 1.5f);
         Rigidbody rigid = GetComponent<Rigidbody>();
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
         rigid.AddForce((-transform.position + target.transform.position) * 50f);
     }
     private void OnTriggerEnter(Collider other)

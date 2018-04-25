@@ -12,6 +12,7 @@ public class BulletMove_3 : MonoBehaviour
     public bool isFrozen;//
     public GameObject left;//
     public GameObject right;//
+    public GameObject foodholder;
 
     GameObject[] sparks;
     GameObject[] explosion;
@@ -58,7 +59,8 @@ public class BulletMove_3 : MonoBehaviour
     }
 
     private void OnTriggerStay(Collider other)
-    {
+    {   if (other.gameObject.name == "FoodHolder")
+            foodholder.SendMessage("hit", true);
 
         if (other.tag == "wall")
         {
