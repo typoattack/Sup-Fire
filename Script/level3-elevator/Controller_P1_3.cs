@@ -72,8 +72,10 @@ public class Controller_P1_3 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
-        
-        
+        UseTurret1();
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.5f, 0.5f, 0.3f);
+        this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+
     }
 
     void SetMulti()
@@ -84,8 +86,9 @@ public class Controller_P1_3 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
-       
-        
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        UseTurret2();
+
     }
 
     void SetFrozen()//
@@ -96,9 +99,11 @@ public class Controller_P1_3 : MonoBehaviour
         isFrozen = true;//
         audioR.Play();
         special = 5;
-      
-       
-        
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(true);
+        UseTurret1();
+
+
 
     }
 
@@ -110,7 +115,8 @@ public class Controller_P1_3 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 3;
-       
+        gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        UseTurret3();
 
     }
     void Buff_Time(float buff_begin)//
@@ -155,6 +161,40 @@ public class Controller_P1_3 : MonoBehaviour
         }
     }
 
+    private void UseTurret1()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(true);
+        gameObject.transform.GetChild(2).gameObject.SetActive(false);
+        gameObject.transform.GetChild(3).gameObject.SetActive(false);
+        activeTurret = 1;
+        this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
+        this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
+        this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
+    }
+
+    private void UseTurret2()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(2).gameObject.SetActive(true);
+        gameObject.transform.GetChild(3).gameObject.SetActive(false);
+        activeTurret = 2;
+        this.firepoint = transform.GetChild(2).GetChild(2).GetComponent<Transform>();
+        this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
+        this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
+        this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+    }
+
+    private void UseTurret3()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(2).gameObject.SetActive(false);
+        gameObject.transform.GetChild(3).gameObject.SetActive(true);
+        activeTurret = 3;
+        this.firepoint = transform.GetChild(3).GetChild(2).GetComponent<Transform>();
+        this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
+        this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
+        this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+    }
 
     void Start()
     {
@@ -346,7 +386,9 @@ public class Controller_P1_3 : MonoBehaviour
             isMulti = false;
             isMissile = false;
             isFrozen = false;//
-
+            gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+            this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+            UseTurret1();
         }
 
         SpeCount.SendMessage("SetSpe", special);
