@@ -34,7 +34,8 @@ public class rightwall : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         testbuff();
-        float v_dir = Input.GetAxis("J2-Vertical");
+        //float v_dir = Input.GetAxis("J2-Vertical");
+        float v_dir = Input.GetAxis("J-Vertical");
         if (buff_frozen)
         {
             v_dir = 0;

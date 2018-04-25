@@ -88,7 +88,6 @@ public class Controller_P1_3 : MonoBehaviour
         special = 5;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         UseTurret2();
-
     }
 
     void SetFrozen()//
@@ -102,9 +101,6 @@ public class Controller_P1_3 : MonoBehaviour
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(true);
         UseTurret1();
-
-
-
     }
 
     void SetMissile()
@@ -117,7 +113,6 @@ public class Controller_P1_3 : MonoBehaviour
         special = 3;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         UseTurret3();
-
     }
     void Buff_Time(float buff_begin)//
     {
@@ -199,6 +194,7 @@ public class Controller_P1_3 : MonoBehaviour
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
+        transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
     }
 
 
@@ -212,8 +208,10 @@ public class Controller_P1_3 : MonoBehaviour
         );
         Vector3 pos = rigid.position;
 
-        float v_dir = Input.GetAxis("J-V-Direct");
-        float h_dir = Input.GetAxis("J-H-Direct");
+        //float v_dir = Input.GetAxis("J-V-Direct");
+        //float h_dir = Input.GetAxis("J-H-Direct");
+        float v_dir = Input.GetAxis("J2-V-Direct");
+        float h_dir = Input.GetAxis("J2-H-Direct");
 
         Vector3 direction = Vector3.zero;
 
@@ -246,7 +244,7 @@ public class Controller_P1_3 : MonoBehaviour
         }
 
        
-        if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
+        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
 
         {
             isFireing = true;
@@ -331,7 +329,7 @@ public class Controller_P1_3 : MonoBehaviour
                             rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
-                    anim.Play("Gun Animation");
+                        anim.Play("Gun Animation");
                     }
                 }
 
