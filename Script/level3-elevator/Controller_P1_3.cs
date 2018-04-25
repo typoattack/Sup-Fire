@@ -331,8 +331,8 @@ public class Controller_P1_3 : MonoBehaviour
                             rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
-                    }
                     anim.Play("Gun Animation");
+                    }
                 }
 
                 SetAmmo(-1);

@@ -5,6 +5,7 @@ using UnityEngine;
 public class rightwall : MonoBehaviour {
     private Rigidbody itself;
     public bool buff_frozen;
+    public float WallSpeed;
     public float buff_begin_time;
     public float buff_exist_time;
     
@@ -38,6 +39,6 @@ public class rightwall : MonoBehaviour {
         {
             v_dir = 0;
         }
-        itself.velocity = new Vector3(0,  v_dir, 0);
+        itself.velocity = new Vector3(0, WallSpeed * v_dir, 0);
     }
 }
