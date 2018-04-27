@@ -224,7 +224,7 @@ public class ControllerP1_joystick : MonoBehaviour {
 
         recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
-        if (direction.magnitude >= 0.9)
+        if (direction.magnitude >= 0.5)
         {
             transform.GetChild(activeTurret).rotation = rotation;
         }
