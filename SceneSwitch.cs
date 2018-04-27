@@ -21,5 +21,17 @@ public class SceneSwitch : MonoBehaviour {
         {
             SceneManager.LoadScene("scene4-volcano");
         }
+        else if (Input.GetKey(KeyCode.Alpha5))
+        {
+            SceneManager.LoadScene("scene5-orbit");
+        }
+        else if (Input.GetKey(KeyCode.Alpha6))
+        {
+            SceneManager.LoadScene("scene6-platform");
+        }
+        else if (Input.GetKey(KeyCode.Alpha7))
+        {
+            SceneManager.LoadScene("scene7-underwater");
+        }
     }
 }
