@@ -197,7 +197,7 @@ public class ControllerP2volcano : MonoBehaviour
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
+        //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
     }
 
 
