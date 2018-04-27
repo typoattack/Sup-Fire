@@ -220,7 +220,8 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
-        recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        recoil = recoilIntensity * -direction.normalized;
 
         if (direction.magnitude >= 0.9)
         {
