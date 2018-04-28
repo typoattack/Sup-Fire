@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class bigTrigger : MonoBehaviour {
+public class big_trigger_5 : MonoBehaviour {
 
     private GameObject target;
-	
-	void FixedUpdate () {
-        transform.Translate(new Vector3(0f, -0.02f, 0f));
-	}
+
+    void FixedUpdate()
+    {
+      //  transform.Translate(new Vector3(0f, -0.02f, 0f));
+    }
     void got(GameObject target)
     {
         Collider capCo = GetComponent<Collider>();
@@ -39,6 +40,6 @@ public class bigTrigger : MonoBehaviour {
             got(target);
 
         }
-       
+
     }
 }
