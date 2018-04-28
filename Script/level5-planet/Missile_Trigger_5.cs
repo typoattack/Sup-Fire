@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class bigTrigger : MonoBehaviour {
+public class Missile_Trigger_5 : MonoBehaviour {
 
     private GameObject target;
-	
-	void FixedUpdate () {
-        transform.Translate(new Vector3(0f, -0.02f, 0f));
-	}
+
+    void FixedUpdate()
+    {
+      //  transform.Translate(new Vector3(0f, -0.02f, 0f));
+    }
+
     void got(GameObject target)
     {
         Collider capCo = GetComponent<Collider>();
@@ -17,6 +19,7 @@ public class bigTrigger : MonoBehaviour {
         Rigidbody rigid = GetComponent<Rigidbody>();
         rigid.AddForce((-transform.position + target.transform.position) * 50f);
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "wall")
@@ -27,18 +30,15 @@ public class bigTrigger : MonoBehaviour {
         {
             bulletMove bullet = other.GetComponent<bulletMove>();
             target = bullet.comeFrom;
-            target.SendMessage("SetBig");
+            target.SendMessage("SetMissile");
             got(target);
-
         }
         else if (other.tag == "Missile")
         {
             MissileMove missile = other.GetComponent<MissileMove>();
             target = missile.comeFrom;
-            target.SendMessage("SetBig");
+            target.SendMessage("SetMissile");
             got(target);
-
         }
-       
     }
 }
