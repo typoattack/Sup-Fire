@@ -27,6 +27,7 @@ public class MissileMove : MonoBehaviour {
 
     public AudioSource expSound;
     public AudioSource hitSound;
+    public AudioSource waterSound;
 
     float startTime;
 
@@ -112,6 +113,17 @@ public class MissileMove : MonoBehaviour {
             Destroy(newDelay, 2.0f);
 
         }
+        else if (other.tag == "water")
+        {
+            waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            waterSound.Play();
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", 1f);
+            }
+            Destroy(gameObject);
+        }
+
         ParticleSystem P = newMissileTrail.GetComponent<ParticleSystem>();
         var em = P.emission;
         em.enabled = false;

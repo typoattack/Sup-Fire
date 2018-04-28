@@ -18,6 +18,7 @@ public class bulletMove : MonoBehaviour {
 
     public AudioSource expSound;
     public AudioSource hitSound;
+    public AudioSource waterSound;
 
     private bool damagded = false;
 
@@ -104,7 +105,18 @@ public class bulletMove : MonoBehaviour {
 
             }
         }
+        else if (other.tag == "water")
+        {
+            waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            waterSound.Play();
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            }
+            Destroy(gameObject);
+        }
 
-        
+
+
     }
 }
