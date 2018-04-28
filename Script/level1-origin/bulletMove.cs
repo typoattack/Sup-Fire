@@ -69,7 +69,10 @@ public class bulletMove : MonoBehaviour {
             {
                 CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.0f);
             }
-            comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f: 1f);
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            }
             Destroy(gameObject);
             Destroy(newSparks, 0.5f);
         }else if (other.tag == "Player")

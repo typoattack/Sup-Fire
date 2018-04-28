@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class VolcanoFire : MonoBehaviour {
 
@@ -10,6 +11,13 @@ public class VolcanoFire : MonoBehaviour {
     public float LavaAngle;
     public float fistLavaTime;
     public float lavaRepeatTime;
+
+    public float shakeMagnitude;
+    public float shakeRoughness;
+    public float shakeFadein;
+    public float shakeFadeout;
+
+    public AudioSource eruption;
 
     void Start () {
         InvokeRepeating("Volcano", fistLavaTime, lavaRepeatTime);
@@ -32,5 +40,9 @@ public class VolcanoFire : MonoBehaviour {
             LavaList[i].transform.Rotate(new Vector3(0f, 0f, Random.Range(-LavaAngle, LavaAngle)));
             LavaList[i].LavaSpeed = LavaSpeed;
         }
+
+        CameraShaker.Instance.ShakeOnce(shakeMagnitude, shakeRoughness, shakeFadein, shakeFadeout);
+        eruption.volume = 2f;
+        eruption.Play();
     }
 }
