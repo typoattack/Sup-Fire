@@ -12,7 +12,7 @@ public class icebergFloating : MonoBehaviour {
 
     private void Start()
     {
-        direction = Random.Range(0, 1) < 0.5 ? true : false;
+        direction = Random.Range(0f, 1f) < 0.5 ? true : false;
         rigid = gameObject.GetComponent<Rigidbody>();
         originX = this.transform.position.x;
     }
