@@ -23,7 +23,7 @@ public class SceneSwitch : MonoBehaviour {
         }
         else if (Input.GetKey(KeyCode.Alpha5))
         {
-            SceneManager.LoadScene("scene5-orbit");
+            SceneManager.LoadScene("scene5-planet");
         }
         else if (Input.GetKey(KeyCode.Alpha6))
         {
