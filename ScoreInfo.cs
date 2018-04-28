@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Score : MonoBehaviour {
+public class ScoreInfo : MonoBehaviour {
 
-    TextMesh text;
-    int left;
-    int right;
+    public int left;
+    public int right;
 
     void Awake()
     {
@@ -18,23 +17,19 @@ public class Score : MonoBehaviour {
         DontDestroyOnLoad(this.gameObject);
     }
 
-    void Start () {
-        text = this.GetComponent<TextMesh>();
+    void Start()
+    {
         left = 0;
         right = 0;
-	}
-	
+    }
+
     void leftPlus()
     {
-            left += 1;
+        left += 1;
     }
 
     void rightPlus()
     {
-            right += 1;
+        right += 1;
     }
-
-	void FixedUpdate () {
-        text.text = left.ToString() + "  :  " + right.ToString();
-	}
 }
