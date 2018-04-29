@@ -12,6 +12,7 @@ public class bulletMove : MonoBehaviour {
     public bool isFrozen;//
 
     GameObject[] sparks;
+    GameObject waterSplatter;
     GameObject[] explosion;
     GameObject[] delay;
     GameObject[] hit;
@@ -25,7 +26,7 @@ public class bulletMove : MonoBehaviour {
     private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
-
+        waterSplatter = GameObject.Find("FX_WaterSplatter");
     }
     void Start () {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
@@ -109,11 +110,22 @@ public class bulletMove : MonoBehaviour {
         {
             waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
             waterSound.Play();
+            GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+            if (isBig)
+            {
+                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
+                var main = SplattersParticle.main;
+                main.startSize = 0.4f;
+                main.startSpeed = 5f;
+            }
+
             if (comeFrom.activeSelf)
             {
                 comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             }
+
             Destroy(gameObject);
+            Destroy(newSplatters, 1.5f);
         }
 
 
