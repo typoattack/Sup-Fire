@@ -63,6 +63,8 @@ public class Controller_P2_3 : MonoBehaviour {
     private GameObject player;
     private bool SetScore = false;
 
+    private Quaternion LastDirection;
+
     void SetBig()
     {
         isBig = true;
@@ -163,6 +165,7 @@ public class Controller_P2_3 : MonoBehaviour {
         this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
         this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
         this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret2()
@@ -175,6 +178,7 @@ public class Controller_P2_3 : MonoBehaviour {
         this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
         this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret3()
@@ -187,6 +191,7 @@ public class Controller_P2_3 : MonoBehaviour {
         this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     void Start()
@@ -224,8 +229,9 @@ public class Controller_P2_3 : MonoBehaviour {
         if (direction.magnitude >= 0.5)
         {
             transform.GetChild(activeTurret).rotation = rotation;
+            LastDirection = rotation;
         }
-       
+
         MoveAnim.Play("body Animation");
         
         testbuff();//
