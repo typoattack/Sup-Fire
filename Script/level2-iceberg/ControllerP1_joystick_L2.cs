@@ -68,6 +68,8 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
     private GameObject player;
     private bool SetScore = false;
 
+    private Quaternion LastDirection;
+    
     //L2, new parameters
     public GameObject floe;
     public float floeVelocity;
@@ -175,6 +177,7 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
         this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
         this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret2()
@@ -187,6 +190,7 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
         this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret3()
@@ -199,6 +203,7 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     //L2, new function
@@ -244,6 +249,7 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         if (direction.magnitude >= 0.5)
         {
             transform.GetChild(activeTurret).rotation = rotation;
+            LastDirection = rotation;
         }
 
 
