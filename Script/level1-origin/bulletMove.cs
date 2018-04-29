@@ -127,7 +127,29 @@ public class bulletMove : MonoBehaviour {
             Destroy(gameObject);
             Destroy(newSplatters, 1.5f);
         }
-
+        else if (other.tag == "sub")
+        {
+            hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            //0.8-1.5 as normal, 0.5-0.8 as big, need more modification
+            hitSound.Play();
+            GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
+            if (isBig)
+            {
+                newSparks.transform.localScale = new Vector3(2f, 2f, 2f);
+                CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 3f);
+            }
+            else
+            {
+                CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.0f);
+            }
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            }
+            Destroy(gameObject);
+            Destroy(newSparks, 0.5f);
+            SubMover.torpedohitcount++;
+        }
 
 
     }
