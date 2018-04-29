@@ -20,6 +20,7 @@ public class MissileMove : MonoBehaviour {
 
     GameObject[] sparks;
     GameObject[] explosion;
+    GameObject waterSplatter;
     GameObject[] delay;
     GameObject[] MissileTrail;
     GameObject newMissileTrail;
@@ -34,7 +35,7 @@ public class MissileMove : MonoBehaviour {
     private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
-
+        waterSplatter = GameObject.Find("FX_WaterSplatter");
     }
     void Start()
     {
@@ -121,7 +122,9 @@ public class MissileMove : MonoBehaviour {
             {
                 comeFrom.SendMessage("SetAmmo", 1f);
             }
+            GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
             Destroy(gameObject);
+            Destroy(newSplatters, 1.5f);
         }
 
         ParticleSystem P = newMissileTrail.GetComponent<ParticleSystem>();
