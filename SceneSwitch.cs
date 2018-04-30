@@ -5,33 +5,74 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitch : MonoBehaviour {
 
+    public int addedScenesNum;
+    private int sceneCount;
 
-	void Update () {
+    void Switch(){
+        if (addedScenesNum - 1 <= sceneCount)
+        {
+            sceneCount = 0;
+        }
+        else
+        {
+            sceneCount += 1;
+        }
+
+        StartCoroutine(DelayTime(1.0f, sceneCount));
+    }
+
+    IEnumerator DelayTime(float duration, int sceneCount)
+    {
+        GameObject.Find("FadeInOut").GetComponent<fading>().BeginFade(1);
+        yield return new WaitForSeconds(duration);
+        SceneManager.LoadScene(sceneBuildIndex: sceneCount);
+
+    }
+
+    void Awake()
+    {
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("SceneSwitch");
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
+    }
+
+    void Update () {
         if (Input.GetKey(KeyCode.Alpha1))
         {
             SceneManager.LoadScene("scene1-origin");
+            sceneCount = 0;
         }else if (Input.GetKey(KeyCode.Alpha2))
         {
             SceneManager.LoadScene("scene2-iceberg");
-        }else if (Input.GetKey(KeyCode.Alpha3))
+            sceneCount = 1;
+        }
+        else if (Input.GetKey(KeyCode.Alpha3))
         {
             SceneManager.LoadScene("scene3-elevator");
+            sceneCount = 2;
         }
         else if (Input.GetKey(KeyCode.Alpha4))
         {
             SceneManager.LoadScene("scene4-volcano");
+            sceneCount = 3;
         }
         else if (Input.GetKey(KeyCode.Alpha5))
         {
             SceneManager.LoadScene("scene5-planet");
+            sceneCount = 4;
         }
-        else if (Input.GetKey(KeyCode.Alpha6))
-        {
-            SceneManager.LoadScene("scene6-platform");
-        }
+//        else if (Input.GetKey(KeyCode.Alpha6))
+//        {
+//            SceneManager.LoadScene("scene6-platform");
+//            sceneCount = 5;
+//        }
         else if (Input.GetKey(KeyCode.Alpha7))
         {
             SceneManager.LoadScene("scene7-underwater");
+            sceneCount = 5;
         }
     }
 }

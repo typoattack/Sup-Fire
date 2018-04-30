@@ -215,6 +215,7 @@ public class ControllerP2_L2 : MonoBehaviour
     {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
+        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
     }
 
 

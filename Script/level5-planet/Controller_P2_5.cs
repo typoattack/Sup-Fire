@@ -201,6 +201,7 @@ public class Controller_P2_5 : MonoBehaviour {
         angled = 90;
         transform.position = new Vector3(1.7f, 0f, -0.56f);
         transform.rotation = Quaternion.Euler(angled, 90, 0);
+        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
     }
 
 

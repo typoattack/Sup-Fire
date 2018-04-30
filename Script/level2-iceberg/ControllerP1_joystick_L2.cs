@@ -216,6 +216,7 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
+        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
     }
 
 
