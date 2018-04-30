@@ -24,6 +24,7 @@ public class controllerP1_L2 : MonoBehaviour
     public AudioSource audioSB;
     public AudioSource audioR;
     public AudioSource audioM;
+    public AudioSource waterSound;
 
     public int special;
 
@@ -65,7 +66,9 @@ public class controllerP1_L2 : MonoBehaviour
     public float recoilIntensity;
 
     private GameObject player;
+    private GameObject waterSplatter;
     private bool SetScore = false;
+    private bool hasFall = false;
 
     //L2, new parameters
     public GameObject floe;
@@ -231,7 +234,21 @@ public class controllerP1_L2 : MonoBehaviour
         transform.GetChild(activeTurret).rotation = rotation;
 
         //L2, check if sink
-        if (pos.y < boundary1mouse.yMin + 0.2) remainLife = 0;
+        if (pos.y < boundary1mouse.yMin + 0.2) {
+            remainLife = 0;
+            if (!hasFall)
+            {
+                waterSound.Play();
+                waterSplatter = GameObject.Find("FX_WaterSplatter");
+                GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
+                var main = SplattersParticle.main;
+                main.startSize = 0.5f;
+                main.startSpeed = 5f;
+                Destroy(newSplatters, 1.5f);
+                hasFall = !hasFall;
+            }
+        }
         //
 
         float h_axis = Input.GetAxis("Horizontal");
