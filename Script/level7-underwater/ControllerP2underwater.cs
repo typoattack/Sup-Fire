@@ -66,6 +66,8 @@ public class ControllerP2underwater : MonoBehaviour
     public Vector3 recoil;
     public float recoilIntensity;
 
+    private Quaternion LastDirection;
+
     private GameObject player;
     private bool SetScore = false;
 
@@ -170,6 +172,7 @@ public class ControllerP2underwater : MonoBehaviour
         this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
         this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
         this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret2()
@@ -182,6 +185,7 @@ public class ControllerP2underwater : MonoBehaviour
         this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
         this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret3()
@@ -194,12 +198,14 @@ public class ControllerP2underwater : MonoBehaviour
         this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
+        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
     }
 
 
@@ -230,6 +236,7 @@ public class ControllerP2underwater : MonoBehaviour
         if (direction.magnitude >= 0.5)
         {
             transform.GetChild(activeTurret).rotation = rotation;
+            LastDirection = rotation;
         }
 
         if (isGrounded == true) h_axis = Input.GetAxis("J2-Horizontal");
