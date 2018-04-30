@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class SceneSwitch : MonoBehaviour {
 
     public int addedScenesNum;
+    public int thisScenesNum;
     private int sceneCount;
 
     void Switch(){
@@ -19,6 +20,7 @@ public class SceneSwitch : MonoBehaviour {
         }
 
         StartCoroutine(DelayTime(1.0f, sceneCount));
+        GameObject.Find("BGM-Manager").SendMessage("SetLevel", sceneCount);
     }
 
     IEnumerator DelayTime(float duration, int sceneCount)
@@ -37,6 +39,9 @@ public class SceneSwitch : MonoBehaviour {
             Destroy(this.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
+
+        sceneCount = thisScenesNum;
+        GameObject.Find("BGM-Manager").SendMessage("SetLevel", sceneCount);
     }
 
     void Update () {
