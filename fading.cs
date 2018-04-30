@@ -11,16 +11,6 @@ public class fading : MonoBehaviour {
     private float alpha = 1.0f;
     private int fadeDir = -1;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     void OnGUI()
     {
         alpha += fadeDir * fadespeed * Time.deltaTime;
