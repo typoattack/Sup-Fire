@@ -27,6 +27,24 @@ public class BGM_Manager : MonoBehaviour {
 
     }
 
+    public static class AudioFadeIn
+    {
+
+        public static IEnumerator FadeIn(AudioSource audioSource, float FadeTime)
+        {
+            audioSource.volume = 0f;
+
+            while (audioSource.volume < 1)
+            {
+                audioSource.volume += Time.deltaTime / FadeTime;
+
+                yield return null;
+            }
+
+            audioSource.mute = false;
+        }
+
+    }
     void Awake()
     {
 
@@ -62,12 +80,15 @@ public class BGM_Manager : MonoBehaviour {
             {
                 StartCoroutine(AudioFadeOut.FadeOut(gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>(), 0.8f));
                 whichIsPlaying = sceneCount;
+
                 if (!gameObject.transform.GetChild(sceneCount).GetComponent<AudioSource>().isPlaying)
                 {
                     gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>().Play();
                 }
-            gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>().mute = false;
-                gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>().volume = 1f;
+
+                StartCoroutine(AudioFadeIn.FadeIn(gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>(), 0.5f));
+                //gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>().mute = false;
+                //gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>().volume = 1f;
 
             }
         }
