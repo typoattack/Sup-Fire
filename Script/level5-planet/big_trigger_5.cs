@@ -26,7 +26,7 @@ public class big_trigger_5 : MonoBehaviour {
         }
         else if (other.tag == "Bullet")
         {
-            bulletMove bullet = other.GetComponent<bulletMove>();
+            BulletMove_Planet bullet = other.GetComponent<BulletMove_Planet>();
             target = bullet.comeFrom;
             target.SendMessage("SetBig");
             got(target);
