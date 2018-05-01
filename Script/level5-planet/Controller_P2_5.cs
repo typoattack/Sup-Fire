@@ -248,7 +248,7 @@ public class Controller_P2_5 : MonoBehaviour {
         playerDir.Normalize();
         Vector2 joyDir = new Vector2(h_axis, v_axis);
         joyDir.Normalize();
-        joyDir = joyDir.magnitude > 0.8 ? joyDir : playerDir;
+        joyDir = joyDir.magnitude > 0.5 ? joyDir : playerDir;
 
         float angleDiff = Vector2.Angle(playerDir, joyDir);
         angleDiff = Vector3.Cross(playerDir, joyDir).z > 0 ? angleDiff : -angleDiff;
