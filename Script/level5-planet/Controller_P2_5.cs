@@ -74,6 +74,7 @@ public class Controller_P2_5 : MonoBehaviour {
         isFrozen = false;//
         audioR.Play();
         special = 5;
+        UseTurret1();
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.5f, 0.5f, 0.3f);
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
@@ -201,7 +202,7 @@ public class Controller_P2_5 : MonoBehaviour {
         angled = 90;
         transform.position = new Vector3(1.7f, 0f, -0.56f);
         transform.rotation = Quaternion.Euler(angled, 90, 0);
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        LastDirection = new Quaternion(90f, 90f, 0f, 1f);
     }
 
 
@@ -228,6 +229,10 @@ public class Controller_P2_5 : MonoBehaviour {
         {
             transform.GetChild(activeTurret).rotation = rotation;
             LastDirection = rotation;
+        }
+        else
+        {
+            transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
         testbuff();//

@@ -135,7 +135,7 @@ public class MissileMove_Planet : MonoBehaviour {
         ParticleSystem P = newMissileTrail.GetComponent<ParticleSystem>();
         var em = P.emission;
         em.enabled = false;
-        Destroy(newMissileTrail, 3.0f);
+        Destroy(newMissileTrail, 5.0f);
 
     }
 }
