@@ -205,7 +205,7 @@ public class Controller_P1_5 : MonoBehaviour {
         angled = -90;
         transform.position = new Vector3(-1.5f, 0f, -0.56f);
         transform.rotation = Quaternion.Euler(angled, 90, 0);
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        LastDirection = new Quaternion(-90f, 90f, 0f, 1f);
 
     }
 
@@ -234,7 +234,10 @@ public class Controller_P1_5 : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = rotation;
             LastDirection = rotation;
         }
-
+        else
+        {
+            transform.GetChild(activeTurret).rotation = LastDirection;
+        }
 
 
         testbuff();
