@@ -59,6 +59,8 @@ public class Controller_P1_5 : MonoBehaviour {
     private GameObject player;
     private bool SetScore = false;
 
+    private Quaternion LastDirection;
+    
     //RotateAround
     public Transform aroundPoint;
     public float angularSpeed;
@@ -168,6 +170,7 @@ public class Controller_P1_5 : MonoBehaviour {
         this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
         this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
         this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret2()
@@ -180,6 +183,7 @@ public class Controller_P1_5 : MonoBehaviour {
         this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
         this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret3()
@@ -192,6 +196,7 @@ public class Controller_P1_5 : MonoBehaviour {
         this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     void Start()
@@ -200,6 +205,7 @@ public class Controller_P1_5 : MonoBehaviour {
         angled = -90;
         transform.position = new Vector3(-1.5f, 0f, -0.56f);
         transform.rotation = Quaternion.Euler(angled, 90, 0);
+        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
 
     }
 
@@ -223,12 +229,13 @@ public class Controller_P1_5 : MonoBehaviour {
 
         recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
-        if (direction.magnitude >= 0.9)
+        if (direction.magnitude >= 0.5)
         {
             transform.GetChild(activeTurret).rotation = rotation;
+            LastDirection = rotation;
         }
 
-        
+
 
         testbuff();
         if (buff_frozen)//

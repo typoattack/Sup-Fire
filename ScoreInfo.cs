@@ -7,6 +7,7 @@ public class ScoreInfo : MonoBehaviour {
     public int left;
     public int right;
 
+
     void Awake()
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("Score");
@@ -26,10 +27,13 @@ public class ScoreInfo : MonoBehaviour {
     void leftPlus()
     {
         left += 1;
+        GameObject.Find("SceneSwitch").SendMessage("Switch");
     }
 
     void rightPlus()
     {
         right += 1;
+
+        GameObject.Find("SceneSwitch").SendMessage("Switch");
     }
 }

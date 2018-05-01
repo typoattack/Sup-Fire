@@ -24,6 +24,7 @@ public class ControllerP2_L2 : MonoBehaviour
     public AudioSource audioSB;
     public AudioSource audioR;
     public AudioSource audioM;
+    public AudioSource waterSound;
 
     public int special;
 
@@ -65,7 +66,11 @@ public class ControllerP2_L2 : MonoBehaviour
     public float recoilIntensity;
 
     private GameObject player;
+    private GameObject waterSplatter;
     private bool SetScore = false;
+    private bool hasFall = false;
+
+    private Quaternion LastDirection;
 
     //L2, new parameters
     public GameObject floe;
@@ -173,6 +178,7 @@ public class ControllerP2_L2 : MonoBehaviour
         this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
         this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
         this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret2()
@@ -185,6 +191,7 @@ public class ControllerP2_L2 : MonoBehaviour
         this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
         this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret3()
@@ -197,6 +204,7 @@ public class ControllerP2_L2 : MonoBehaviour
         this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     //L2, new function
@@ -210,6 +218,7 @@ public class ControllerP2_L2 : MonoBehaviour
     {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
+        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
     }
 
 
@@ -235,7 +244,24 @@ public class ControllerP2_L2 : MonoBehaviour
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
         //L2, check if sink
-        if (pos.y < boundary2stick.yMin + 0.2) remainLife = 0;
+        if (pos.y < boundary2stick.yMin + 0.2) {
+
+            remainLife = 0;
+            if (!hasFall)
+            {
+                waterSound.Play();
+                waterSplatter = GameObject.Find("FX_WaterSplatter");
+                GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
+                var main = SplattersParticle.main;
+                main.startSize = 0.5f;
+                main.startSpeed = 5f;
+                Destroy(newSplatters, 1.5f);
+                hasFall = !hasFall;
+            }
+
+        }
+
         //
 
         recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
@@ -243,6 +269,7 @@ public class ControllerP2_L2 : MonoBehaviour
         if (direction.magnitude >= 0.5)
         {
             transform.GetChild(activeTurret).rotation = rotation;
+            LastDirection = rotation;
         }
 
 
