@@ -62,7 +62,7 @@ public class BulletMove_Planet : MonoBehaviour {
     private void OnTriggerStay(Collider other)
     {
 
-        if (other.tag == "wall")
+        if (other.tag == "wall" || other.tag == "Planet")
         {
             hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
             //0.8-1.5 as normal, 0.5-0.8 as big, need more modification

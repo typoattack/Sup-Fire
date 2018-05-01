@@ -13,8 +13,8 @@ public class big_trigger_5 : MonoBehaviour {
     void got(GameObject target)
     {
         Collider capCo = GetComponent<Collider>();
-        capCo.enabled = false;
-        Destroy(gameObject, 1.5f);
+        //capCo.enabled = false;
+        Destroy(gameObject, 0.5f);
         Rigidbody rigid = GetComponent<Rigidbody>();
         rigid.AddForce((-transform.position + target.transform.position) * 50f);
     }
@@ -34,7 +34,7 @@ public class big_trigger_5 : MonoBehaviour {
         }
         else if (other.tag == "Missile")
         {
-            MissileMove missile = other.GetComponent<MissileMove>();
+            MissileMove_Planet missile = other.GetComponent<MissileMove_Planet>();
             target = missile.comeFrom;
             target.SendMessage("SetBig");
             got(target);
