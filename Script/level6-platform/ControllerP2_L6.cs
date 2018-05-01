@@ -4,20 +4,20 @@ using UnityEngine;
 using EZCameraShake;
 
 [System.Serializable]
-public class Boundary2StickVolcano
+public class Boundary2Stick_L6
 {
     public float xMin, xMax, yMin, yMax, zMin, zMax;
 }
 
-public class ControllerP2volcano : MonoBehaviour
+public class ControllerP2_L6 : MonoBehaviour
 {
-    public Boundary2StickVolcano boundary2stick;
+    public Boundary2Stick_L6 boundary2stick;
 
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletMove bullet;
-    public MissileMove missile;
+    public bulletMove_L6 bullet;//_L6
+    public MissileMove_L6 missile;//_L6
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -56,23 +56,23 @@ public class ControllerP2volcano : MonoBehaviour
     public float maxLife;
     public float remainLife;
 
+    //L6
+    private float platformVelocity;
+    //
 
     private Rigidbody rigid;
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public float recoil;//in angular
+    public Vector3 recoil;
     public float recoilIntensity;
-    private int updownrecoil;
-    private Vector3 up;
-    private Vector3 down;
 
     private GameObject player;
     private bool SetScore = false;
 
-    private Quaternion LastDirection;
-
-    void SetBig()
+    private Quaternion LastDirection; 
+    
+        void SetBig()
     {
         isBig = true;
         isMulti = false;
@@ -80,7 +80,6 @@ public class ControllerP2volcano : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
-        UseTurret1();
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.5f, 0.5f, 0.3f);
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
@@ -164,6 +163,13 @@ public class ControllerP2volcano : MonoBehaviour
         }
     }
 
+    //L6
+    public void SetPlatformVelocity(float v)
+    {
+        platformVelocity = v;
+    }
+    //
+
     private void UseTurret1()
     {
         gameObject.transform.GetChild(1).gameObject.SetActive(true);
@@ -203,32 +209,27 @@ public class ControllerP2volcano : MonoBehaviour
     }
 
 
-    void recoiltest(Vector3 dir)
-    {
-         if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 15 &&dir.x>=0)
-        updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 15 &&dir.x<=0)
-          updownrecoil = 1;
-        else
-            updownrecoil = 2;
-        //Debug.Log(Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg);
-
-    }
-
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
-        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
-        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
-        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
-        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
+        //L6
+        platformVelocity = 0f;
+        //
     }
 
 
     void FixedUpdate()
     {
+        //L6
+        transform.position = new Vector3(transform.position.x + platformVelocity * Time.deltaTime, transform.position.y, transform.position.z);
+        if (rigid.position.y < -5.5)
+        {
+            rigid.position = new Vector3(rigid.position.x, 5f, rigid.position.z);
+            rigid.velocity = Vector3.zero;
+        }
+        //
         rigid.position = new Vector3
         (
             Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
@@ -244,12 +245,11 @@ public class ControllerP2volcano : MonoBehaviour
 
         direction.x = -h_dir;
         direction.y = v_dir;
-        recoiltest(direction);
+
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
-        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
-       
+        recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
         if (direction.magnitude >= 0.5)
         {
@@ -276,7 +276,7 @@ public class ControllerP2volcano : MonoBehaviour
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y > 0f ? 0f : rigid.velocity.y, 0f);
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
@@ -298,8 +298,8 @@ public class ControllerP2volcano : MonoBehaviour
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMove_L6 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//_L6
+                    bulletMove_L6 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//_L6
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -314,10 +314,7 @@ public class ControllerP2volcano : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    if (updownrecoil == 0)
-                        rigid.AddForce(up, ForceMode.Impulse);
-                    else if (updownrecoil == 1)
-                        rigid.AddForce(down, ForceMode.Impulse);
+                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -327,14 +324,14 @@ public class ControllerP2volcano : MonoBehaviour
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMove_L6 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_L6;//_L6
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMove_L6 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//_L6
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
@@ -348,10 +345,7 @@ public class ControllerP2volcano : MonoBehaviour
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
+                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
@@ -365,10 +359,7 @@ public class ControllerP2volcano : MonoBehaviour
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
 
                         }
@@ -432,8 +423,8 @@ public class ControllerP2volcano : MonoBehaviour
         }
 
         SpeCount.SendMessage("SetSpe", special);
-
     }
+
     IEnumerator DelayTime(float duration)
     {
         yield return new WaitForSeconds(duration);

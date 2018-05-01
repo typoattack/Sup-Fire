@@ -4,20 +4,20 @@ using UnityEngine;
 using EZCameraShake;
 
 [System.Serializable]
-public class Boundary2StickVolcano
+public class Boundary1Mouse_L6
 {
     public float xMin, xMax, yMin, yMax, zMin, zMax;
 }
 
-public class ControllerP2volcano : MonoBehaviour
+public class controllerP1_L6 : MonoBehaviour
 {
-    public Boundary2StickVolcano boundary2stick;
+    public Boundary1Mouse_L6 boundary1mouse;
 
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletMove bullet;
-    public MissileMove missile;
+    public bulletMove_L6 bullet;//L6
+    public MissileMove_L6 missile;//L6
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -56,21 +56,19 @@ public class ControllerP2volcano : MonoBehaviour
     public float maxLife;
     public float remainLife;
 
+    //L6
+    private float platformVelocity;
+    //
 
     private Rigidbody rigid;
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public float recoil;//in angular
+    public Vector3 recoil;
     public float recoilIntensity;
-    private int updownrecoil;
-    private Vector3 up;
-    private Vector3 down;
 
     private GameObject player;
     private bool SetScore = false;
-
-    private Quaternion LastDirection;
 
     void SetBig()
     {
@@ -129,6 +127,7 @@ public class ControllerP2volcano : MonoBehaviour
 
 
     }
+
     void testbuff()
     {
         if (buff_begin_time != 0)
@@ -157,12 +156,19 @@ public class ControllerP2volcano : MonoBehaviour
 
         remainAmmo += change;
 
-
+        
         if (remainAmmo > maxAmmo)
         {
             remainAmmo = maxAmmo;
         }
     }
+
+    //L6
+    public void SetPlatformVelocity(float v)
+    {
+        platformVelocity = v;
+    }
+    //
 
     private void UseTurret1()
     {
@@ -173,7 +179,6 @@ public class ControllerP2volcano : MonoBehaviour
         this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
         this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
         this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
-        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret2()
@@ -186,7 +191,6 @@ public class ControllerP2volcano : MonoBehaviour
         this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
         this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
-        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret3()
@@ -199,72 +203,46 @@ public class ControllerP2volcano : MonoBehaviour
         this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
-        transform.GetChild(activeTurret).rotation = LastDirection;
-    }
-
-
-    void recoiltest(Vector3 dir)
-    {
-         if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 15 &&dir.x>=0)
-        updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 15 &&dir.x<=0)
-          updownrecoil = 1;
-        else
-            updownrecoil = 2;
-        //Debug.Log(Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg);
-
     }
 
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
-        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
-        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
-        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
-        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
+        //L6
+        platformVelocity = 0f;
+        //
     }
 
 
     void FixedUpdate()
     {
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        //L6
+        transform.position = new Vector3(transform.position.x + platformVelocity * Time.deltaTime, transform.position.y, transform.position.z);
+        if (rigid.position.y < -5.5) {
+            rigid.position = new Vector3(rigid.position.x, 5f, rigid.position.z);
+            rigid.velocity = Vector3.zero;
+        }
+        //
         rigid.position = new Vector3
         (
-            Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
-            Mathf.Clamp(rigid.position.y, boundary2stick.yMin, boundary2stick.yMax),
-            Mathf.Clamp(rigid.position.z, boundary2stick.zMin, boundary2stick.zMax)
+            Mathf.Clamp(rigid.position.x, boundary1mouse.xMin, boundary1mouse.xMax),
+            Mathf.Clamp(rigid.position.y, boundary1mouse.yMin, boundary1mouse.yMax),
+            Mathf.Clamp(rigid.position.z, boundary1mouse.zMin, boundary1mouse.zMax)
         );
         Vector3 pos = rigid.position;
-
-        float v_dir = Input.GetAxis("J-V-Direct");
-        float h_dir = Input.GetAxis("J-H-Direct");
-
-        Vector3 direction = Vector3.zero;
-
-        direction.x = -h_dir;
-        direction.y = v_dir;
-        recoiltest(direction);
+        Vector3 direction = mousePos - pos;
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
+        transform.GetChild(activeTurret).rotation = rotation;
 
-        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
-       
+        float h_axis = Input.GetAxis("Horizontal");
 
-        if (direction.magnitude >= 0.5)
-        {
-            transform.GetChild(activeTurret).rotation = rotation;
-            LastDirection = rotation;
-        }
+        recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
-
-        float h_axis = Input.GetAxis("J-Horizontal");
-
-        if (h_axis != 0)
-        {
-            MoveAnim.Play("body Animation");
-        }
-        testbuff();//
+        testbuff();
         if (buff_frozen)//
         {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
@@ -276,9 +254,13 @@ public class ControllerP2volcano : MonoBehaviour
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y > 0f ? 0f : rigid.velocity.y, 0f);
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+        if (h_axis != 0)
+        {
+            MoveAnim.Play("body Animation");
+        }
 
-        if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
+        if ((Input.GetMouseButton(0)|| Input.GetKey(KeyCode.Space)) && remainAmmo >= 1) //fire
         {
             isFireing = true;
         }
@@ -298,8 +280,8 @@ public class ControllerP2volcano : MonoBehaviour
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMove_L6 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
+                    bulletMove_L6 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -314,27 +296,24 @@ public class ControllerP2volcano : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    if (updownrecoil == 0)
-                        rigid.AddForce(up, ForceMode.Impulse);
-                    else if (updownrecoil == 1)
-                        rigid.AddForce(down, ForceMode.Impulse);
+                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
                 else
-                {
+                {   
 
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMove_L6 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_L6;//L6
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMove_L6 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
@@ -348,10 +327,8 @@ public class ControllerP2volcano : MonoBehaviour
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
+                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+
                         }
                         else if (isFrozen)//
                         {
@@ -365,14 +342,11 @@ public class ControllerP2volcano : MonoBehaviour
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
 
                         }
-                        anim.Play("Gun Animation");
+                        anim.Play("Gun Animation");                    
                     }
                 }
 
@@ -388,8 +362,7 @@ public class ControllerP2volcano : MonoBehaviour
                         audioS.Play();
                     }
                 }
-                else
-                {
+                else {
                     audioM.pitch = Random.Range(0.8f, 1.2f);
                     audioM.Play();
                 }
@@ -403,23 +376,25 @@ public class ControllerP2volcano : MonoBehaviour
         }
         AmmoCount.SendMessage("SetAmmo", Mathf.Floor(remainAmmo));
 
-        float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f / maxLife;
+        float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f/ maxLife;
 
         transform.GetChild(0).transform.localScale = new Vector3(1.5f * liftRatio, 0.3f, 0.5f);
 
         LifeCount.SendMessage("SetLife", remainLife);
 
-        if (remainLife <= 0)
+        if(remainLife <= 0)
         {
             StartCoroutine(DelayTime(0.3f));
             Time.timeScale = 0.2f;
             GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
             if (!SetScore)
             {
-                score[0].SendMessage("leftPlus");
+                score[0].SendMessage("rightPlus");
                 SetScore = !SetScore;
             }
+
         }
+
         if (special <= 0)
         {
             isBig = false;
@@ -432,8 +407,8 @@ public class ControllerP2volcano : MonoBehaviour
         }
 
         SpeCount.SendMessage("SetSpe", special);
-
     }
+
     IEnumerator DelayTime(float duration)
     {
         yield return new WaitForSeconds(duration);
@@ -441,4 +416,3 @@ public class ControllerP2volcano : MonoBehaviour
         gameObject.SetActive(false);
     }
 }
-
