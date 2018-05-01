@@ -35,7 +35,7 @@ public class Missile_Trigger_5 : MonoBehaviour {
         }
         else if (other.tag == "Missile")
         {
-            MissileMove missile = other.GetComponent<MissileMove>();
+            MissileMove_Planet missile = other.GetComponent<MissileMove_Planet>();
             target = missile.comeFrom;
             target.SendMessage("SetMissile");
             got(target);
