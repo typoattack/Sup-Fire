@@ -51,7 +51,7 @@ public class VolcanoFireNoShakeEven : MonoBehaviour
             LavaList[i].LavaSpeed = LavaSpeed;
         }
 
-        //CameraShaker.Instance.ShakeOnce(shakeMagnitude, shakeRoughness, shakeFadein, shakeFadeout);
+        CameraShaker.Instance.ShakeOnce(shakeMagnitude, shakeRoughness, shakeFadein, shakeFadeout);
         eruption.volume = 2f;
         eruption.Play();
     }
