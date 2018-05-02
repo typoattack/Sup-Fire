@@ -81,6 +81,7 @@ public class controllerP1_L2 : MonoBehaviour
 
     void SetBig()
     {
+        ResetBarrel();//fix bug
         isBig = true;
         isMulti = false;
         isMissile = false;
@@ -94,6 +95,7 @@ public class controllerP1_L2 : MonoBehaviour
 
     void SetMulti()
     {
+        ResetBarrel();//fix bug
         isBig = false;
         isMulti = true;
         isMissile = false;
@@ -106,6 +108,7 @@ public class controllerP1_L2 : MonoBehaviour
 
     void SetFrozen()//
     {
+        ResetBarrel();//fix bug
         isBig = false;
         isMulti = false;
         isMissile = false;
@@ -120,6 +123,7 @@ public class controllerP1_L2 : MonoBehaviour
 
     void SetMissile()
     {
+        ResetBarrel();//fix bug
         isBig = false;
         isMulti = false;
         isMissile = true;
@@ -129,6 +133,15 @@ public class controllerP1_L2 : MonoBehaviour
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         UseTurret3();
     }
+
+    //fix bug
+    void ResetBarrel()
+    {
+        if (isMulti) gameObject.transform.GetChild(2).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+        else if (isMissile) gameObject.transform.GetChild(3).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+        else gameObject.transform.GetChild(1).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+    }
+    //
 
     void Buff_Time(float buff_begin)//
     {
