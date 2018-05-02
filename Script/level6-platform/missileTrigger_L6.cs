@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Multi_Triggrt_5 : MonoBehaviour {
+public class missileTrigger_L6 : MonoBehaviour {
 
     private GameObject target;
 
     void FixedUpdate()
     {
-       // transform.Translate(new Vector3(0f, -0.02f, 0f));
+        transform.Translate(new Vector3(0f, -0.02f, 0f));
     }
+
     void got(GameObject target)
     {
         Collider capCo = GetComponent<Collider>();
         capCo.enabled = false;
         Destroy(gameObject, 1.5f);
         Rigidbody rigid = GetComponent<Rigidbody>();
-        rigid.AddForce((-transform.position + target.transform.position) * 50f);
+        rigid.AddForce((- transform.position + target.transform.position)*50f);
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "wall")
@@ -26,19 +28,17 @@ public class Multi_Triggrt_5 : MonoBehaviour {
         }
         else if (other.tag == "Bullet")
         {
-            BulletMove_Planet bullet = other.GetComponent<BulletMove_Planet>();
+            bulletMove_L6 bullet = other.GetComponent<bulletMove_L6>();
             target = bullet.comeFrom;
-            target.SendMessage("SetMulti");
+            target.SendMessage("SetMissile");
             got(target);
-
         }
         else if (other.tag == "Missile")
         {
-            MissileMove_Planet missile = other.GetComponent<MissileMove_Planet>();
+            MissileMove_L6 missile = other.GetComponent<MissileMove_L6>();
             target = missile.comeFrom;
-            target.SendMessage("SetMulti");
+            target.SendMessage("SetMissile");
             got(target);
-
         }
     }
 }

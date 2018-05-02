@@ -61,8 +61,11 @@ public class controllerP1volcano : MonoBehaviour
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public Vector3 recoil;
+    public float recoil;//in angular
     public float recoilIntensity;
+    private int updownrecoil;
+    private Vector3 up;
+    private Vector3 down;
 
     private GameObject player;
     private bool SetScore = false;
@@ -195,9 +198,27 @@ public class controllerP1volcano : MonoBehaviour
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
 
+    void recoiltest(Vector3 dir)
+    {
+        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= 10 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 40 && dir.x > 0 && dir.y > 0)
+            updownrecoil = 0;
+        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -10 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 20 && dir.x < 0 && dir.y <= 1)
+            updownrecoil = 1;
+        else
+            updownrecoil = 2;
+
+     
+    }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
+        //set recoil angle
+        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
+        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
+        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
+        down = new Vector3(posX, posY, 0).normalized*recoilIntensity;
+
     }
 
 
@@ -213,14 +234,17 @@ public class controllerP1volcano : MonoBehaviour
         );
         Vector3 pos = rigid.position;
         Vector3 direction = mousePos - pos;
+        recoiltest(direction);
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
         transform.GetChild(activeTurret).rotation = rotation;
 
         float h_axis = Input.GetAxis("Horizontal");
-
-        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
-        recoil = recoilIntensity * -direction.normalized;
+       
+        
+  
+        //if(tandirs>=0.268||)
+       // recoil = recoilIntensity * -direction.normalized;
 
         testbuff();
         if (buff_frozen)//
@@ -275,7 +299,10 @@ public class controllerP1volcano : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    if(updownrecoil==0)
+                        rigid.AddForce(up, ForceMode.Impulse);
+                    else if(updownrecoil==1)
+                        rigid.AddForce(down, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -306,7 +333,10 @@ public class controllerP1volcano : MonoBehaviour
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
 
                         }
                         else if (isFrozen)//
@@ -322,7 +352,10 @@ public class controllerP1volcano : MonoBehaviour
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
                             audioS.pitch = Random.Range(1f, 5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
 
                         }
                         anim.Play("Gun Animation");

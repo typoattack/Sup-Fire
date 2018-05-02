@@ -45,7 +45,7 @@ public class LavaMove : MonoBehaviour {
             hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
             hitSound.Play();
             GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
-            CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.0f);
+            CameraShaker.Instance.ShakeOnce(0.6f, 3f, 0f, 1.0f);
             
             Destroy(gameObject);
             Destroy(newSparks, 0.5f);

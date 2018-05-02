@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Multi_Triggrt_5 : MonoBehaviour {
+public class snowtrigger_L6 : MonoBehaviour {
 
     private GameObject target;
+    // Use this for initialization
 
+
+    // Update is called once per frame
     void FixedUpdate()
     {
-       // transform.Translate(new Vector3(0f, -0.02f, 0f));
+        transform.Translate(new Vector3(0f, -0.02f, 0f));
     }
     void got(GameObject target)
     {
@@ -21,22 +24,20 @@ public class Multi_Triggrt_5 : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "wall")
-        {
             Destroy(gameObject);
-        }
         else if (other.tag == "Bullet")
         {
-            BulletMove_Planet bullet = other.GetComponent<BulletMove_Planet>();
+            bulletMove_L6 bullet = other.GetComponent<bulletMove_L6>();
             target = bullet.comeFrom;
-            target.SendMessage("SetMulti");
+            target.SendMessage("SetFrozen");
             got(target);
 
         }
         else if (other.tag == "Missile")
         {
-            MissileMove_Planet missile = other.GetComponent<MissileMove_Planet>();
+            MissileMove_L6 missile = other.GetComponent<MissileMove_L6>();
             target = missile.comeFrom;
-            target.SendMessage("SetMulti");
+            target.SendMessage("SetFrozen");
             got(target);
 
         }

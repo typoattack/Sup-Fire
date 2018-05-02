@@ -61,8 +61,11 @@ public class ControllerP2volcano : MonoBehaviour
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public Vector3 recoil;
+    public float recoil;//in angular
     public float recoilIntensity;
+    private int updownrecoil;
+    private Vector3 up;
+    private Vector3 down;
 
     private GameObject player;
     private bool SetScore = false;
@@ -199,11 +202,28 @@ public class ControllerP2volcano : MonoBehaviour
         transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
+
+    void recoiltest(Vector3 dir)
+    {
+         if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 15 &&dir.x>=0)
+        updownrecoil = 0;
+        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 15 &&dir.x<=0)
+          updownrecoil = 1;
+        else
+            updownrecoil = 2;
+        //Debug.Log(Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg);
+
+    }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
+        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
+        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
+        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
     }
 
 
@@ -224,12 +244,12 @@ public class ControllerP2volcano : MonoBehaviour
 
         direction.x = -h_dir;
         direction.y = v_dir;
-
+        recoiltest(direction);
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
         //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
-        recoil = recoilIntensity * -direction.normalized;
+       
 
         if (direction.magnitude >= 0.5)
         {
@@ -294,7 +314,10 @@ public class ControllerP2volcano : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    if (updownrecoil == 0)
+                        rigid.AddForce(up, ForceMode.Impulse);
+                    else if (updownrecoil == 1)
+                        rigid.AddForce(down, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -325,7 +348,10 @@ public class ControllerP2volcano : MonoBehaviour
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
@@ -339,7 +365,10 @@ public class ControllerP2volcano : MonoBehaviour
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
 
                         }

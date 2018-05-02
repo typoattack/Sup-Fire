@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Multi_Triggrt_5 : MonoBehaviour {
+public class multiTrigger_L6 : MonoBehaviour {
 
     private GameObject target;
 
     void FixedUpdate()
     {
-       // transform.Translate(new Vector3(0f, -0.02f, 0f));
+        transform.Translate(new Vector3(0f, -0.02f, 0f));
     }
     void got(GameObject target)
     {
@@ -26,7 +26,7 @@ public class Multi_Triggrt_5 : MonoBehaviour {
         }
         else if (other.tag == "Bullet")
         {
-            BulletMove_Planet bullet = other.GetComponent<BulletMove_Planet>();
+            bulletMove_L6 bullet = other.GetComponent<bulletMove_L6>();
             target = bullet.comeFrom;
             target.SendMessage("SetMulti");
             got(target);
@@ -34,7 +34,7 @@ public class Multi_Triggrt_5 : MonoBehaviour {
         }
         else if (other.tag == "Missile")
         {
-            MissileMove_Planet missile = other.GetComponent<MissileMove_Planet>();
+            MissileMove_L6 missile = other.GetComponent<MissileMove_L6>();
             target = missile.comeFrom;
             target.SendMessage("SetMulti");
             got(target);

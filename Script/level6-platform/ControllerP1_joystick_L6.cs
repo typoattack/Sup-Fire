@@ -16,8 +16,8 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletMove bullet;
-    public MissileMove missile;
+    public bulletMove_L6 bullet;//L6
+    public MissileMove_L6 missile;//L6
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -56,6 +56,9 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
     public float maxLife;
     public float remainLife;
 
+    //L6
+    private float platformVelocity;
+    //
 
     private Rigidbody rigid;
     private float angle = 0f;
@@ -161,6 +164,13 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
         }
     }
 
+    //L6
+    public void SetPlatformVelocity(float v)
+    {
+        platformVelocity = v;
+    }
+    //
+
     private void UseTurret1()
     {
         gameObject.transform.GetChild(1).gameObject.SetActive(true);
@@ -204,12 +214,16 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
         rigid = this.GetComponent<Rigidbody>();
         //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        //L6
+        platformVelocity = 0f;
+        //
     }
 
 
     void FixedUpdate()
     {
         //L6
+        transform.position = new Vector3(transform.position.x + platformVelocity * Time.deltaTime, transform.position.y, transform.position.z);
         if (rigid.position.y < -5.5)
         {
             rigid.position = new Vector3(rigid.position.x, 5f, rigid.position.z);
@@ -285,8 +299,8 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMove_L6 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
+                    bulletMove_L6 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -311,14 +325,14 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMove_L6 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_L6;//L6
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMove_L6 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)

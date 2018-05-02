@@ -16,8 +16,8 @@ public class controllerP1_L6 : MonoBehaviour
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletMove bullet;
-    public MissileMove missile;
+    public bulletMove_L6 bullet;//L6
+    public MissileMove_L6 missile;//L6
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -56,9 +56,9 @@ public class controllerP1_L6 : MonoBehaviour
     public float maxLife;
     public float remainLife;
 
-    ////L6
-    //private float platformVelocity;
-    ////
+    //L6
+    private float platformVelocity;
+    //
 
     private Rigidbody rigid;
     private float angle = 0f;
@@ -163,10 +163,12 @@ public class controllerP1_L6 : MonoBehaviour
         }
     }
 
-    //public void SetPlatformVelocity(float v)
-    //{
-    //    platformVelocity = v;
-    //}
+    //L6
+    public void SetPlatformVelocity(float v)
+    {
+        platformVelocity = v;
+    }
+    //
 
     private void UseTurret1()
     {
@@ -206,9 +208,9 @@ public class controllerP1_L6 : MonoBehaviour
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        ////L6
-        //platformVelocity = 0f;
-        ////
+        //L6
+        platformVelocity = 0f;
+        //
     }
 
 
@@ -218,9 +220,10 @@ public class controllerP1_L6 : MonoBehaviour
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         //L6
-        if (rigid.position.y < -5.5) {
-            rigid.position = new Vector3(rigid.position.x, 5f, rigid.position.z);
-            rigid.velocity = Vector3.zero;
+        transform.position = new Vector3(transform.position.x + platformVelocity * Time.deltaTime, transform.position.y, transform.position.z);
+        if (rigid.position.y < -7) {
+            rigid.position = new Vector3(rigid.position.x, 7f, rigid.position.z);
+            //rigid.velocity = Vector3.zero;
         }
         //
         rigid.position = new Vector3
@@ -237,7 +240,8 @@ public class controllerP1_L6 : MonoBehaviour
 
         float h_axis = Input.GetAxis("Horizontal");
 
-        recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        recoil = recoilIntensity * -direction.normalized;
 
         testbuff();
         if (buff_frozen)//
@@ -250,10 +254,9 @@ public class controllerP1_L6 : MonoBehaviour
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
-        //L6
-        //rigid.velocity = new Vector3(buff * Accelrate * h_axis + platformVelocity, rigid.velocity.y, 0f);
-        //
+
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
@@ -279,8 +282,8 @@ public class controllerP1_L6 : MonoBehaviour
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMove_L6 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
+                    bulletMove_L6 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -305,14 +308,14 @@ public class controllerP1_L6 : MonoBehaviour
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMove_L6 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_L6;//L6
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMove_L6 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L6;//L6
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)

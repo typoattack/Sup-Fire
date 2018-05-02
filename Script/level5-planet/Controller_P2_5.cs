@@ -6,8 +6,8 @@ public class Controller_P2_5 : MonoBehaviour {
 
 
     public bool isFireing;
-    public bulletMove bullet;
-    public MissileMove missile;
+    public BulletMove_Planet bullet;
+    public MissileMove_Planet missile;
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -74,6 +74,7 @@ public class Controller_P2_5 : MonoBehaviour {
         isFrozen = false;//
         audioR.Play();
         special = 5;
+        UseTurret1();
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.5f, 0.5f, 0.3f);
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
@@ -201,7 +202,7 @@ public class Controller_P2_5 : MonoBehaviour {
         angled = 90;
         transform.position = new Vector3(1.7f, 0f, -0.56f);
         transform.rotation = Quaternion.Euler(angled, 90, 0);
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        LastDirection = new Quaternion(90f, 90f, 0f, 1f);
     }
 
 
@@ -229,6 +230,10 @@ public class Controller_P2_5 : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = rotation;
             LastDirection = rotation;
         }
+        else
+        {
+            transform.GetChild(activeTurret).rotation = LastDirection;
+        }
 
         testbuff();//
         if (buff_frozen)//
@@ -241,10 +246,32 @@ public class Controller_P2_5 : MonoBehaviour {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
-        float h_axis = Input.GetAxis("J-Vertical");
-        angled -= h_axis * (buff * angularSpeed * Time.deltaTime) % 360;
+        float v_axis = Input.GetAxis("J-Vertical");
+        float h_axis = Input.GetAxis("J-Horizontal");
 
-        angled = Mathf.Clamp(angled, 20, 160);
+        Vector2 playerDir = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
+        playerDir.Normalize();
+        Vector2 joyDir = new Vector2(h_axis, v_axis);
+        joyDir.Normalize();
+        joyDir = joyDir.magnitude > 0.5 ? joyDir : playerDir;
+
+        float angleDiff = Vector2.Angle(playerDir, joyDir);
+        angleDiff = Vector3.Cross(playerDir, joyDir).z > 0 ? angleDiff : -angleDiff;
+        if (angleDiff != angleDiff){//see if is null
+            angleDiff = 0f;
+        }
+
+        if(angleDiff > 0)
+        {
+            angled -= buff * angularSpeed * Time.deltaTime % 360;
+        }else if (angleDiff < 0)
+        {
+            angled += buff * angularSpeed * Time.deltaTime % 360;
+
+        }
+
+        angled = Mathf.Clamp(angled, 12, 168);
+
         float posX = aroundRadius * Mathf.Sin(angled * Mathf.Deg2Rad);
         float posy = aroundRadius * Mathf.Cos(angled * Mathf.Deg2Rad);
         transform.position = new Vector3(posX, posy, 0) + aroundPoint.position;
@@ -252,7 +279,7 @@ public class Controller_P2_5 : MonoBehaviour {
        
 
 
-        if (h_axis != 0)
+        if (v_axis != 0)
         {
             MoveAnim.Play("body Animation");
         }
@@ -276,19 +303,19 @@ public class Controller_P2_5 : MonoBehaviour {
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    BulletMove_Planet newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as BulletMove_Planet;
+                    BulletMove_Planet newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as BulletMove_Planet;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
                     newBullet1.transform.Rotate(new Vector3(0f, 0f, -5f));
-                    newBullet1.bulletSpeed = bulletSpeed;
+                    newBullet1.bulletIniForce = bulletSpeed;
                     newBullet1.SendMessage("SetMulti", true);
 
                     newBullet2.gameObject.SetActive(true);
                     newBullet2.transform.Translate(new Vector3(-0.2f, 0f, 0f));
                     newBullet2.transform.Rotate(new Vector3(0f, 0f, 5f));
-                    newBullet2.bulletSpeed = bulletSpeed;
+                    newBullet2.bulletIniForce = bulletSpeed;
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
@@ -302,16 +329,16 @@ public class Controller_P2_5 : MonoBehaviour {
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMove_Planet newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_Planet;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        BulletMove_Planet newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as BulletMove_Planet;
                         newBullet.gameObject.SetActive(true);
-                        newBullet.bulletSpeed = bulletSpeed;
+                        newBullet.bulletIniForce = bulletSpeed;
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
