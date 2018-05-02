@@ -69,15 +69,15 @@ public class SceneSwitch : MonoBehaviour {
             SceneManager.LoadScene("scene5-planet");
             sceneCount = 4;
         }
-//        else if (Input.GetKey(KeyCode.Alpha6))
-//        {
-//            SceneManager.LoadScene("scene6-platform");
-//            sceneCount = 5;
-//        }
+        else if (Input.GetKey(KeyCode.Alpha6))
+        {
+            SceneManager.LoadScene("scene6-platform");
+            sceneCount = 5;
+        }
         else if (Input.GetKey(KeyCode.Alpha7))
         {
             SceneManager.LoadScene("scene7-underwater");
-            sceneCount = 5;
+            sceneCount = 6;
         }
     }
 }
