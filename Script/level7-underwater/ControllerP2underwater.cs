@@ -18,7 +18,7 @@ public class ControllerP2underwater : MonoBehaviour
     private float h_axis;
     private bool isGrounded;
     public bool isFireing;
-    public bulletMove bullet;
+    public bulletMoveunderwater bullet;
     public MissileMove missile;
     public Transform firepoint;
     public float bulletSpeed;
@@ -293,8 +293,8 @@ public class ControllerP2underwater : MonoBehaviour
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMoveunderwater newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMoveunderwater;
+                    bulletMoveunderwater newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMoveunderwater;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -326,7 +326,7 @@ public class ControllerP2underwater : MonoBehaviour
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMoveunderwater newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMoveunderwater;
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
