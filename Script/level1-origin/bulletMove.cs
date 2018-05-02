@@ -148,7 +148,8 @@ public class bulletMove : MonoBehaviour {
             }
             Destroy(gameObject);
             Destroy(newSparks, 0.5f);
-            SubMover.torpedohitcount++;
+            if (comeFrom.name == "Player1") SubMover.torpedohitcountleft++;
+            if (comeFrom.name == "Player2") SubMover.torpedohitcountright++;
         }
 
 

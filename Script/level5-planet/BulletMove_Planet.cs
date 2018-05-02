@@ -155,7 +155,6 @@ public class BulletMove_Planet : MonoBehaviour {
             }
             Destroy(gameObject);
             Destroy(newSparks, 0.5f);
-            SubMover.torpedohitcount++;
         }
 
 
