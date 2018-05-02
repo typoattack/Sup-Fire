@@ -52,12 +52,18 @@ public class bulletMove_L6 : MonoBehaviour {
     void FixedUpdate () {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
         //L6
-        if (gameObject != null && transform.position.y < -6f) {
-            Destroy(gameObject);
-            if (comeFrom.activeSelf)
-            {
-                comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
-            }
+        //if (gameObject != null && transform.position.y < -6f) {
+            //Destroy(gameObject);
+            //if (comeFrom.activeSelf)
+            //{
+                //comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            //}
+        //}
+
+        if (gameObject.transform.position.y < -7)
+        {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, 7f, gameObject.transform.position.z);
+            //rigid.velocity = Vector3.zero;
         }
         //
     }

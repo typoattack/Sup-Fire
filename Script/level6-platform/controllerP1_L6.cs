@@ -221,9 +221,9 @@ public class controllerP1_L6 : MonoBehaviour
 
         //L6
         transform.position = new Vector3(transform.position.x + platformVelocity * Time.deltaTime, transform.position.y, transform.position.z);
-        if (rigid.position.y < -5.5) {
-            rigid.position = new Vector3(rigid.position.x, 5f, rigid.position.z);
-            rigid.velocity = Vector3.zero;
+        if (rigid.position.y < -7) {
+            rigid.position = new Vector3(rigid.position.x, 7f, rigid.position.z);
+            //rigid.velocity = Vector3.zero;
         }
         //
         rigid.position = new Vector3
@@ -240,7 +240,8 @@ public class controllerP1_L6 : MonoBehaviour
 
         float h_axis = Input.GetAxis("Horizontal");
 
-        recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        recoil = recoilIntensity * -direction.normalized;
 
         testbuff();
         if (buff_frozen)//
@@ -255,6 +256,7 @@ public class controllerP1_L6 : MonoBehaviour
         }
 
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
