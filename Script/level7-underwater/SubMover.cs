@@ -5,14 +5,15 @@ using UnityEngine;
 public class SubMover : MonoBehaviour {
 
     private Rigidbody rigid;
-    public static int torpedohitcount = 0;
+    public static int torpedohitcountleft = 0;
+    public static int torpedohitcountright = 0;
     public Transform leftTorpedoSpawn;
     public Transform rightTorpedoSpawn;
     public MissileMove leftTorpedo;
     public MissileMove rightTorpedo;
     public AudioSource audioM;
-    public GameObject bridge;
-    public GameObject mast;
+    public GameObject stern;
+    public GameObject bow;
 
     void Start ()
     {
@@ -23,30 +24,49 @@ public class SubMover : MonoBehaviour {
 	void Update ()
     {
         transform.position = new Vector3(-7f + Mathf.PingPong(Time.time, 14f), transform.position.y, transform.position.z);
-        if(torpedohitcount <= 5)
+        if(torpedohitcountleft < 5)
         {
-            bridge.GetComponent<Renderer>().material.color = Color.green;
-            mast.GetComponent<Renderer>().material.color = Color.green;
+            stern.GetComponent<Renderer>().material.color = Color.green;
         }
-        if (torpedohitcount > 5 && torpedohitcount <= 10)
+        if (torpedohitcountleft >= 5 && torpedohitcountleft < 7)
         {
-            bridge.GetComponent<Renderer>().material.color = Color.yellow;
-            mast.GetComponent<Renderer>().material.color = Color.yellow;
+            stern.GetComponent<Renderer>().material.color = Color.yellow;
         }
-        if (torpedohitcount > 10 && torpedohitcount < 15)
+        if (torpedohitcountleft >=7 && torpedohitcountleft < 10)
         {
-            bridge.GetComponent<Renderer>().material.color = Color.red;
-            mast.GetComponent<Renderer>().material.color = Color.red;
+            stern.GetComponent<Renderer>().material.color = Color.red;
         }
-        if (torpedohitcount >= 15)
+        if (torpedohitcountleft >= 10)
         {
-            torpedohitcount = 0;
+            torpedohitcountleft = 0;
             MissileMove newMissileleft = Instantiate(leftTorpedo, leftTorpedoSpawn.position, leftTorpedoSpawn.rotation) as MissileMove;
             newMissileleft.gameObject.SetActive(true);
+            //MissileMove newMissileright = Instantiate(rightTorpedo, rightTorpedoSpawn.position, rightTorpedoSpawn.rotation) as MissileMove;
+            //newMissileright.gameObject.SetActive(true);
+            audioM.pitch = Random.Range(0.8f, 1.2f);
+            audioM.Play();
+        }
+        if (torpedohitcountright <= 5)
+        {
+            bow.GetComponent<Renderer>().material.color = Color.green;
+        }
+        if (torpedohitcountright >= 5 && torpedohitcountright < 7)
+        {
+            bow.GetComponent<Renderer>().material.color = Color.yellow;
+        }
+        if (torpedohitcountright >= 7 && torpedohitcountright < 10)
+        {
+            bow.GetComponent<Renderer>().material.color = Color.red;
+        }
+        if (torpedohitcountright >= 10)
+        {
+            torpedohitcountright = 0;
+            //MissileMove newMissileleft = Instantiate(leftTorpedo, leftTorpedoSpawn.position, leftTorpedoSpawn.rotation) as MissileMove;
+            //newMissileleft.gameObject.SetActive(true);
             MissileMove newMissileright = Instantiate(rightTorpedo, rightTorpedoSpawn.position, rightTorpedoSpawn.rotation) as MissileMove;
             newMissileright.gameObject.SetActive(true);
             audioM.pitch = Random.Range(0.8f, 1.2f);
             audioM.Play();
         }
-	}
+    }
 }
