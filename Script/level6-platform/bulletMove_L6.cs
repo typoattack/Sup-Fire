@@ -163,7 +163,6 @@ public class bulletMove_L6 : MonoBehaviour {
             }
             Destroy(gameObject);
             Destroy(newSparks, 0.5f);
-            SubMover.torpedohitcount++;
         }
 
 
