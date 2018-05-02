@@ -247,7 +247,10 @@ public class ControllerP1_joystick : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = rotation;
             LastDirection = rotation;
         }
-
+        else
+        {
+            transform.GetChild(activeTurret).rotation = LastDirection;
+        }
 
         float h_axis = Input.GetAxis("J2-Horizontal");
 
