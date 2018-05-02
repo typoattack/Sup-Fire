@@ -18,7 +18,7 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
     private float h_axis;
     private bool isGrounded;
     public bool isFireing;
-    public bulletMove bullet;
+    public bulletMoveunderwater bullet;
     public MissileMove missile;
     public Transform firepoint;
     public float bulletSpeed;
@@ -73,6 +73,7 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
 
     void SetBig()
     {
+        ResetBarrel();//fix bug
         isBig = true;
         isMulti = false;
         isMissile = false;
@@ -86,6 +87,7 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
 
     void SetMulti()
     {
+        ResetBarrel();//fix bug
         isBig = false;
         isMulti = true;
         isMissile = false;
@@ -98,6 +100,7 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
 
     void SetFrozen()//
     {
+        ResetBarrel();//fix bug
         isBig = false;
         isMulti = false;
         isMissile = false;
@@ -112,6 +115,7 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
 
     void SetMissile()
     {
+        ResetBarrel();//fix bug
         isBig = false;
         isMulti = false;
         isMissile = true;
@@ -121,6 +125,15 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         UseTurret3();
     }
+
+    //fix bug
+    void ResetBarrel()
+    {
+        if (isMulti) gameObject.transform.GetChild(2).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+        else if (isMissile) gameObject.transform.GetChild(3).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+        else gameObject.transform.GetChild(1).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+    }
+    //
 
     void Buff_Time(float buff_begin)//
     {
@@ -279,8 +292,8 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMoveunderwater newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMoveunderwater;
+                    bulletMoveunderwater newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMoveunderwater;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -312,7 +325,7 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMoveunderwater newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMoveunderwater;
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
