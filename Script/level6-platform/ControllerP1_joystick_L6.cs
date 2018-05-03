@@ -238,10 +238,10 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
     {
         //L6
         transform.position = new Vector3(transform.position.x + platformVelocity * Time.deltaTime, transform.position.y, transform.position.z);
-        if (rigid.position.y < -5.5)
+        if (rigid.position.y < -7)
         {
-            rigid.position = new Vector3(rigid.position.x, 5f, rigid.position.z);
-            rigid.velocity = Vector3.zero;
+            rigid.position = new Vector3(rigid.position.x, 7f, rigid.position.z);
+            //rigid.velocity = Vector3.zero;
         }
         //
         rigid.position = new Vector3
@@ -270,7 +270,10 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = rotation;
             LastDirection = rotation;
         }
-
+        else
+        {
+            transform.GetChild(activeTurret).rotation = LastDirection;
+        }
 
         float h_axis = Input.GetAxis("J2-Horizontal");
 

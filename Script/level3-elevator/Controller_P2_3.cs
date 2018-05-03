@@ -246,6 +246,10 @@ public class Controller_P2_3 : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = rotation;
             LastDirection = rotation;
         }
+        else
+        {
+            transform.GetChild(activeTurret).rotation = LastDirection;
+        }
 
         MoveAnim.Play("body Animation");
         
