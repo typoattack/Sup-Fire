@@ -83,20 +83,19 @@ public class ControllerP2_L2 : MonoBehaviour
 
     void SetBig()
     {
-        ResetBarrel();//fix bug
         isBig = true;
         isMulti = false;
         isMissile = false;
         isFrozen = false;//
         audioR.Play();
         special = 5;
+        UseTurret1();
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.5f, 0.5f, 0.3f);
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
 
     void SetMulti()
     {
-        ResetBarrel();//fix bug
         isBig = false;
         isMulti = true;
         isMissile = false;
@@ -109,7 +108,6 @@ public class ControllerP2_L2 : MonoBehaviour
 
     void SetFrozen()//
     {
-        ResetBarrel();//fix bug
         isBig = false;
         isMulti = false;
         isMissile = false;
@@ -124,7 +122,6 @@ public class ControllerP2_L2 : MonoBehaviour
 
     void SetMissile()
     {
-        ResetBarrel();//fix bug
         isBig = false;
         isMulti = false;
         isMissile = true;
@@ -135,21 +132,11 @@ public class ControllerP2_L2 : MonoBehaviour
         UseTurret3();
     }
 
-    //fix bug
-    void ResetBarrel()
-    {
-        if (isMulti) gameObject.transform.GetChild(2).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
-        else if (isMissile) gameObject.transform.GetChild(3).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
-        else gameObject.transform.GetChild(1).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
-    }
-    //
-
     void Buff_Time(float buff_begin)//
     {
         buff_begin_time = buff_begin;
-
-
     }
+
     void testbuff()
     {
         if (buff_begin_time != 0)
@@ -175,10 +162,7 @@ public class ControllerP2_L2 : MonoBehaviour
 
     void SetAmmo(float change)
     {
-
         remainAmmo += change;
-
-
         if (remainAmmo > maxAmmo)
         {
             remainAmmo = maxAmmo;
@@ -187,6 +171,7 @@ public class ControllerP2_L2 : MonoBehaviour
 
     private void UseTurret1()
     {
+        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(true);
         gameObject.transform.GetChild(2).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
@@ -199,6 +184,7 @@ public class ControllerP2_L2 : MonoBehaviour
 
     private void UseTurret2()
     {
+        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(2).gameObject.SetActive(true);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
@@ -212,6 +198,7 @@ public class ControllerP2_L2 : MonoBehaviour
 
     private void UseTurret3()
     {
+        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(2).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(true);

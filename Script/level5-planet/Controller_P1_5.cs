@@ -70,7 +70,6 @@ public class Controller_P1_5 : MonoBehaviour {
 
     void SetBig()
     {
-        ResetBarrel();//fix bug
         isBig = true;
         isMulti = false;
         isMissile = false;
@@ -84,7 +83,6 @@ public class Controller_P1_5 : MonoBehaviour {
 
     void SetMulti()
     {
-        ResetBarrel();//fix bug
         isBig = false;
         isMulti = true;
         isMissile = false;
@@ -97,7 +95,6 @@ public class Controller_P1_5 : MonoBehaviour {
 
     void SetFrozen()//
     {
-        ResetBarrel();//fix bug
         isBig = false;
         isMulti = false;
         isMissile = false;
@@ -112,7 +109,6 @@ public class Controller_P1_5 : MonoBehaviour {
 
     void SetMissile()
     {
-        ResetBarrel();//fix bug
         isBig = false;
         isMulti = false;
         isMissile = true;
@@ -176,6 +172,7 @@ public class Controller_P1_5 : MonoBehaviour {
 
     private void UseTurret1()
     {
+        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(true);
         gameObject.transform.GetChild(2).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
@@ -188,6 +185,7 @@ public class Controller_P1_5 : MonoBehaviour {
 
     private void UseTurret2()
     {
+        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(2).gameObject.SetActive(true);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
@@ -201,6 +199,7 @@ public class Controller_P1_5 : MonoBehaviour {
 
     private void UseTurret3()
     {
+        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(2).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(true);
