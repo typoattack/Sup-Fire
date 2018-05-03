@@ -256,7 +256,7 @@ public class ControllerP2underwater : MonoBehaviour
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
-        if (isGrounded == true) h_axis = Input.GetAxis("J2-Horizontal");
+        if (isGrounded == true) h_axis = Input.GetAxis("J-Horizontal");
         else h_axis = 0;
 
         if (h_axis != 0)

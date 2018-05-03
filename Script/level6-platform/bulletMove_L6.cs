@@ -64,6 +64,21 @@ public class bulletMove_L6 : MonoBehaviour {
         {
             gameObject.transform.position = new Vector3(gameObject.transform.position.x, 7f, gameObject.transform.position.z);
             //rigid.velocity = Vector3.zero;
+        }else if(gameObject.transform.position.y > 7.5f)
+        {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, -6.5f, gameObject.transform.position.z);
+
+        }
+
+        if (gameObject.transform.position.x < -12)
+        {
+            gameObject.transform.position = new Vector3(11.5f, gameObject.transform.position.y, gameObject.transform.position.z);
+            //rigid.velocity = Vector3.zero;
+        }
+        else if (gameObject.transform.position.x > 12f)
+        {
+            gameObject.transform.position = new Vector3( -11.5f, gameObject.transform.position.y, gameObject.transform.position.z);
+
         }
         //
     }
