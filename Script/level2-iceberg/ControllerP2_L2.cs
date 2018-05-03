@@ -274,7 +274,7 @@ public class ControllerP2_L2 : MonoBehaviour
 
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
-        recoiltest(direction);
+        recoiltest(firepoint.transform.position - gameObject.transform.position);
         //L2, check if sink
         if (pos.y < boundary2stick.yMin + 0.2) {
 

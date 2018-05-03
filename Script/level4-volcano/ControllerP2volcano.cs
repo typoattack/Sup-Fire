@@ -257,7 +257,7 @@ public class ControllerP2volcano : MonoBehaviour
 
         direction.x = -h_dir;
         direction.y = v_dir;
-        recoiltest(direction);
+        recoiltest(firepoint.transform.position - gameObject.transform.position);
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
