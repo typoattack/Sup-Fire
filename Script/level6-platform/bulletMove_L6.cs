@@ -21,6 +21,8 @@ public class bulletMove_L6 : MonoBehaviour {
     public AudioSource hitSound;
     public AudioSource waterSound;
 
+    public ParticleSystem fireBall;
+    public float MaxBulletSpeed;
     private bool damagded = false;
 
     private void Awake()
@@ -32,7 +34,7 @@ public class bulletMove_L6 : MonoBehaviour {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
-
+        fireBall.gameObject.SetActive(false);
     }
 
     void SetMulti(bool multi)
@@ -49,6 +51,22 @@ public class bulletMove_L6 : MonoBehaviour {
         isFrozen = Frozen;
     }
 
+    void BurnUp()
+    {
+        fireBall.gameObject.SetActive(true);
+        StartCoroutine(bulletDelay(2.4f));
+        Destroy(gameObject, 2.5f);
+    }
+
+    IEnumerator bulletDelay(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        if (comeFrom.activeSelf)
+        {
+            comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+        }
+    }
+
     void FixedUpdate () {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
         //L6
@@ -59,6 +77,10 @@ public class bulletMove_L6 : MonoBehaviour {
                 //comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             //}
         //}
+        if (gameObject.GetComponent<Rigidbody>().velocity.magnitude > MaxBulletSpeed)
+        {
+            BurnUp();
+        }
 
         if (gameObject.transform.position.y < -7)
         {

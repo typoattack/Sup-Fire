@@ -201,6 +201,11 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
         transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
+    void SetPlatformVelocity(float platformVelocity)
+    {
+        this.platformVelocity = platformVelocity;
+    }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
