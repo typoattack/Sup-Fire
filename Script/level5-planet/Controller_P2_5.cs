@@ -422,6 +422,7 @@ public class Controller_P2_5 : MonoBehaviour {
         {
             StartCoroutine(DelayTime(0.3f));
             Time.timeScale = 0.2f;
+            Application.targetFrameRate = 150;
             GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
             if (!SetScore)
             {
@@ -448,6 +449,7 @@ public class Controller_P2_5 : MonoBehaviour {
     {
         yield return new WaitForSeconds(duration);
         Time.timeScale = 1f;
+        Application.targetFrameRate = -1;
         gameObject.SetActive(false);
     }
 }
