@@ -13,6 +13,7 @@ public class bulletMoveunderwater : MonoBehaviour
     public bool isFrozen;//
     public float upforceRange;
     public float upforceMagnitude;
+    public float AntiGravity;
 
     GameObject[] sparks;
     GameObject waterSplatter;
@@ -61,6 +62,8 @@ public class bulletMoveunderwater : MonoBehaviour
         {
             rigid.AddForce(new Vector3(0f, upforceMagnitude, 0f), ForceMode.Acceleration);
         }
+        rigid.AddForce(new Vector3(0f, AntiGravity, 0f), ForceMode.Acceleration);
+
     }
 
     private void OnTriggerStay(Collider other)
