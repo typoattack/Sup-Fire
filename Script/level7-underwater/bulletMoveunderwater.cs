@@ -11,6 +11,8 @@ public class bulletMoveunderwater : MonoBehaviour
     public bool isMulti;
     public bool isBig;
     public bool isFrozen;//
+    public float upforceRange;
+    public float upforceMagnitude;
 
     GameObject[] sparks;
     GameObject waterSplatter;
@@ -23,8 +25,9 @@ public class bulletMoveunderwater : MonoBehaviour
     public AudioSource waterSound;
 
     private bool damagded = false;
-
-    private void Awake()
+    private Rigidbody rigid;
+    
+        private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
         waterSplatter = GameObject.Find("FX_WaterSplatter");
@@ -34,7 +37,7 @@ public class bulletMoveunderwater : MonoBehaviour
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
-
+        rigid = gameObject.GetComponent<Rigidbody>();
     }
 
     void SetMulti(bool multi)
@@ -54,6 +57,10 @@ public class bulletMoveunderwater : MonoBehaviour
     void FixedUpdate()
     {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
+        if (gameObject.transform.position.x < upforceRange && gameObject.transform.position.x > -upforceRange && gameObject.transform.position.y < 1.5)
+        {
+            rigid.AddForce(new Vector3(0f, upforceMagnitude, 0f), ForceMode.Acceleration);
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -133,14 +140,16 @@ public class bulletMoveunderwater : MonoBehaviour
         }
         else if (other.tag == "sub")
         {
-            hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
-            //0.8-1.5 as normal, 0.5-0.8 as big, need more modification
-            hitSound.Play();
-            GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
+            GameObject newExplosion = Instantiate(explosion[0], transform.position, transform.rotation) as GameObject;
+            GameObject newDelay = Instantiate(delay[0], transform.position, transform.rotation) as GameObject;
+            newDelay.SetActive(true);
+
             if (isBig)
             {
-                newSparks.transform.localScale = new Vector3(2f, 2f, 2f);
-                CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 3f);
+                newExplosion.transform.localScale = new Vector3(2f, 2f, 2f);
+                CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 2f);
+                if (comeFrom.name == "Player1") SubMover.torpedohitcountleft++;
+                if (comeFrom.name == "Player2") SubMover.torpedohitcountright++;
             }
             else
             {
@@ -151,7 +160,7 @@ public class bulletMoveunderwater : MonoBehaviour
                 comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             }
             Destroy(gameObject);
-            Destroy(newSparks, 0.5f);
+            Destroy(newExplosion, 0.5f);
             if (comeFrom.name == "Player1") SubMover.torpedohitcountleft++;
             if (comeFrom.name == "Player2") SubMover.torpedohitcountright++;
         }

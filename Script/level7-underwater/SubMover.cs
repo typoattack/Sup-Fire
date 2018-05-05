@@ -9,8 +9,8 @@ public class SubMover : MonoBehaviour {
     public static int torpedohitcountright = 0;
     public Transform leftTorpedoSpawn;
     public Transform rightTorpedoSpawn;
-    public MissileMove leftTorpedo;
-    public MissileMove rightTorpedo;
+    public MissileMoveUnderwater leftTorpedo;
+    public MissileMoveUnderwater rightTorpedo;
     public AudioSource audioM;
     public GameObject stern;
     public GameObject bow;
@@ -39,10 +39,8 @@ public class SubMover : MonoBehaviour {
         if (torpedohitcountleft >= 10)
         {
             torpedohitcountleft = 0;
-            MissileMove newMissileleft = Instantiate(leftTorpedo, leftTorpedoSpawn.position, leftTorpedoSpawn.rotation) as MissileMove;
+            MissileMoveUnderwater newMissileleft = Instantiate(leftTorpedo, leftTorpedoSpawn.position, leftTorpedoSpawn.rotation) as MissileMoveUnderwater;
             newMissileleft.gameObject.SetActive(true);
-            //MissileMove newMissileright = Instantiate(rightTorpedo, rightTorpedoSpawn.position, rightTorpedoSpawn.rotation) as MissileMove;
-            //newMissileright.gameObject.SetActive(true);
             audioM.pitch = Random.Range(0.8f, 1.2f);
             audioM.Play();
         }
@@ -61,9 +59,7 @@ public class SubMover : MonoBehaviour {
         if (torpedohitcountright >= 10)
         {
             torpedohitcountright = 0;
-            //MissileMove newMissileleft = Instantiate(leftTorpedo, leftTorpedoSpawn.position, leftTorpedoSpawn.rotation) as MissileMove;
-            //newMissileleft.gameObject.SetActive(true);
-            MissileMove newMissileright = Instantiate(rightTorpedo, rightTorpedoSpawn.position, rightTorpedoSpawn.rotation) as MissileMove;
+            MissileMoveUnderwater newMissileright = Instantiate(rightTorpedo, rightTorpedoSpawn.position, rightTorpedoSpawn.rotation) as MissileMoveUnderwater;
             newMissileright.gameObject.SetActive(true);
             audioM.pitch = Random.Range(0.8f, 1.2f);
             audioM.Play();

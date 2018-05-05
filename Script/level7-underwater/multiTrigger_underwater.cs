@@ -34,7 +34,7 @@ public class multiTrigger_underwater : MonoBehaviour {
         }
         else if (other.tag == "Missile")
         {
-            MissileMove missile = other.GetComponent<MissileMove>();
+            MissileMoveUnderwater missile = other.GetComponent<MissileMoveUnderwater>();
             target = missile.comeFrom;
             target.SendMessage("SetMulti");
             got(target);
