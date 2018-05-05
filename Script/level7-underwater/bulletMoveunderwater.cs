@@ -162,6 +162,7 @@ public class bulletMoveunderwater : MonoBehaviour
             {
                 comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             }
+            expSound.Play();
             Destroy(gameObject);
             Destroy(newExplosion, 0.5f);
             if (comeFrom.name == "Player1") SubMover.torpedohitcountleft++;
