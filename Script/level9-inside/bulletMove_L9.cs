@@ -41,9 +41,14 @@ public class bulletMove_L9 : MonoBehaviour {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
-        //L9 Optional;
-        rb = GetComponent<Rigidbody>();
-        //
+        //L9 not yer valid;
+        //rb = GetComponent<Rigidbody>();
+        //Debug.Log(Vector3.ProjectOnPlane(transform.Rotate.rotation.eulerAngles, Vector3.forward));
+        //Vector3 veject = Vector3.ProjectOnPlane(Vector3.Normalize(transform.rotation.eulerAngles),  Vector3.forward) * bulletSpeed;
+        //float vh = pipe.angularVelocity / 360 * 2 * Mathf.PI * pipeRedius;
+        //Vector3 angle = Vector3.Normalize(transform.position - pipe.transform.position);
+        //Vector3 vpipe = new Vector3(pipe.clockwise ? angle.y : -angle.y, pipe.clockwise ? -angle.x : angle.x, 0f) * vh;
+        //velocity = veject + vpipe;
     }
 
     void SetMulti(bool multi)
