@@ -40,5 +40,10 @@ public class multiTrigger_underwater : MonoBehaviour {
             got(target);
 
         }
+        else if (other.tag == "Player")
+        {
+            other.transform.parent.SendMessage("SetMulti");
+            Destroy(gameObject);
+        }
     }
 }

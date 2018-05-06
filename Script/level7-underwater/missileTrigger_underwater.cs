@@ -40,5 +40,10 @@ public class missileTrigger_underwater : MonoBehaviour {
             target.SendMessage("SetMissile");
             got(target);
         }
+        else if (other.tag == "Player")
+        {
+            other.transform.parent.SendMessage("SetMissile");
+            Destroy(gameObject);
+        }
     }
 }

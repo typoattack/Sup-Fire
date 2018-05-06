@@ -39,6 +39,10 @@ public class bigTrigger_underwater : MonoBehaviour {
             got(target);
 
         }
-       
+        else if (other.tag == "Player")
+        {
+            other.transform.parent.SendMessage("SetBig");
+            Destroy(gameObject);
+        }
     }
 }
