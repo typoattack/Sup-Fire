@@ -5,18 +5,39 @@ using UnityEngine;
 public class FishMover : MonoBehaviour {
 
     private Rigidbody rigid;
-    private float randomNumber;
-    private float speed;
-
-    // Use this for initialization
+    public float SwimmingRange;
+    public float speed;
+    public bool isLeft = false;
+    public float fishOffset;
+    public float LastOffset = 0;
     void Start () {
         rigid = this.GetComponent<Rigidbody>();
-        randomNumber = Random.Range(3f, 7f);
-        speed = Random.Range(0.5f, 2f);
+        SwimmingRange = Random.Range(2f, 8f);
+        speed = Random.Range(0.3f, 0.7f);
     }
 	
-	// Update is called once per frame
-	void Update () {
-        transform.position = new Vector3(-randomNumber + Mathf.PingPong(Time.time * speed, randomNumber * 2), transform.position.y, transform.position.z);
+	void FixedUpdate ()
+    {
+        fishOffset = Offset();
+        transform.position = new Vector3(-SwimmingRange + fishOffset, transform.position.y, transform.position.z);
+
+        if (fishOffset < LastOffset && !isLeft)
+        {
+            gameObject.transform.Rotate(180f, 0f, 0f);
+            isLeft = !isLeft;
+        }
+
+        if (fishOffset > LastOffset && isLeft)
+        {
+            gameObject.transform.Rotate(180f, 0f, 0f);
+            isLeft = !isLeft;
+        }
+
+        LastOffset = fishOffset;
+    }
+
+    private float Offset()
+    {
+        return Mathf.PingPong(Time.time * speed, SwimmingRange * 2);
     }
 }
