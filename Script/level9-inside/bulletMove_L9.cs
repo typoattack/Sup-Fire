@@ -42,13 +42,18 @@ public class bulletMove_L9 : MonoBehaviour {
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
         //L9 not yer valid;
-        //rb = GetComponent<Rigidbody>();
-        //Debug.Log(Vector3.ProjectOnPlane(transform.Rotate.rotation.eulerAngles, Vector3.forward));
-        //Vector3 veject = Vector3.ProjectOnPlane(Vector3.Normalize(transform.rotation.eulerAngles),  Vector3.forward) * bulletSpeed;
-        //float vh = pipe.angularVelocity / 360 * 2 * Mathf.PI * pipeRedius;
-        //Vector3 angle = Vector3.Normalize(transform.position - pipe.transform.position);
-        //Vector3 vpipe = new Vector3(pipe.clockwise ? angle.y : -angle.y, pipe.clockwise ? -angle.x : angle.x, 0f) * vh;
-        //velocity = veject + vpipe;
+        rb = GetComponent<Rigidbody>();
+        transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
+        Vector3 veject = Vector3.Normalize(transform.position - comeFrom.transform.position) * bulletSpeed;
+        float omega = 0;
+        if (comeFrom.GetComponent<controllerP1_L9>() != null) omega = - comeFrom.GetComponent<controllerP1_L9>().omega;//need modify when using joystick script
+        //if (comeFrom.GetComponent<ControllerP1_joystick_L9>() != null) omega = -comeFrom.GetComponent<ControllerP1_joystick_L9>().omega;
+        else if (comeFrom.GetComponent<ControllerP2_L9>() != null) omega = -comeFrom.GetComponent<ControllerP2_L9>().omega;
+        float vh = omega / 360 * 2 * Mathf.PI * pipeRedius;
+        Vector3 angle = Vector3.Normalize(transform.position - pipe.transform.position);
+        Vector3 vpipe = new Vector3(pipe.clockwise ? angle.y : -angle.y, pipe.clockwise ? -angle.x : angle.x, 0f) * vh;
+        velocity = veject + vpipe;
+        //
     }
 
     void SetMulti(bool multi)
@@ -66,12 +71,13 @@ public class bulletMove_L9 : MonoBehaviour {
     }
 
     void FixedUpdate () {
-        ////L9 Optional
-        //transform.position += velocity *Time.deltaTime;
-        //Vector3 centrifugal = (transform.position - new Vector3(pipe.transform.position.x, pipe.transform.position.y, transform.position.z)) / pipeRedius;
-        //rb.AddForce(centrifugal * centrifugalRate, ForceMode.Impulse);
-        ////
-        transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
+        //L9 Optional
+        transform.position += velocity * Time.deltaTime;
+        Vector3 centrifugal = (transform.position - new Vector3(pipe.transform.position.x, pipe.transform.position.y, transform.position.z)) / pipeRedius;
+        Debug.Log(transform.position - new Vector3(pipe.transform.position.x, pipe.transform.position.y, transform.position.z));
+        rb.AddForce(centrifugal * centrifugalRate, ForceMode.Impulse);
+        //
+        //transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
     }
 
     private void OnTriggerStay(Collider other)
