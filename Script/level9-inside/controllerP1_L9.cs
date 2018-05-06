@@ -53,7 +53,8 @@ public class controllerP1_L9 : MonoBehaviour
     //L9
     public PipeMove pipe;
     private static float pipeRedius = 10.6f;
-    public float angularVelocity;
+    public float maxAugularSpeed;
+    public float omega;
     public float degree;
     //
 
@@ -228,8 +229,8 @@ public class controllerP1_L9 : MonoBehaviour
         float h_axis = Input.GetAxis("Horizontal");
 
         //L9 angular update
-        float omega = (angularVelocity * h_axis + (pipe.clockwise ? -pipe.angularVelocity : pipe.angularVelocity)) *Time.deltaTime;
-        degree += omega;
+        omega = (maxAugularSpeed * h_axis + (pipe.clockwise ? -pipe.angularVelocity : pipe.angularVelocity)) ;
+        degree += omega * Time.deltaTime;
         degree %= 360;
         //transform.Rotate(omega, 0f, 0f);
         transform.position = new Vector3(Mathf.Cos(degree * Mathf.Deg2Rad) * pipeRedius + pipe.transform.position.x, 
@@ -308,6 +309,7 @@ public class controllerP1_L9 : MonoBehaviour
                     }
                     else
                     {
+
                         bulletMove_L9 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_L9;
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
