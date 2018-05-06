@@ -19,7 +19,7 @@ public class controllerP1underwater : MonoBehaviour
     private bool isGrounded;
     public bool isFireing;
     public bulletMoveunderwater bullet;
-    public MissileMove missile;
+    public MissileMoveUnderwater missile;
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -299,7 +299,7 @@ public class controllerP1underwater : MonoBehaviour
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMoveUnderwater newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMoveUnderwater;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
