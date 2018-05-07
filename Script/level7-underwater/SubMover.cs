@@ -23,7 +23,7 @@ public class SubMover : MonoBehaviour {
 	
 	void Update ()
     {
-        transform.position = new Vector3(-7f + Mathf.PingPong(Time.time, 14f), transform.position.y, transform.position.z);
+        transform.position = new Vector3(-8f + Mathf.PingPong(Time.time, 16f), transform.position.y, transform.position.z);
         if(torpedohitcountleft < 2)
         {
             stern.GetComponent<Renderer>().material.color = Color.green;

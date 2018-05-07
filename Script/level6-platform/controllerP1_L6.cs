@@ -270,6 +270,11 @@ public class controllerP1_L6 : MonoBehaviour
 
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
 
+        if (rigid.velocity.magnitude > MaxSpeed)
+        {
+            rigid.velocity = rigid.velocity.normalized * MaxSpeed;
+        }
+
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");

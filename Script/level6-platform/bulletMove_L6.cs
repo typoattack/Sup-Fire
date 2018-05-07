@@ -24,8 +24,9 @@ public class bulletMove_L6 : MonoBehaviour {
     public ParticleSystem fireBall;
     public float MaxBulletSpeed;
     private bool damagded = false;
-
-    private void Awake()
+    private Rigidbody rigid;
+    
+        private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
         waterSplatter = GameObject.Find("FX_WaterSplatter");
@@ -35,6 +36,7 @@ public class bulletMove_L6 : MonoBehaviour {
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
         fireBall.gameObject.SetActive(false);
+        rigid = gameObject.GetComponent<Rigidbody>();
     }
 
     void SetMulti(bool multi)
@@ -102,7 +104,11 @@ public class bulletMove_L6 : MonoBehaviour {
             gameObject.transform.position = new Vector3( -11.5f, gameObject.transform.position.y, gameObject.transform.position.z);
 
         }
-        //
+
+        if (rigid.velocity.magnitude > MaxBulletSpeed)
+        {
+            rigid.velocity = rigid.velocity.normalized * MaxBulletSpeed;
+        }
     }
 
     private void OnTriggerStay(Collider other)

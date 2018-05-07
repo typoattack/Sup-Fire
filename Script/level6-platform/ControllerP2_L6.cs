@@ -278,6 +278,11 @@ public class ControllerP2_L6 : MonoBehaviour
 
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
 
+        if (rigid.velocity.magnitude > MaxSpeed)
+        {
+            rigid.velocity = rigid.velocity.normalized * MaxSpeed;
+        }
+
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
             isFireing = true;

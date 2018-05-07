@@ -15,7 +15,7 @@ public class missileTrigger_L6 : MonoBehaviour {
     {
         Collider capCo = GetComponent<Collider>();
         capCo.enabled = false;
-        Destroy(gameObject, 1.5f);
+        Destroy(gameObject, 0.5f);
         Rigidbody rigid = GetComponent<Rigidbody>();
         rigid.AddForce((- transform.position + target.transform.position)*50f);
     }
@@ -39,6 +39,11 @@ public class missileTrigger_L6 : MonoBehaviour {
             target = missile.comeFrom;
             target.SendMessage("SetMissile");
             got(target);
+        }
+        else if (other.tag == "Player")
+        {
+            other.transform.parent.SendMessage("SetMissile");
+            Destroy(gameObject);
         }
     }
 }

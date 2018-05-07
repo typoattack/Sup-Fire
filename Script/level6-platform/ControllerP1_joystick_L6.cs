@@ -278,6 +278,12 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
         }
 
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+
+        if (rigid.velocity.magnitude > MaxSpeed)
+        {
+            rigid.velocity = rigid.velocity.normalized * MaxSpeed;
+        }
+
         if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
 
         {
