@@ -20,8 +20,17 @@ public class reset : MonoBehaviour {
     {
         if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Joystick1Button7))
         {
- //           Application.LoadLevel(scene.name);
             SceneManager.LoadScene(scene.name);
+        }
+
+        if (Input.GetKey (KeyCode.Escape) && Input.GetKey(KeyCode.Tab)){
+            SceneManager.LoadScene(scene.name);
+            SceneManager.LoadScene("scene1-origin");
+            ScoreInfo info = GameObject.Find("ScoreInfo").GetComponent<ScoreInfo>();
+            SceneSwitch swith = GameObject.Find("SceneSwitch").GetComponent<SceneSwitch>();
+            info.left = 0;
+            info.right = 0;
+            swith.sceneCount = 0;
         }
     }
 }

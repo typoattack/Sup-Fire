@@ -7,7 +7,7 @@ public class SceneSwitch : MonoBehaviour {
 
     public int addedScenesNum;
     public int thisScenesNum;
-    private int sceneCount;
+    public int sceneCount;
 
     void Switch(){
         if (addedScenesNum - 1 <= sceneCount)
