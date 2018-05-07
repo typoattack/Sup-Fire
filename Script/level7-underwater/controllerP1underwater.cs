@@ -229,13 +229,10 @@ public class controllerP1underwater : MonoBehaviour
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
         transform.GetChild(activeTurret).rotation = rotation;
 
-        //if (rigid.position.y < -3.3f) h_axis = Input.GetAxis("Horizontal");
         if(isGrounded == true) h_axis = Input.GetAxis("Horizontal");
         else h_axis = 0;
 
-        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
         recoil = recoilIntensity * -direction.normalized;
-        recoil.x = recoil.x * 2;
 
         testbuff();
         if (buff_frozen)//
@@ -248,7 +245,24 @@ public class controllerP1underwater : MonoBehaviour
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+
+        if (isGrounded)
+        {
+            if (rigid.velocity.magnitude > 0.25f * MaxSpeed)
+            {
+                rigid.velocity = rigid.velocity.normalized * 0.2f * MaxSpeed;
+            }
+            rigid.velocity = new Vector3(buff * Accelrate * h_axis + rigid.velocity.x * 0.8f, rigid.velocity.y, 0f);
+        }
+        else
+        {
+            if (rigid.velocity.magnitude > MaxSpeed)
+            {
+                rigid.velocity = rigid.velocity.normalized * MaxSpeed;
+            }
+            rigid.velocity = new Vector3(buff * Accelrate * h_axis + rigid.velocity.x, rigid.velocity.y, 0f);
+        }
+
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
@@ -331,6 +345,7 @@ public class controllerP1underwater : MonoBehaviour
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else

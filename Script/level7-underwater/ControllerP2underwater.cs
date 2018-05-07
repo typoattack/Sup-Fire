@@ -16,7 +16,7 @@ public class ControllerP2underwater : MonoBehaviour
     public float Accelrate;
     public float MaxSpeed;
     private float h_axis;
-    private bool isGrounded;
+    public bool isGrounded;
     public bool isFireing;
     public bulletMoveunderwater bullet;
     public MissileMoveUnderwater missile;
@@ -229,9 +229,8 @@ public class ControllerP2underwater : MonoBehaviour
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
 
-        //recoil = recoilIntensity * -direction.normalized;
         recoil = recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;
-        recoil.x = recoil.x * 2;
+
         if (direction.magnitude >= 0.5)
         {
             transform.GetChild(activeTurret).rotation = rotation;
@@ -261,7 +260,22 @@ public class ControllerP2underwater : MonoBehaviour
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+        if (isGrounded)
+        {
+            if (rigid.velocity.magnitude > 0.25f * MaxSpeed)
+            {
+                rigid.velocity = rigid.velocity.normalized * 0.2f * MaxSpeed;
+            }
+            rigid.velocity = new Vector3(buff * Accelrate * h_axis + rigid.velocity.x * 0.8f, rigid.velocity.y, 0f);
+        }
+        else
+        {
+            if (rigid.velocity.magnitude > MaxSpeed)
+            {
+                rigid.velocity = rigid.velocity.normalized * MaxSpeed;
+            }
+            rigid.velocity = new Vector3(buff * Accelrate * h_axis + rigid.velocity.x, rigid.velocity.y, 0f);
+        }
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
@@ -339,6 +353,7 @@ public class ControllerP2underwater : MonoBehaviour
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else

@@ -43,7 +43,7 @@ public class snowtrigger_underwater : MonoBehaviour {
         }
         else if (other.tag == "Player")
         {
-            other.transform.parent.SendMessage("SetMissile");
+            other.transform.parent.SendMessage("SetFrozen");
             Destroy(gameObject);
         }
     }
