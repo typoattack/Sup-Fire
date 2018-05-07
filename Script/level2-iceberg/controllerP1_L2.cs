@@ -353,7 +353,7 @@ public class controllerP1_L2 : MonoBehaviour
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
-                            audioSB.volume = 1.0f;
+                            audioSB.volume = 0.5f;
                             special -= 1;
                             newBullet.transform.localScale = new Vector3(1f, 0.1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
@@ -374,6 +374,10 @@ public class controllerP1_L2 : MonoBehaviour
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
