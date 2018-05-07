@@ -226,7 +226,14 @@ public class ControllerP1_joystick_L6 : MonoBehaviour {
             rigid.position = new Vector3(rigid.position.x, 7f, rigid.position.z);
             //rigid.velocity = Vector3.zero;
         }
-        //
+        if (gameObject.transform.position.x < -12)
+        {
+            gameObject.transform.position = new Vector3(11.5f, gameObject.transform.position.y, gameObject.transform.position.z);
+        }
+        else if (gameObject.transform.position.x > 12f)
+        {
+            gameObject.transform.position = new Vector3(-11.5f, gameObject.transform.position.y, gameObject.transform.position.z);
+        }//
         rigid.position = new Vector3
         (
             Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),

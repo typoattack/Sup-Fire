@@ -224,8 +224,16 @@ public class ControllerP2_L6 : MonoBehaviour
         if (rigid.position.y < -7)
         {
             rigid.position = new Vector3(rigid.position.x, 7f, rigid.position.z);
-            //rigid.velocity = Vector3.zero;
         }
+        if (gameObject.transform.position.x < -12.5)
+        {
+            gameObject.transform.position = new Vector3(12f, gameObject.transform.position.y, gameObject.transform.position.z);
+        }
+        else if (gameObject.transform.position.x > 12.5f)
+        {
+            gameObject.transform.position = new Vector3(-12f, gameObject.transform.position.y, gameObject.transform.position.z);
+        }
+
         //
         rigid.position = new Vector3
         (
