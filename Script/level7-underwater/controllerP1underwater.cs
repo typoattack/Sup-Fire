@@ -235,6 +235,7 @@ public class controllerP1underwater : MonoBehaviour
 
         //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
         recoil = recoilIntensity * -direction.normalized;
+        recoil.x = recoil.x * 2;
 
         testbuff();
         if (buff_frozen)//
