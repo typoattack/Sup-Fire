@@ -327,7 +327,7 @@ public class controllerP1underwater : MonoBehaviour
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
-                            audioSB.volume = 1.0f;
+                            audioSB.volume = 0.5f;
                             special -= 1;
                             newBullet.transform.localScale = new Vector3(1f, 0.1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
