@@ -231,7 +231,7 @@ public class ControllerP2underwater : MonoBehaviour
 
         //recoil = recoilIntensity * -direction.normalized;
         recoil = recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;
-
+        recoil.x = recoil.x * 2;
         if (direction.magnitude >= 0.5)
         {
             transform.GetChild(activeTurret).rotation = rotation;
