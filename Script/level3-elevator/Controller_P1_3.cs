@@ -65,6 +65,7 @@ public class Controller_P1_3 : MonoBehaviour
     private bool SetScore = false;
 
     private Quaternion LastDirection;
+    private bool isSpecial = false;
 
     void SetBig()
     {
@@ -74,6 +75,7 @@ public class Controller_P1_3 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
+        isSpecial = true;
         UseTurret1();
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.5f, 0.5f, 0.3f);
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
@@ -87,6 +89,7 @@ public class Controller_P1_3 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 5;
+        isSpecial = true;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         UseTurret2();
     }
@@ -99,6 +102,7 @@ public class Controller_P1_3 : MonoBehaviour
         isFrozen = true;//
         audioR.Play();
         special = 5;
+        isSpecial = true;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(true);
         UseTurret1();
@@ -113,6 +117,7 @@ public class Controller_P1_3 : MonoBehaviour
         isFrozen = false;//
         audioR.Play();
         special = 3;
+        isSpecial = true;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         UseTurret3();
     }
@@ -389,7 +394,7 @@ public class Controller_P1_3 : MonoBehaviour
                 SetScore = !SetScore;
             }
         }
-        if (special <= 0)
+        if (isSpecial && special <= 0)
         {
             isBig = false;
             isMulti = false;
@@ -398,6 +403,7 @@ public class Controller_P1_3 : MonoBehaviour
             gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
             UseTurret1();
+            isSpecial = !isSpecial;
         }
 
         SpeCount.SendMessage("SetSpe", special);
