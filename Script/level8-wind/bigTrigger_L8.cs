@@ -13,7 +13,7 @@ public class bigTrigger_L8 : MonoBehaviour {
     {
         Collider capCo = GetComponent<Collider>();
         capCo.enabled = false;
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 1.5f);
         Rigidbody rigid = GetComponent<Rigidbody>();
         rigid.AddForce((-transform.position + target.transform.position) * 50f);
     }
@@ -39,10 +39,6 @@ public class bigTrigger_L8 : MonoBehaviour {
             got(target);
 
         }
-        else if (other.tag == "Player")
-        {
-            other.transform.parent.SendMessage("SetBig");
-            Destroy(gameObject);
-        }
+       
     }
 }
