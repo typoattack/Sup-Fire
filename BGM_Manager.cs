@@ -87,9 +87,6 @@ public class BGM_Manager : MonoBehaviour {
                 }
 
                 StartCoroutine(AudioFadeIn.FadeIn(gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>(), 0.5f));
-                //gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>().mute = false;
-                //gameObject.transform.GetChild(whichIsPlaying).GetComponent<AudioSource>().volume = 1f;
-
             }
         }
 	}

@@ -6,7 +6,7 @@ public class ScoreInfo : MonoBehaviour {
 
     public int left;
     public int right;
-
+    public int FirstTo;
 
     void Awake()
     {
@@ -27,13 +27,30 @@ public class ScoreInfo : MonoBehaviour {
     void leftPlus()
     {
         left += 1;
-        GameObject.Find("SceneSwitch").SendMessage("Switch");
+
+        if (left >= FirstTo)
+        {
+            GameObject.Find("SceneSwitch").SendMessage("End");
+        }
+        else
+        {
+            GameObject.Find("SceneSwitch").SendMessage("Switch");
+        }
     }
 
     void rightPlus()
     {
         right += 1;
 
-        GameObject.Find("SceneSwitch").SendMessage("Switch");
+        if (right >= FirstTo)
+        {
+            GameObject.Find("SceneSwitch").SendMessage("End");
+        }
+        else
+        {
+            GameObject.Find("SceneSwitch").SendMessage("Switch");
+        }
     }
+
+    
 }
