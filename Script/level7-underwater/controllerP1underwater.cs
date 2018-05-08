@@ -237,7 +237,7 @@ public class controllerP1underwater : MonoBehaviour
         if(isGrounded == true) h_axis = Input.GetAxis("Horizontal");
         else h_axis = 0;
 
-        recoil = recoilIntensity * -direction.normalized;
+        recoil = recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;
 
         testbuff();
         if (buff_frozen)//
