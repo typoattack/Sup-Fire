@@ -208,14 +208,12 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
 
     void recoiltest(Vector3 dir)
     {
-        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -5 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 55 && dir.x > 0)
+        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -20 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 70 && dir.x > 0)
             updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -25 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 35 && dir.x < 0)
+        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -40 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 50 && dir.x < 0)
             updownrecoil = 1;
         else
             updownrecoil = 2;
-
-
     }
 
     void Start()

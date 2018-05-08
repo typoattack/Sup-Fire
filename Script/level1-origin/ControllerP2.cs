@@ -209,9 +209,9 @@ public class ControllerP2 : MonoBehaviour
 
     void recoiltest(Vector3 dir)
     {
-        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -30 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 30 && dir.x > 0)
+        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x > 0)
             updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -30 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 30 && dir.x < 0)
+        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x < 0)
             updownrecoil = 1;
         else
             updownrecoil = 2;
