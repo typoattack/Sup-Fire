@@ -322,9 +322,9 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
                     if (updownrecoil == 0)
-                        rigid.AddForce(up, ForceMode.Impulse);
+                        rigid.AddForce(1.5f*up, ForceMode.Impulse);
                     else if (updownrecoil == 1)
-                        rigid.AddForce(down, ForceMode.Impulse);
+                        rigid.AddForce(1.5f*down, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -356,9 +356,9 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
                             if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
+                                rigid.AddForce(2*up, ForceMode.Impulse);
                             else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
+                                rigid.AddForce(2*down, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
