@@ -18,6 +18,8 @@ public class SubMover : MonoBehaviour {
     void Start ()
     {
         rigid = this.GetComponent<Rigidbody>();
+        torpedohitcountleft = 0;
+        torpedohitcountright = 0;
     }
 	
 	
