@@ -11,8 +11,8 @@ public class FoodHolder3 : MonoBehaviour {
 
     void Update()
     {
-        if (cnt <= 0)
-            gameObject.SetActive(false);
+        //if (cnt <= 0)
+            //gameObject.SetActive(false);
 
         countDown -= Time.deltaTime;
         if (countDown < 0)

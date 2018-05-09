@@ -381,8 +381,8 @@ public class ControllerP1_joystick : MonoBehaviour {
                                 rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
+                        anim.Play("Gun Animation");
                     }
-                    anim.Play("Gun Animation");
                 }
 
                 SetAmmo(-1);
