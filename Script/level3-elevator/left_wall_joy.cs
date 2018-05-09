@@ -38,7 +38,7 @@ public class left_wall_joy : MonoBehaviour {
     {
         testbuff();
 
-        float v_dir = Input.GetAxis("J-Vertical");
+        float v_dir = Input.GetAxis("J2-Vertical");
         if (buff_frozen)
         {
             v_dir = 0;
