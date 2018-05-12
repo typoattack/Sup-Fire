@@ -16,9 +16,9 @@ public class WindController : MonoBehaviour {
     void BlowWind()
     {
         randomNumber = Random.Range(-4, 4);
-        if (randomNumber < -1) wind = -0.5f;
+        if (randomNumber < -1) wind = -0.25f;
         else if (randomNumber >= -1 && randomNumber <= -1) wind = 0f;
-        else wind = 0.5f;
+        else wind = 0.25f;
 
     }
 }
