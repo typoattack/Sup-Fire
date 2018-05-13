@@ -78,11 +78,11 @@ public class bulletMoveunderwater : MonoBehaviour
             if (isBig)
             {
                 newSparks.transform.localScale = new Vector3(2f, 2f, 2f);
-                CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 3f);
+                CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 2f);
             }
             else
             {
-                CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.0f);
+                CameraShaker.Instance.ShakeOnce(1f, 4f, 0f, 0.8f);
             }
             if (comeFrom.activeSelf)
             {
@@ -150,13 +150,13 @@ public class bulletMoveunderwater : MonoBehaviour
             if (isBig)
             {
                 newExplosion.transform.localScale = new Vector3(2f, 2f, 2f);
-                CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 2f);
+                CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
                 if (comeFrom.name == "Player1") SubMover.torpedohitcountleft++;
                 if (comeFrom.name == "Player2") SubMover.torpedohitcountright++;
             }
             else
             {
-                CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.0f);
+                CameraShaker.Instance.ShakeOnce(1f, 4f, 0f, 1.0f);
             }
             if (comeFrom.activeSelf)
             {
