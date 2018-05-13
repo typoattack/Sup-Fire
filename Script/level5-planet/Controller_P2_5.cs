@@ -258,7 +258,7 @@ public class Controller_P2_5 : MonoBehaviour {
         float v_axis = Input.GetAxis("J-Vertical");
         float h_axis = Input.GetAxis("J-Horizontal");
 
-        Vector2 playerDir = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
+        Vector2 playerDir = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 2);
         playerDir.Normalize();
         Vector2 joyDir = new Vector2(h_axis, v_axis);
         joyDir.Normalize();
