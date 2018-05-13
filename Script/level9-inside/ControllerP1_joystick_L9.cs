@@ -70,6 +70,13 @@ public class ControllerP1_joystick_L9 : MonoBehaviour {
     private Quaternion LastDirection;
     private bool isSpecial = false;
 
+    //RotateAround
+    public Transform aroundPoint;
+    public float angularSpeed;
+    public float aroundRadius;
+    private float angled;
+    PipeMove RollingObj;
+
     void SetBig()
     {
         isBig = true;
@@ -209,8 +216,9 @@ public class ControllerP1_joystick_L9 : MonoBehaviour {
         //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
         //L9
-        degree = 180f;
+        angled = 180f;
         //
+        RollingObj = aroundPoint.gameObject.GetComponent<PipeMove>();
     }
 
 
@@ -242,6 +250,7 @@ public class ControllerP1_joystick_L9 : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
+        float v_axis = Input.GetAxis("J2-Vertical");
         float h_axis = Input.GetAxis("J2-Horizontal");
 
         if (h_axis != 0)
@@ -249,13 +258,42 @@ public class ControllerP1_joystick_L9 : MonoBehaviour {
             MoveAnim.Play("body Animation");
         }
 
+        Vector2 playerDir = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 2);
+        playerDir.Normalize();
+        Vector2 joyDir = new Vector2(h_axis, v_axis);
+        joyDir.Normalize();
+        joyDir = joyDir.magnitude > 0.5 ? joyDir : playerDir;
+
+        float angleDiff = Vector2.Angle(playerDir, joyDir);
+        angleDiff = Vector3.Cross(playerDir, joyDir).z > 0 ? angleDiff : -angleDiff;
+        if (angleDiff != angleDiff)
+        {//see if is null
+            angleDiff = 0f;
+        }
+
+        if (angleDiff > 0)
+        {
+            angled -= buff * angularSpeed * Time.deltaTime % 360;
+        }
+        else if (angleDiff < 0)
+        {
+            angled += buff * angularSpeed * Time.deltaTime % 360;
+
+        }
+        //angled = Mathf.Clamp(angled, 0, 360);
+        angled += RollingObj.angularVelocity * Time.deltaTime % 360 * (RollingObj.clockwise ? 1 : -1);
+
+        float posX = aroundRadius * Mathf.Sin(angled * Mathf.Deg2Rad);
+        float posy = aroundRadius * Mathf.Cos(angled * Mathf.Deg2Rad);
+        transform.position = new Vector3(posX, posy, 0) + aroundPoint.position;
+        transform.rotation = Quaternion.Euler(angled, 90, 180);
         //L9 angular update
-        omega = (maxAugularSpeed * h_axis + (pipe.clockwise ? -pipe.angularVelocity : pipe.angularVelocity));
-        degree += omega * Time.deltaTime;
-        degree %= 360;
+        //omega = (maxAugularSpeed * h_axis + (pipe.clockwise ? -pipe.angularVelocity : pipe.angularVelocity));
+        //degree += omega * Time.deltaTime;
+        //degree %= 360;
         //transform.Rotate(omega, 0f, 0f);
-        transform.position = new Vector3(Mathf.Cos(degree * Mathf.Deg2Rad) * pipeRedius + pipe.transform.position.x,
-            Mathf.Sin(degree * Mathf.Deg2Rad) * pipeRedius + pipe.transform.position.y, transform.position.z);
+        //transform.position = new Vector3(Mathf.Cos(degree * Mathf.Deg2Rad) * pipeRedius + pipe.transform.position.x,
+        //Mathf.Sin(degree * Mathf.Deg2Rad) * pipeRedius + pipe.transform.position.y, transform.position.z);
         //
 
         testbuff();
