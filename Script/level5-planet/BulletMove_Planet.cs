@@ -55,7 +55,7 @@ public class BulletMove_Planet : MonoBehaviour {
 
     void FixedUpdate()
     {
-        Vector3 dir = Gforce * (new Vector3(0, 0, 0) - transform.position).normalized;
+        Vector3 dir = Gforce * (new Vector3(0, -2, 0) - transform.position).normalized;
         rigid.AddForce(dir,ForceMode.Acceleration);
     }
 
