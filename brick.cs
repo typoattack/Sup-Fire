@@ -16,14 +16,16 @@ public class brick : MonoBehaviour {
 		
 	}
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        if (other.tag == "Bullet")
-            other.gameObject.SendMessage("dir",true);
+
+        //if (other.gameObject.tag == "Bullet")
+          //  other.gameObject.SendMessage("dir", true);
         if (Time.time - temp >= cd)
         {
+            Debug.Log("1");
             int childNum;
-          
+
             childNum = Random.Range(0, 4);
 
             GameObject randomChild = transform.GetChild(childNum).gameObject;
@@ -33,5 +35,7 @@ public class brick : MonoBehaviour {
             temp = Time.time;
         }
     }
+
+  
 
 }

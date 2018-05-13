@@ -21,6 +21,9 @@ public class bullet_move_l10 : MonoBehaviour
     public AudioSource expSound;
     public AudioSource hitSound;
     public bool reverse;
+    private float angle;
+    private Quaternion angle1;
+    private Vector3 angle2;
    // public AudioSource waterSound;
 
     private bool damagded = false;
@@ -36,7 +39,8 @@ public class bullet_move_l10 : MonoBehaviour
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
         rigid = GetComponent<Rigidbody>();
-     
+        angle1 = transform.rotation;
+        angle=transform.rotation.eulerAngles.x;
     }
 
     void SetMulti(bool multi)
@@ -55,11 +59,15 @@ public class bullet_move_l10 : MonoBehaviour
 
     void FixedUpdate()
     {
-            transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
+        Debug.Log(angle);
+            transform.Translate(Vector3.right* bulletSpeed * Time.deltaTime);
+        if (reverse)
+            transform.rotation = Quaternion.Euler(180-angle, 90, 90);
+            
     }
 
  
-
+    
     private void OnCollisionEnter(Collision other)
     {
 
@@ -109,10 +117,15 @@ public class bullet_move_l10 : MonoBehaviour
             Destroy(newDelay, 2.0f);
             if (!damagded)
             {
-                other.transform.parent.SendMessage("SetLife", isBig ? -2 : -1);
+                other.gameObject.SendMessage("SetLife", isBig ? -2 : -1);
                 damagded = !damagded;
 
             }
+        }
+        else if (other.gameObject.tag == "bricks'")
+        {
+            reverse = true;
+
         }
         
 

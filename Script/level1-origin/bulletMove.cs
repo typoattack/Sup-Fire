@@ -51,6 +51,7 @@ public class bulletMove : MonoBehaviour {
 
     void FixedUpdate () {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
+        Debug.Log(transform);
 	}
 
     private void OnTriggerStay(Collider other)
