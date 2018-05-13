@@ -25,27 +25,26 @@ public class brick : MonoBehaviour {
 		
 	}
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-
         if (foodornot == true)
         {
 
 
-                int childNum;
+            int childNum;
 
-                childNum = Random.Range(0, 3);
+            childNum = Random.Range(0, 3);
             if (childNum == 2)
             { childNum = 1; }
-            
-                GameObject randomChild = transform.GetChild(childNum).gameObject;
-                GameObject newChild = Instantiate(randomChild, place, new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
+
+            GameObject randomChild = transform.GetChild(childNum).gameObject;
+            GameObject newChild = Instantiate(randomChild, place, new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
             bullet_move_l10 bullet = other.gameObject.GetComponent<bullet_move_l10>();
             target = bullet.comeFrom;
 
-            if(childNum==0)
-            target.SendMessage("SetBig");
-            else if(childNum==1)
+            if (childNum == 0)
+                target.SendMessage("SetBig");
+            else if (childNum == 1)
                 target.SendMessage("SetMulti");
             else if (childNum == 2)
                 target.SendMessage("SetMissile");
@@ -53,11 +52,12 @@ public class brick : MonoBehaviour {
                 target.SendMessage("SetFrozen");
 
             newChild.SetActive(true);
-                foodornot = false;
- 
+            foodornot = false;
+
         }
     }
 
-  
+   
+    }
 
-}
+
