@@ -34,7 +34,10 @@ public class brick : MonoBehaviour {
 
                 int childNum;
 
-                childNum = Random.Range(0, 4);
+                childNum = Random.Range(0, 3);
+            if (childNum == 2)
+            { childNum = 1; }
+            
                 GameObject randomChild = transform.GetChild(childNum).gameObject;
                 GameObject newChild = Instantiate(randomChild, place, new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
             bullet_move_l10 bullet = other.gameObject.GetComponent<bullet_move_l10>();
@@ -43,7 +46,7 @@ public class brick : MonoBehaviour {
             if(childNum==0)
             target.SendMessage("SetBig");
             else if(childNum==1)
-                target.SendMessage("SetNulti");
+                target.SendMessage("SetMulti");
             else if (childNum == 2)
                 target.SendMessage("SetMissile");
             else if (childNum == 3)

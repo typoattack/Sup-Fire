@@ -127,6 +127,19 @@ public class bullet_move_l10 : MonoBehaviour
             reverse = true;
 
         }
+        else
+        {
+            hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            //0.8-1.5 as normal, 0.5-0.8 as big, need more modification
+            hitSound.Play();
+            GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            }
+            Destroy(gameObject);
+            Destroy(newSparks, 0.5f);
+        }
         
 
 

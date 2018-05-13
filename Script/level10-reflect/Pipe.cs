@@ -20,7 +20,7 @@ public class Pipe : MonoBehaviour {
         {
 
             int childNum;
-            childNum = Random.Range(0, 14);
+            childNum = Random.Range(0, 15);
  
             gameObject.transform.GetChild(childNum).GetComponent<MeshRenderer>().material = food;
             gameObject.transform.GetChild(childNum).gameObject.SendMessage("befoodhoodler", true);
