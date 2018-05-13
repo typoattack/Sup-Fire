@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SubMover : MonoBehaviour {
 
-    private Rigidbody rigid;
     public static int torpedohitcountleft = 0;
     public static int torpedohitcountright = 0;
     public Transform leftTorpedoSpawn;
@@ -17,7 +16,6 @@ public class SubMover : MonoBehaviour {
 
     void Start ()
     {
-        rigid = this.GetComponent<Rigidbody>();
         torpedohitcountleft = 0;
         torpedohitcountright = 0;
     }

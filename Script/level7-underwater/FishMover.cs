@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class FishMover : MonoBehaviour {
 
-    private Rigidbody rigid;
     public float SwimmingRange;
     public float speed;
     public bool isLeft = false;
     public float fishOffset;
     public float LastOffset = 0;
     void Start () {
-        rigid = this.GetComponent<Rigidbody>();
         SwimmingRange = Random.Range(2f, 8f);
         speed = Random.Range(0.3f, 0.7f);
     }
