@@ -61,8 +61,9 @@ public class bullet_move_l10 : MonoBehaviour
     {
         transform.Translate(Vector3.right* bulletSpeed * Time.deltaTime);
         if (reverse)
-            transform.rotation = Quaternion.Euler(180-angle, 90, 90);
-            
+            transform.rotation = Quaternion.Euler(180 - angle, 90, 90);
+        else
+            transform.rotation = angle1;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -121,7 +122,6 @@ public class bullet_move_l10 : MonoBehaviour
         else if (other.gameObject.tag == "bricks'")
         {
             reverse = !reverse;
-
         }
  
 
