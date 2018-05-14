@@ -259,9 +259,10 @@ public class ControllerP2_L10 : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
-        float h_axis = Input.GetAxis("J-Horizontal");
+        //float h_axis = Input.GetAxis("J-Horizontal");
+        float v_axis = Input.GetAxis("J-Vertical");
 
-        if (h_axis != 0)
+        if (v_axis != 0)
         {
             MoveAnim.Play("body Animation");
         }
@@ -277,7 +278,7 @@ public class ControllerP2_L10 : MonoBehaviour {
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
+        rigid.velocity = new Vector3(rigid.velocity.x, buff * Accelrate * v_axis, 0f);//
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
@@ -305,13 +306,13 @@ public class ControllerP2_L10 : MonoBehaviour {
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
                     newBullet1.transform.Rotate(new Vector3(0f, 0f, -5f));
-                    newBullet1.bulletSpeed = bulletSpeed;
+                    newBullet1.bulletIniForce = bulletSpeed;
                     newBullet1.SendMessage("SetMulti", true);
 
                     newBullet2.gameObject.SetActive(true);
                     newBullet2.transform.Translate(new Vector3(-0.2f, 0f, 0f));
                     newBullet2.transform.Rotate(new Vector3(0f, 0f, 5f));
-                    newBullet2.bulletSpeed = bulletSpeed;
+                    newBullet2.bulletIniForce = bulletSpeed;
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
@@ -336,8 +337,8 @@ public class ControllerP2_L10 : MonoBehaviour {
                     else
                     {
                         bullet_move_l10 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bullet_move_l10;
+                        newBullet.bulletIniForce = bulletSpeed;
                         newBullet.gameObject.SetActive(true);
-                        newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);

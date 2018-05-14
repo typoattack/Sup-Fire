@@ -6,14 +6,13 @@ using EZCameraShake;
 
 public class bullet_move_l10 : MonoBehaviour
 {
-    public float bulletSpeed;
+    public float bulletIniForce;
     public GameObject comeFrom;
     public bool isMulti;
     public bool isBig;
     public bool isFrozen;//
     Rigidbody rigid;
     GameObject[] sparks;
-    //GameObject waterSplatter;
     GameObject[] explosion;
     GameObject[] delay;
     GameObject[] hit;
@@ -24,14 +23,12 @@ public class bullet_move_l10 : MonoBehaviour
     private float angle;
     private Quaternion angle1;
     private Vector3 angle2;
-   // public AudioSource waterSound;
 
     private bool damagded = false;
 
     private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
-       // waterSplatter = GameObject.Find("FX_WaterSplatter");
     }
     void Start()
     {
@@ -39,6 +36,7 @@ public class bullet_move_l10 : MonoBehaviour
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
         rigid = GetComponent<Rigidbody>();
+        rigid.AddRelativeForce(Vector3.up * bulletIniForce, ForceMode.Impulse);
         angle1 = transform.rotation;
         angle=transform.rotation.eulerAngles.x;
     }
@@ -59,11 +57,11 @@ public class bullet_move_l10 : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.Translate(Vector3.right* bulletSpeed * Time.deltaTime);
-        if (reverse)
-            transform.rotation = Quaternion.Euler(180 - angle, 90, 90);
-        else
-            transform.rotation = angle1;
+        //transform.Translate(Vector3.right* bulletSpeed * Time.deltaTime);
+        //if (reverse)
+            //transform.rotation = Quaternion.Euler(180 - angle, 90, 90);
+        //else
+            //transform.rotation = angle1;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -121,9 +119,12 @@ public class bullet_move_l10 : MonoBehaviour
         }
         else if (other.gameObject.tag == "bricks'")
         {
-            reverse = !reverse;
+            //reverse = !reverse;
+            //transform.rotation = Quaternion.Euler(180 - angle, 90, 90);
+            rigid.velocity = new Vector3(rigid.velocity.x, -rigid.velocity.y, 0f);
+            Debug.Log(rigid.velocity);
         }
- 
+
 
 
     }
