@@ -20,7 +20,7 @@ public class bullet_move_l10 : MonoBehaviour
 
     public AudioSource expSound;
     public AudioSource hitSound;
-    public bool reverse;
+    public bool reverse = false;
     private float angle;
     private Quaternion angle1;
     private Vector3 angle2;
@@ -59,8 +59,7 @@ public class bullet_move_l10 : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log(angle);
-            transform.Translate(Vector3.right* bulletSpeed * Time.deltaTime);
+        transform.Translate(Vector3.right* bulletSpeed * Time.deltaTime);
         if (reverse)
             transform.rotation = Quaternion.Euler(180-angle, 90, 90);
             
@@ -121,7 +120,7 @@ public class bullet_move_l10 : MonoBehaviour
         }
         else if (other.gameObject.tag == "bricks'")
         {
-            reverse = true;
+            reverse = !reverse;
 
         }
  

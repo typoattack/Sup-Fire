@@ -43,10 +43,10 @@ public class bulletMove_L9 : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
         Vector3 veject = Vector3.Normalize(transform.position - comeFrom.transform.position) * bulletSpeed;
-        float omega = 0;
-        if (comeFrom.GetComponent<controllerP1_L9>() != null) omega = - comeFrom.GetComponent<controllerP1_L9>().omega;//need modify when using joystick script
+        float omega = 0f;
+        //if (comeFrom.GetComponent<controllerP1_L9>() != null) omega = - comeFrom.GetComponent<controllerP1_L9>().omega;//need modify when using joystick script
         //if (comeFrom.GetComponent<ControllerP1_joystick_L9>() != null) omega = -comeFrom.GetComponent<ControllerP1_joystick_L9>().omega;
-        else if (comeFrom.GetComponent<ControllerP2_L9>() != null) omega = -comeFrom.GetComponent<ControllerP2_L9>().omega;
+        //else if (comeFrom.GetComponent<ControllerP2_L9>() != null) omega = -comeFrom.GetComponent<ControllerP2_L9>().omega;
         float vh = omega / 360 * 2 * Mathf.PI * pipeRedius;
         Vector3 angle = Vector3.Normalize(transform.position - pipe.transform.position);
         Vector3 vpipe = new Vector3(pipe.clockwise ? angle.y : -angle.y, pipe.clockwise ? -angle.x : angle.x, 0f) * vh;

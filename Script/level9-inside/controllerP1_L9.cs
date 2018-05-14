@@ -52,9 +52,6 @@ public class controllerP1_L9 : MonoBehaviour
 
     //L9
     public PipeMove pipe;
-    private static float pipeRedius = 10.6f;
-    public float maxAugularSpeed;
-    public float omega;
     public float degree;
     //
 
