@@ -122,7 +122,6 @@ public class bullet_move_l10 : MonoBehaviour
             //reverse = !reverse;
             //transform.rotation = Quaternion.Euler(180 - angle, 90, 90);
             rigid.velocity = new Vector3(rigid.velocity.x, -rigid.velocity.y, 0f);
-            Debug.Log(rigid.velocity);
         }
 
 
