@@ -11,10 +11,11 @@ public class GravityController : MonoBehaviour {
     public Material MaxMaterial;
     public bulletMove_L9 b1;
     public bulletMove_L9 b2;
-
+    public AudioSource GravityChange;
 
     public float CountDown;
     bool isMin = true;
+    bool notPlayed = true;
 
     void Start () {
         CountDown = ChangeTime;
@@ -54,6 +55,13 @@ public class GravityController : MonoBehaviour {
             }
 
             isMin = !isMin;
+            notPlayed = true;
+        }
+
+        if (CountDown <= 1 && notPlayed)
+        {
+            GravityChange.Play();
+            notPlayed = false;
         }
 	}
 }
