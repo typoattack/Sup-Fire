@@ -34,7 +34,7 @@ public class SceneSwitch : MonoBehaviour {
     void End()
     {
         //SceneManager.LoadScene("End Scene");
-        StartCoroutine(DelayTime(1.0f, 8));
+        StartCoroutine(DelayTime(1.0f, 9));
         GameObject.Find("BGM-Manager").SendMessage("SetLevel", 0);
     }
 
