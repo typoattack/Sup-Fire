@@ -19,10 +19,9 @@ public class bullet_move_l10 : MonoBehaviour
 
     public AudioSource expSound;
     public AudioSource hitSound;
-    public bool reverse = false;
-    private float angle;
-    private Quaternion angle1;
-    private Vector3 angle2;
+    RaycastHit hits;
+    Ray ray;
+   
 
     private bool damagded = false;
 
@@ -37,8 +36,8 @@ public class bullet_move_l10 : MonoBehaviour
         transform.Rotate(0f, 90f, 90f);
         rigid = GetComponent<Rigidbody>();
         rigid.AddRelativeForce(Vector3.up * bulletIniForce, ForceMode.Impulse);
-        angle1 = transform.rotation;
-        angle=transform.rotation.eulerAngles.x;
+        // angle1 = transform.rotation;
+        // angle=transform.rotation.eulerAngles.x;
     }
 
     void SetMulti(bool multi)
@@ -59,13 +58,20 @@ public class bullet_move_l10 : MonoBehaviour
     {
         //transform.Translate(Vector3.right* bulletSpeed * Time.deltaTime);
         //if (reverse)
-            //transform.rotation = Quaternion.Euler(180 - angle, 90, 90);
+        //transform.rotation = Quaternion.Euler(180 - angle, 90, 90);
         //else
-            //transform.rotation = angle1;
-    }
+        //transform.rotation = angle1;
+        ray = new Ray(gameObject.transform.position, rigid.velocity);
 
+        if (Physics.Raycast(ray, out hits, 0.2f,-1))
+        {  if(hits.collider.gameObject.tag=="bricks'")
+                rigid.velocity = Vector3.Reflect(rigid.velocity, hits.normal);
+        }
+
+    }
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.gameObject.tag == "wall")
         {
             hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
@@ -117,16 +123,9 @@ public class bullet_move_l10 : MonoBehaviour
 
             }
         }
-        else if (other.gameObject.tag == "bricks'")
-        {
-            //reverse = !reverse;
-            //transform.rotation = Quaternion.Euler(180 - angle, 90, 90);
-            rigid.velocity = new Vector3(rigid.velocity.x, -rigid.velocity.y, 0f);
-        }
 
 
 
     }
-
-
 }
+

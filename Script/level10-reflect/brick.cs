@@ -7,10 +7,12 @@ public class brick : MonoBehaviour {
     private Vector3 place;
     public bool foodornot;
     private GameObject target;
+    public float ang;
  
 	// Use this for initialization
 	void Start () {
         place = transform.position + new Vector3(0, 1, 0);
+        
 	}
 
     void befoodhoodler(bool set)
@@ -22,7 +24,7 @@ public class brick : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        ang = transform.rotation.eulerAngles.z;
 	}
 
     private void OnTriggerEnter(Collider other)
