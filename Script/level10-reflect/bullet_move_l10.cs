@@ -69,7 +69,7 @@ public class bullet_move_l10 : MonoBehaviour
         }
 
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
 
         if (other.gameObject.tag == "wall")
