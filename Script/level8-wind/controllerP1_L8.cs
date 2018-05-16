@@ -24,6 +24,7 @@ public class controllerP1_L8 : MonoBehaviour
     public AudioSource audioSB;
     public AudioSource audioR;
     public AudioSource audioM;
+    private float wind;
 
     public int special;
 
@@ -215,12 +216,13 @@ public class controllerP1_L8 : MonoBehaviour
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
+        wind = WindController.wind;
     }
 
 
     void FixedUpdate()
     {
-
+        wind = WindController.wind;
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         rigid.position = new Vector3
         (
@@ -250,6 +252,7 @@ public class controllerP1_L8 : MonoBehaviour
             buff = 1f;
         }
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
+        rigid.AddForce(Vector3.right * wind * 100);
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");

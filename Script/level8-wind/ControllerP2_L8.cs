@@ -24,6 +24,7 @@ public class ControllerP2_L8 : MonoBehaviour
     public AudioSource audioSB;
     public AudioSource audioR;
     public AudioSource audioM;
+    private float wind;
 
     public int special;
 
@@ -208,12 +209,13 @@ public class ControllerP2_L8 : MonoBehaviour
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
-
+        wind = WindController.wind;
     }
 
 
     void FixedUpdate()
     {
+        wind = WindController.wind;
         rigid.position = new Vector3
         (
             Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
@@ -264,6 +266,7 @@ public class ControllerP2_L8 : MonoBehaviour
         }
 
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
+        rigid.AddForce(Vector3.right * wind * 100);
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
