@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
-public class ControllerP1_L10 : MonoBehaviour {
-
-    public Boundary2Stick boundary2stick;
+public class controllerP1_L10 : MonoBehaviour
+{
+    public Boundary1Mouse boundary1mouse;
 
     public float Accelrate;
     public float MaxSpeed;
@@ -55,21 +55,16 @@ public class ControllerP1_L10 : MonoBehaviour {
     private float angle = 0f;
     private int activeTurret = 1;
 
-
-    public float recoil;//in angular
+    public Vector3 recoil;
     public float recoilIntensity;
-    private int updownrecoil;
-    private Vector3 left;
-    private Vector3 right;
 
     private GameObject player;
     private bool SetScore = false;
-
-    private Quaternion LastDirection;
     private bool isSpecial = false;
 
     void SetBig()
     {
+        ResetBarrel();//fix bug
         isBig = true;
         isMulti = false;
         isMissile = false;
@@ -84,6 +79,7 @@ public class ControllerP1_L10 : MonoBehaviour {
 
     void SetMulti()
     {
+        ResetBarrel();//fix bug
         isBig = false;
         isMulti = true;
         isMissile = false;
@@ -97,6 +93,7 @@ public class ControllerP1_L10 : MonoBehaviour {
 
     void SetFrozen()//
     {
+        ResetBarrel();
         isBig = false;
         isMulti = false;
         isMissile = false;
@@ -112,6 +109,7 @@ public class ControllerP1_L10 : MonoBehaviour {
 
     void SetMissile()
     {
+        ResetBarrel();
         isBig = false;
         isMulti = false;
         isMissile = true;
@@ -123,9 +121,19 @@ public class ControllerP1_L10 : MonoBehaviour {
         UseTurret3();
     }
 
+    //fix bug
+    void ResetBarrel() {
+        if (isMulti) gameObject.transform.GetChild(2).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+        else if (isMissile) gameObject.transform.GetChild(3).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+        else gameObject.transform.GetChild(1).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+    }
+    //
+
     void Buff_Time(float buff_begin)//
     {
         buff_begin_time = buff_begin;
+
+
     }
 
     void testbuff()
@@ -153,7 +161,10 @@ public class ControllerP1_L10 : MonoBehaviour {
 
     void SetAmmo(float change)
     {
+
         remainAmmo += change;
+
+        
         if (remainAmmo > maxAmmo)
         {
             remainAmmo = maxAmmo;
@@ -162,7 +173,6 @@ public class ControllerP1_L10 : MonoBehaviour {
 
     private void UseTurret1()
     {
-        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(true);
         gameObject.transform.GetChild(2).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
@@ -170,12 +180,10 @@ public class ControllerP1_L10 : MonoBehaviour {
         this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
         this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
         this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
-        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret2()
     {
-        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(2).gameObject.SetActive(true);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
@@ -184,12 +192,10 @@ public class ControllerP1_L10 : MonoBehaviour {
         this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
         this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
-        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret3()
     {
-        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(2).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(true);
@@ -198,75 +204,36 @@ public class ControllerP1_L10 : MonoBehaviour {
         this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
-        transform.GetChild(activeTurret).rotation = LastDirection;
     }
-
-    void recoiltest(Vector3 dir)
-    {
-        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x > 0)
-            updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x < 0)
-            updownrecoil = 1;
-        else
-            updownrecoil = 2;
-
-
-    }
-
 
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
-        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
-        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
-        left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
-        right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
-
-
     }
 
 
     void FixedUpdate()
     {
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         rigid.position = new Vector3
         (
-            Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
-            Mathf.Clamp(rigid.position.y, boundary2stick.yMin, boundary2stick.yMax),
-            Mathf.Clamp(rigid.position.z, boundary2stick.zMin, boundary2stick.zMax)
+            Mathf.Clamp(rigid.position.x, boundary1mouse.xMin, boundary1mouse.xMax),
+            Mathf.Clamp(rigid.position.y, boundary1mouse.yMin, boundary1mouse.yMax),
+            Mathf.Clamp(rigid.position.z, boundary1mouse.zMin, boundary1mouse.zMax)
         );
         Vector3 pos = rigid.position;
-
-        float v_dir = Input.GetAxis("J2-V-Direct");
-        float h_dir = Input.GetAxis("J2-H-Direct");
-
-        Vector3 direction = Vector3.zero;
-
-        direction.x = -h_dir;
-        direction.y = v_dir;
-
+        Vector3 direction = mousePos - pos;
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
-        recoiltest(firepoint.transform.position - gameObject.transform.position);
-        if (direction.magnitude >= 0.5)
-        {
-            transform.GetChild(activeTurret).rotation = rotation;
-            LastDirection = rotation;
-        }
-        else
-        {
-            transform.GetChild(activeTurret).rotation = LastDirection;
-        }
+        transform.GetChild(activeTurret).rotation = rotation;
 
-        //float h_axis = Input.GetAxis("J-Horizontal");
-        float v_axis = Input.GetAxis("J2-Vertical");
+        float v_axis = Input.GetAxis("Vertical");
 
-        if (v_axis != 0)
-        {
-            MoveAnim.Play("body Animation");
-        }
-        testbuff();//
+        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        recoil = recoilIntensity * -direction.normalized;
+
+        testbuff();
         if (buff_frozen)//
         {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
@@ -277,10 +244,13 @@ public class ControllerP1_L10 : MonoBehaviour {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
+        rigid.velocity = new Vector3(0f, buff * Accelrate * v_axis, 0f);
+        if (v_axis != 0)
+        {
+            MoveAnim.Play("body Animation");
+        }
 
-        rigid.velocity = new Vector3(rigid.velocity.x, buff * Accelrate * v_axis, 0f);//
-
-        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
+        if ((Input.GetMouseButton(0)|| Input.GetKey(KeyCode.Space)) && remainAmmo >= 1) //fire
         {
             isFireing = true;
         }
@@ -316,15 +286,12 @@ public class ControllerP1_L10 : MonoBehaviour {
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    if (updownrecoil == 0)
-                        rigid.AddForce(1.5f * left, ForceMode.Impulse);
-                    else if (updownrecoil == 1)
-                        rigid.AddForce(1.5f * right, ForceMode.Impulse);
+                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
                 else
-                {
+                {   
 
                     if (isMissile)
                     {
@@ -337,8 +304,8 @@ public class ControllerP1_L10 : MonoBehaviour {
                     else
                     {
                         bullet_move_l10 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bullet_move_l10;
-                        newBullet.bulletIniForce = bulletSpeed;
                         newBullet.gameObject.SetActive(true);
+                        newBullet.bulletIniForce = bulletSpeed;
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
@@ -346,14 +313,12 @@ public class ControllerP1_L10 : MonoBehaviour {
                             special -= 1;
                             newBullet.transform.localScale = new Vector3(1f, 0.1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
-                            //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
+ //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(2 * left, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(2 * right, ForceMode.Impulse);
+                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+
                         }
                         else if (isFrozen)//
                         {
@@ -362,23 +327,17 @@ public class ControllerP1_L10 : MonoBehaviour {
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(left, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(right, ForceMode.Impulse);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(left, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
 
                         }
-                        anim.Play("Gun Animation");
+                        anim.Play("Gun Animation");                    
                     }
                 }
 
@@ -394,8 +353,7 @@ public class ControllerP1_L10 : MonoBehaviour {
                         audioS.Play();
                     }
                 }
-                else
-                {
+                else {
                     audioM.pitch = Random.Range(0.8f, 1.2f);
                     audioM.Play();
                 }
@@ -409,24 +367,25 @@ public class ControllerP1_L10 : MonoBehaviour {
         }
         AmmoCount.SendMessage("SetAmmo", Mathf.Floor(remainAmmo));
 
-        float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f / maxLife;
+        float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f/ maxLife;
 
         transform.GetChild(0).transform.localScale = new Vector3(1.5f * liftRatio, 0.3f, 0.5f);
 
         LifeCount.SendMessage("SetLife", remainLife);
 
-        if (remainLife <= 0)
+        if(remainLife <= 0)
         {
             StartCoroutine(DelayTime(0.3f));
             Time.timeScale = 0.2f;
-            Application.targetFrameRate = 150;
             GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
             if (!SetScore)
             {
-                score[0].SendMessage("leftPlus");
+                score[0].SendMessage("rightPlus");
                 SetScore = !SetScore;
             }
+
         }
+
         if (isSpecial && special <= 0)
         {
             isBig = false;
@@ -446,7 +405,6 @@ public class ControllerP1_L10 : MonoBehaviour {
     {
         yield return new WaitForSeconds(duration);
         Time.timeScale = 1f;
-        Application.targetFrameRate = -1;
         gameObject.SetActive(false);
     }
 }
