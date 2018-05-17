@@ -18,6 +18,12 @@ public class ScoreInfo : MonoBehaviour {
         DontDestroyOnLoad(this.gameObject);
     }
 
+    void Mode(int n)
+    {
+
+        FirstTo = n;
+    }
+
     void Start()
     {
         left = 0;
