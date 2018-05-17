@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
-public class controllerP1_L10 : MonoBehaviour
+public class ControllerP1_L10 : MonoBehaviour
 {
     public Boundary1Mouse boundary1mouse;
 
