@@ -218,7 +218,7 @@ public class ControllerP1_joystick_L10 : MonoBehaviour {
     {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        LastDirection = new Quaternion(90f, 90f, 0f, 1f);
         float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
         float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
         left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
