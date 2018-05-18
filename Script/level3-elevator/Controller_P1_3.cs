@@ -69,6 +69,7 @@ public class Controller_P1_3 : MonoBehaviour
 
     void SetBig()
     {
+        anim.Rebind();
         isBig = true;
         isMulti = false;
         isMissile = false;
@@ -83,6 +84,7 @@ public class Controller_P1_3 : MonoBehaviour
 
     void SetMulti()
     {
+        anim.Rebind();
         isBig = false;
         isMulti = true;
         isMissile = false;
@@ -96,6 +98,7 @@ public class Controller_P1_3 : MonoBehaviour
 
     void SetFrozen()//
     {
+        anim.Rebind();
         isBig = false;
         isMulti = false;
         isMissile = false;
@@ -111,6 +114,7 @@ public class Controller_P1_3 : MonoBehaviour
 
     void SetMissile()
     {
+        anim.Rebind();
         isBig = false;
         isMulti = false;
         isMissile = true;

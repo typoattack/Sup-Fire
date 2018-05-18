@@ -86,5 +86,20 @@ public class SceneSwitch : MonoBehaviour {
             SceneManager.LoadScene("scene7-underwater");
             sceneCount = 6;
         }
+        else if (Input.GetKey(KeyCode.Alpha8))
+        {
+            SceneManager.LoadScene("scene8-wind");
+            sceneCount = 6;
+        }
+        else if (Input.GetKey(KeyCode.Alpha9))
+        {
+            SceneManager.LoadScene("scene9-inside");
+            sceneCount = 6;
+        }
+        else if (Input.GetKey(KeyCode.Alpha0))
+        {
+            SceneManager.LoadScene("scene10");
+            sceneCount = 6;
+        }
     }
 }

@@ -16,9 +16,11 @@ public class GravityController : MonoBehaviour {
     public float CountDown;
     bool isMin = true;
     bool notPlayed = true;
+    ParticleSystem Ashes;
 
     void Start () {
         CountDown = ChangeTime;
+        Ashes = transform.GetChild(12).GetComponent<ParticleSystem>();
     }
 	
 	void FixedUpdate () {
@@ -29,7 +31,7 @@ public class GravityController : MonoBehaviour {
             CountDown = ChangeTime;
             GameObject[] bullets = GameObject.FindGameObjectsWithTag("Bullet");
 
-            for (int i = 0; i < gameObject.transform.childCount; i++)
+            for (int i = 0; i < gameObject.transform.childCount - 1; i++)
             {
                 gameObject.transform.GetChild(i).GetComponent<MeshRenderer>().material = isMin ? MaxMaterial : MinMaterial;
             }
@@ -43,6 +45,8 @@ public class GravityController : MonoBehaviour {
 
                 b1.centrifugalRate = MaxGravity;
                 b2.centrifugalRate = MaxGravity;
+                var main = Ashes.main;
+                main.startSpeed = 5;
             }
             else
             {
@@ -52,6 +56,8 @@ public class GravityController : MonoBehaviour {
                 }
                 b1.centrifugalRate = MinGravity;
                 b2.centrifugalRate = MinGravity;
+                var main = Ashes.main;
+                main.startSpeed = 2;    
             }
 
             isMin = !isMin;

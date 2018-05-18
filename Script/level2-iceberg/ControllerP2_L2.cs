@@ -386,7 +386,7 @@ public class ControllerP2_L2 : MonoBehaviour
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
                             audioSB.volume = 0.5f;
                             special -= 1;
-                            newBullet.transform.localScale = new Vector3(1f, 0.1f, 1f);
+                            newBullet.transform.localScale = new Vector3(1f, 0.08f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
                             //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;

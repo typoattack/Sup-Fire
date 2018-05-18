@@ -423,7 +423,7 @@ public class ControllerP1_joystick_L10 : MonoBehaviour {
             GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
             if (!SetScore)
             {
-                score[0].SendMessage("leftPlus");
+                score[0].SendMessage("rightPlus");
                 SetScore = !SetScore;
             }
         }
