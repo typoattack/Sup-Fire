@@ -89,17 +89,17 @@ public class SceneSwitch : MonoBehaviour {
         else if (Input.GetKey(KeyCode.Alpha8))
         {
             SceneManager.LoadScene("scene8-wind");
-            sceneCount = 6;
+            sceneCount = 7;
         }
         else if (Input.GetKey(KeyCode.Alpha9))
         {
             SceneManager.LoadScene("scene9-inside");
-            sceneCount = 6;
+            sceneCount = 8;
         }
         else if (Input.GetKey(KeyCode.Alpha0))
         {
             SceneManager.LoadScene("scene10");
-            sceneCount = 6;
+            sceneCount = 9;
         }
     }
 }
