@@ -9,7 +9,7 @@ public class Boundary1Stick
     public float xMin, xMax, yMin, yMax, zMin, zMax;
 }
 */
-public class ControllerP1_joycon : MonoBehaviour {
+public class ControllerP1_switch_joycon : MonoBehaviour {
 
     public Boundary1Stick boundary1stick;
 
