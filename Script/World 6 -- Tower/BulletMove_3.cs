@@ -13,6 +13,7 @@ public class BulletMove_3 : MonoBehaviour
     public GameObject left;//
     public GameObject right;//
     public GameObject foodholder;
+    public GameObject lights;
 
     GameObject[] sparks;
     GameObject[] explosion;
@@ -68,6 +69,7 @@ public class BulletMove_3 : MonoBehaviour
             //0.8-1.5 as normal, 0.5-0.8 as big, need more modification
             hitSound.Play();
             GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
+
             if (isBig)
             {
                 newSparks.transform.localScale = new Vector3(2f, 2f, 2f);
@@ -77,6 +79,26 @@ public class BulletMove_3 : MonoBehaviour
             {
                 CameraShaker.Instance.ShakeOnce(1f, 4f, 0f, 0.8f);
             }
+            comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            Destroy(gameObject);
+            Destroy(newSparks, 0.5f);
+        }
+        else if (other.tag == "sw")
+        {
+            hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            //0.8-1.5 as normal, 0.5-0.8 as big, need more modification
+            hitSound.Play();
+            GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
+            if (isBig)
+            {
+                newSparks.transform.localScale = new Vector3(2f, 2f, 2f);
+                CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 2f);
+            }
+            else
+            {
+                CameraShaker.Instance.ShakeOnce(1f, 4f, 0f, 0.8f);
+            }
+            lights.SendMessage("swtrigger");
             comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             Destroy(gameObject);
             Destroy(newSparks, 0.5f);
@@ -93,7 +115,7 @@ public class BulletMove_3 : MonoBehaviour
             else if (isFrozen)//
             {
                 other.transform.parent.SendMessage("Buff_Time", Time.time);
-                if(other.transform.parent.name == "Player1")
+                if (other.transform.parent.name == "Player1")
                 {
                     left.SendMessage("Buff_Time", Time.time);
 
