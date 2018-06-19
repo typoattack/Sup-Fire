@@ -61,8 +61,11 @@ public class controllerP1 : MonoBehaviour
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public Vector3 recoil;
+    public float recoil;
     public float recoilIntensity;
+    private int updownrecoil;
+    private Vector3 left;
+    private Vector3 right;
 
     private GameObject player;
     private bool SetScore = false;
@@ -212,9 +215,24 @@ public class controllerP1 : MonoBehaviour
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
 
+    void recoiltest(Vector3 dir)
+    {
+        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x > 0)
+            updownrecoil = 0;
+        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x < 0)
+            updownrecoil = 1;
+        else
+            updownrecoil = 2;
+
+
+    }
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
+        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
+        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
+        left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
+        right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
     }
 
 
@@ -236,7 +254,8 @@ public class controllerP1 : MonoBehaviour
 
         float h_axis = Input.GetAxis("Horizontal");
 
-        recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        recoiltest(firepoint.transform.position - gameObject.transform.position);
 
         testbuff();
         if (buff_frozen)//
@@ -291,7 +310,11 @@ public class controllerP1 : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    //rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    if (updownrecoil == 0)
+                        rigid.AddForce(1.5f * left, ForceMode.Impulse);
+                    else if (updownrecoil == 1)
+                        rigid.AddForce(1.5f * right, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -322,8 +345,11 @@ public class controllerP1 : MonoBehaviour
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
-
+                            //rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(2 * left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(2 * right, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
@@ -332,15 +358,22 @@ public class controllerP1 : MonoBehaviour
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
+                            //rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
                             audioS.pitch = Random.Range(1f, 5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
-
+                            //rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(right, ForceMode.Impulse);
                         }
                         anim.Play("Gun Animation");                    
                     }
