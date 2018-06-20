@@ -266,7 +266,7 @@ public class ControllerP2_2_2 : MonoBehaviour
         }
 
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
-        rigid.AddForce(Vector3.right * wind * 100);
+        rigid.AddForce(Vector3.right * -wind * 100);
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
