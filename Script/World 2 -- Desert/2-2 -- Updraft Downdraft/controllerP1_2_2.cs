@@ -17,7 +17,7 @@ public class controllerP1_2_2 : MonoBehaviour
     public float MaxSpeed;
     public bool isFireing;
     public bulletMove_2_2 bullet;
-    public MissileMove_L8 missile;
+    public MissileMove_2_2 missile;
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -304,7 +304,7 @@ public class controllerP1_2_2 : MonoBehaviour
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove_L8 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_L8;
+                        MissileMove_2_2 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_2_2;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
