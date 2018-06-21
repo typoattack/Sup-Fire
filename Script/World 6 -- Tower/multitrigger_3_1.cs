@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class multitrigger_3_0 : MonoBehaviour {
+public class multitrigger_3_1 : MonoBehaviour {
 
     private GameObject target;
 
@@ -26,15 +26,16 @@ public class multitrigger_3_0 : MonoBehaviour {
         }
         else if (other.tag == "Bullet")
         {
-            bulletMove bullet = other.GetComponent<bulletMove>();
+            bulletmove_3_1 bullet = other.GetComponent<bulletmove_3_1>();
             target = bullet.comeFrom;
             target.SendMessage("SetMulti");
+            
             got(target);
 
         }
         else if (other.tag == "Missile")
         {
-            MissileMove missile = other.GetComponent<MissileMove>();
+            Missilemove_3_1 missile = other.GetComponent<Missilemove_3_1>();
             target = missile.comeFrom;
             target.SendMessage("SetMulti");
             got(target);
