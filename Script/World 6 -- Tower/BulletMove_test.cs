@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
+public class BulletMove_test : MonoBehaviour {
 
-
-public class bulletMove : MonoBehaviour {
     public float bulletSpeed;
     public GameObject comeFrom;
     public bool isMulti;
@@ -29,7 +28,8 @@ public class bulletMove : MonoBehaviour {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
         waterSplatter = GameObject.Find("FX_WaterSplatter");
     }
-    void Start () {
+    void Start()
+    {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
@@ -50,10 +50,11 @@ public class bulletMove : MonoBehaviour {
         isFrozen = Frozen;
     }
 
-    void FixedUpdate () {
+    void FixedUpdate()
+    {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
         //Debug.Log(transform);
-	}
+    }
 
     private void OnTriggerStay(Collider other)
     {
@@ -88,7 +89,7 @@ public class bulletMove : MonoBehaviour {
             {
                 newExplosion.transform.localScale = new Vector3(2f, 2f, 2f);
             }
-            else if (isFrozen)//
+            if (isFrozen)//
             {
                 other.transform.parent.SendMessage("Buff_Time", Time.time);
 
@@ -100,34 +101,14 @@ public class bulletMove : MonoBehaviour {
             comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             Destroy(gameObject);
             Destroy(newExplosion, 2.0f);
-                Destroy(newDelay, 2.0f);
-                if (!damagded)
-                {
-                    other.transform.parent.SendMessage("SetLife", isBig ? -2 : -1);
-                    damagded = !damagded;
-
-                }
-            }
-            else if (other.tag == "water")
+            Destroy(newDelay, 2.0f);
+            if (!damagded)
             {
-                waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
-                waterSound.Play();
-                GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
-                if (isBig)
-                {
-                    ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
-                    var main = SplattersParticle.main;
-                    main.startSize = 0.4f;
-                    main.startSpeed = 5f;
-                }
+                other.transform.parent.SendMessage("SetLife", isBig ? -2 : -1);
+                damagded = !damagded;
 
-                if (comeFrom.activeSelf)
-                {
-                    comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
-                }
-
-                Destroy(gameObject);
-                Destroy(newSplatters, 1.5f);
+            }
         }
+
     }
 }
