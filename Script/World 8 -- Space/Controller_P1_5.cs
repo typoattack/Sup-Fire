@@ -66,6 +66,8 @@ public class Controller_P1_5 : MonoBehaviour {
     public Transform aroundPoint;
     public float angularSpeed;
     public float aroundRadius;
+    public float beginAngle;
+    public float endAngle;
     private float angled;
 
 
@@ -296,7 +298,7 @@ public class Controller_P1_5 : MonoBehaviour {
 
         }
 
-        angled = Mathf.Clamp(angled, -168, -12);
+        angled = Mathf.Clamp(angled, beginAngle, endAngle);
         float posX = aroundRadius * Mathf.Sin(angled * Mathf.Deg2Rad);
         float posy = aroundRadius * Mathf.Cos(angled * Mathf.Deg2Rad);
         transform.position = new Vector3(posX, posy, 0) + aroundPoint.position;

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Controller_P2_5 : MonoBehaviour {
-
+public class Controller_P2_w8_biStar : MonoBehaviour {
 
     public bool isFireing;
     public BulletMove_Planet bullet;
@@ -46,6 +45,12 @@ public class Controller_P2_5 : MonoBehaviour {
     public float maxLife;
     public float remainLife;
 
+    //L9
+    public PipeMove pipe;
+    public float maxAugularSpeed;
+    public float omega;
+    public float degree;
+    //
 
     private Rigidbody rigid;
     private float angle = 0f;
@@ -64,10 +69,8 @@ public class Controller_P2_5 : MonoBehaviour {
     public Transform aroundPoint;
     public float angularSpeed;
     public float aroundRadius;
-    public float beginAngle;
-    public float endAngle;
-    private float angled;
-
+    private float angled = 180;
+    PipeMove RollingObj;
 
     void SetBig()
     {
@@ -124,13 +127,11 @@ public class Controller_P2_5 : MonoBehaviour {
         UseTurret3();
     }
 
-
     void Buff_Time(float buff_begin)//
     {
         buff_begin_time = buff_begin;
-
-
     }
+
     void testbuff()
     {
         if (buff_begin_time != 0)
@@ -156,10 +157,7 @@ public class Controller_P2_5 : MonoBehaviour {
 
     void SetAmmo(float change)
     {
-
         remainAmmo += change;
-
-
         if (remainAmmo > maxAmmo)
         {
             remainAmmo = maxAmmo;
@@ -210,16 +208,14 @@ public class Controller_P2_5 : MonoBehaviour {
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        angled = 90;
-        transform.position = new Vector3(1.7f, 0f, -0.56f);
-        transform.rotation = Quaternion.Euler(angled, 90, 0);
-        LastDirection = new Quaternion(90f, 90f, 0f, 1f);
+        LastDirection = new Quaternion(180f, 0f, 0f, 1f);
+        degree = 180f;
+        RollingObj = aroundPoint.gameObject.GetComponent<PipeMove>();
     }
 
 
     void FixedUpdate()
     {
-       
         Vector3 pos = rigid.position;
 
         float v_dir = Input.GetAxis("J-V-Direct");
@@ -232,9 +228,8 @@ public class Controller_P2_5 : MonoBehaviour {
 
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
-        transform.GetChild(activeTurret).rotation = rotation;
-
-        recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        recoil = firepoint.transform.position.y < gameObject.transform.position.y ?
+            new Vector3(0f, 0f, 0f) : recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;
 
         if (direction.magnitude >= 0.5)
         {
@@ -245,6 +240,44 @@ public class Controller_P2_5 : MonoBehaviour {
         {
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
+
+        float v_axis = Input.GetAxis("J-Vertical");
+        float h_axis = Input.GetAxis("J-Horizontal");
+
+        if (h_axis != 0)
+        {
+            MoveAnim.Play("body Animation");
+        }
+
+        Vector2 playerDir = new Vector2(gameObject.transform.position.x - aroundPoint.position.x, gameObject.transform.position.y - aroundPoint.position.y);
+        playerDir.Normalize();
+        Vector2 joyDir = new Vector2(h_axis, v_axis);
+        joyDir.Normalize();
+        joyDir = joyDir.magnitude > 0.5 ? joyDir : playerDir;
+
+        float angleDiff = Vector2.Angle(playerDir, joyDir);
+        angleDiff = Vector3.Cross(playerDir, joyDir).z > 0 ? angleDiff : -angleDiff;
+        if (angleDiff != angleDiff)
+        {//see if is null
+            angleDiff = 0f;
+        }
+
+        if (angleDiff > 0)
+        {
+            angled -= buff * angularSpeed * Time.deltaTime % 360;
+        }
+        else if (angleDiff < 0)
+        {
+            angled += buff * angularSpeed * Time.deltaTime % 360;
+
+        }
+        //angled = Mathf.Clamp(angled, 0, 360);
+        angled += RollingObj.angularVelocity * Time.deltaTime % 360 * (RollingObj.clockwise ? 1 : -1);
+
+        float posX = aroundRadius * Mathf.Sin(angled * Mathf.Deg2Rad);
+        float posy = aroundRadius * Mathf.Cos(angled * Mathf.Deg2Rad);
+        transform.position = new Vector3(posX, posy, 0) + aroundPoint.position;
+        transform.rotation = Quaternion.Euler(angled, 90, 0);
 
         testbuff();//
         if (buff_frozen)//
@@ -257,43 +290,8 @@ public class Controller_P2_5 : MonoBehaviour {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
-        float v_axis = Input.GetAxis("J-Vertical");
-        float h_axis = Input.GetAxis("J-Horizontal");
-
-        Vector2 playerDir = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 2);
-        playerDir.Normalize();
-        Vector2 joyDir = new Vector2(h_axis, v_axis);
-        joyDir.Normalize();
-        joyDir = joyDir.magnitude > 0.5 ? joyDir : playerDir;
-
-        float angleDiff = Vector2.Angle(playerDir, joyDir);
-        angleDiff = Vector3.Cross(playerDir, joyDir).z > 0 ? angleDiff : -angleDiff;
-        if (angleDiff != angleDiff){//see if is null
-            angleDiff = 0f;
-        }
-
-        if(angleDiff > 0)
-        {
-            angled -= buff * angularSpeed * Time.deltaTime % 360;
-        }else if (angleDiff < 0)
-        {
-            angled += buff * angularSpeed * Time.deltaTime % 360;
-
-        }
-
-        angled = Mathf.Clamp(angled, beginAngle, endAngle);
-
-        float posX = aroundRadius * Mathf.Sin(angled * Mathf.Deg2Rad);
-        float posy = aroundRadius * Mathf.Cos(angled * Mathf.Deg2Rad);
-        transform.position = new Vector3(posX, posy, 0) + aroundPoint.position;
-        transform.rotation = Quaternion.Euler(angled, 90, 0);
-       
 
 
-        if (v_axis != 0)
-        {
-            MoveAnim.Play("body Animation");
-        }
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
             isFireing = true;
@@ -370,6 +368,7 @@ public class Controller_P2_5 : MonoBehaviour {
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
@@ -441,7 +440,6 @@ public class Controller_P2_5 : MonoBehaviour {
         }
 
         SpeCount.SendMessage("SetSpe", special);
-
     }
 
     IEnumerator DelayTime(float duration)

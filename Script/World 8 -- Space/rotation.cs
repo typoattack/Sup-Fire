@@ -29,7 +29,7 @@ public class rotation : MonoBehaviour {
             float posX = aroundRadius * Mathf.Sin(angled * Mathf.Deg2Rad);
             float posy = aroundRadius * Mathf.Cos(angled * Mathf.Deg2Rad);
             transform.position = new Vector3(posX, posy, 0) + aroundPoint.position;
-            transform.rotation = Quaternion.Euler(angled, 90, 0);
+            transform.rotation = Quaternion.Euler(0, 0, -angled);
         }
     }
 
