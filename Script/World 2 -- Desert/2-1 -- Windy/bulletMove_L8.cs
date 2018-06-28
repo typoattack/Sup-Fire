@@ -158,10 +158,6 @@ public class bulletMove_L8 : MonoBehaviour {
             if (comeFrom.name == "Player1") SubMover.torpedohitcountleft++;
             if (comeFrom.name == "Player2") SubMover.torpedohitcountright++;
         }
-        else if (other.tag == "Tornado")
-        {
-            rb.AddForce(new Vector3(0f, 10f, 0f));
-        }
 
     }
 }
