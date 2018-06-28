@@ -414,4 +414,10 @@ public class controllerP1_L8 : MonoBehaviour
         Time.timeScale = 1f;
         gameObject.SetActive(false);
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Tornado")
+            rigid.AddForce(new Vector3(0f, 5f, 0f));
+    }
 }
