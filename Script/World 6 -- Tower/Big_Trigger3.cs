@@ -13,11 +13,10 @@ public class Big_Trigger3 : MonoBehaviour {
     void got(GameObject target)
     {
         Collider capCo = GetComponent<Collider>();
-        capCo.enabled = false;
+        capCo.enabled = true;
         Destroy(gameObject, 1.5f);
         Rigidbody rigid = GetComponent<Rigidbody>();
-        gameObject.transform.GetChild(0).gameObject.SetActive(false);
-        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+
         rigid.AddForce((-transform.position + target.transform.position) * 50f);
     }
     private void OnTriggerEnter(Collider other)
@@ -41,6 +40,10 @@ public class Big_Trigger3 : MonoBehaviour {
             target.SendMessage("SetBig");
             got(target);
 
+        }
+        else if (other.tag == "Player")
+        {
+            Destroy(gameObject);
         }
     }
 }
