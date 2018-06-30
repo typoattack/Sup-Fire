@@ -26,6 +26,9 @@ public class controllerP1_L8 : MonoBehaviour
     public AudioSource audioM;
     private float wind;
 
+    private bool isGrounded;
+    private float h_axis;
+
     public int special;
 
     public Animator anim;
@@ -236,7 +239,8 @@ public class controllerP1_L8 : MonoBehaviour
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
         transform.GetChild(activeTurret).rotation = rotation;
 
-        float h_axis = Input.GetAxis("Horizontal");
+        if(isGrounded == true) h_axis = Input.GetAxis("Horizontal");
+        else h_axis = 0;
 
         recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
@@ -413,5 +417,23 @@ public class controllerP1_L8 : MonoBehaviour
         yield return new WaitForSeconds(duration);
         Time.timeScale = 1f;
         gameObject.SetActive(false);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Tornado")
+            rigid.AddForce(new Vector3(0f, 7.5f, 0f));
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "wall")
+            isGrounded = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "wall")
+            isGrounded = false;
     }
 }

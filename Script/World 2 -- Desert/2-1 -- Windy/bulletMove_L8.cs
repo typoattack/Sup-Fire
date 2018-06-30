@@ -159,6 +159,5 @@ public class bulletMove_L8 : MonoBehaviour {
             if (comeFrom.name == "Player2") SubMover.torpedohitcountright++;
         }
 
-
     }
 }

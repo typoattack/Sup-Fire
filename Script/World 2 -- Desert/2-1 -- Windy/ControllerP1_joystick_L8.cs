@@ -26,6 +26,9 @@ public class ControllerP1_joystick_L8 : MonoBehaviour {
     public AudioSource audioM;
     private float wind;
 
+    private bool isGrounded;
+    private float h_axis;
+
     public int special;
 
     public Animator anim;
@@ -248,7 +251,8 @@ public class ControllerP1_joystick_L8 : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
-        float h_axis = Input.GetAxis("J2-Horizontal");
+        if (isGrounded == true) h_axis = Input.GetAxis("J2-Horizontal");
+        else h_axis = 0;
 
         if (h_axis != 0)
         {
@@ -427,5 +431,23 @@ public class ControllerP1_joystick_L8 : MonoBehaviour {
         Time.timeScale = 1f;
         Application.targetFrameRate = -1;
         gameObject.SetActive(false);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Tornado")
+            rigid.AddForce(new Vector3(0f, 5f, 0f));
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "wall")
+            isGrounded = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "wall")
+            isGrounded = false;
     }
 }
