@@ -29,7 +29,7 @@ public class Multi_Trigger3 : MonoBehaviour {
             BulletMove_3 bullet = other.GetComponent<BulletMove_3>();
             target = bullet.comeFrom;
             target.SendMessage("SetMulti");
-            target.SendMessage("SetFrozen");
+            
             got(target);
 
         }

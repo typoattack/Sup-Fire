@@ -98,7 +98,7 @@ public class BulletMove_3 : MonoBehaviour
             {
                 CameraShaker.Instance.ShakeOnce(1f, 4f, 0f, 0.8f);
             }
-            lights.SendMessage("swtrigger");
+            lights.SendMessage("setbuff", Time.time);
             comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             Destroy(gameObject);
             Destroy(newSparks, 0.5f);
