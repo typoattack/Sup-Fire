@@ -73,7 +73,7 @@ public class MissileMove : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "wall")
+        if (other.tag == "wall"||other.tag=="container")
         {
             hitSound.pitch = 0.5f * 1.05946f * Random.Range(1, 4);
             // 0.75-1.5
