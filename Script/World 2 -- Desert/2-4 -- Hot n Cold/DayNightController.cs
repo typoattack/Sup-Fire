@@ -9,6 +9,7 @@ public class DayNightController : MonoBehaviour {
     public GameObject DayPlane;
     public GameObject Sun;
     public GameObject NightPlane;
+    public GameObject Moon;
 
     [HideInInspector] public static float wind;
     
@@ -25,7 +26,8 @@ public class DayNightController : MonoBehaviour {
         WindLR.gameObject.SetActive(true);
         WindRL.gameObject.SetActive(false);
         DayPlane.gameObject.SetActive(true);
-        Sun.gameObject.SetActive(true);
+        //Sun.gameObject.SetActive(true);
+        //Moon.gameObject.SetActive(false);
         NightPlane.gameObject.SetActive(false);
         
 
@@ -37,7 +39,8 @@ public class DayNightController : MonoBehaviour {
         WindRL.gameObject.SetActive(true);
         WindLR.gameObject.SetActive(false);
         DayPlane.gameObject.SetActive(false);
-        Sun.gameObject.SetActive(false);
+        //Sun.gameObject.SetActive(false);
+        //Moon.gameObject.SetActive(true);
         NightPlane.gameObject.SetActive(true);
     }
 }
