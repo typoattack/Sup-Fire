@@ -17,7 +17,7 @@ public class SnowTrigger_3_3 : MonoBehaviour {
     {
         Collider capCo = GetComponent<Collider>();
         capCo.enabled = false;
-        Destroy(gameObject, 1.5f);
+        Destroy(gameObject, 0.5f);
         Rigidbody rigid = GetComponent<Rigidbody>();
         rigid.AddForce((-transform.position + target.transform.position) * 50f);
     }
@@ -27,14 +27,18 @@ public class SnowTrigger_3_3 : MonoBehaviour {
             Destroy(gameObject);
         else if (other.tag == "Bullet")
         {
-
-            bulletMove bullet = other.gameObject.GetComponent<bulletMove>();
+            bulletMove bullet = other.GetComponent<bulletMove>();
             target = bullet.comeFrom;
-            if (target)
-            {
-                target.SendMessage("SetFrozen");
-                got(target);
-            }
+            target.SendMessage("SetFrozen");
+            got(target);
+
+        }
+        else if (other.tag == "Player")
+        {
+
+            other.transform.parent.gameObject.SendMessage("SetFrozen");
+                Destroy(gameObject);
+            
         }
         else if (other.tag == "Missile")
         {

@@ -22,7 +22,7 @@ public class FoodHolder3_1 : MonoBehaviour {
             childNum = Random.Range(0, 3);
 
             GameObject randomChild = transform.GetChild(childNum).gameObject;
-            GameObject newChild = Instantiate(randomChild, new Vector3(0f, -2.4f, -0.5f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
+            GameObject newChild = Instantiate(randomChild, new Vector3(0f, -2f, -0.5f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
             newChild.SetActive(true);
         }
     }

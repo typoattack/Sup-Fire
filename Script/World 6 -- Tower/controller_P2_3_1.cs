@@ -93,10 +93,10 @@ public class controller_P2_3_1 : MonoBehaviour {
         isBig = true;
         isMulti = false;
         isMissile = false;
-        isFrozen = true;
+        isFrozen = false;
         audioR.Play();
         special_big = 1;
-        special_frozen = 1;
+        special_frozen = 0;
         special_missile = 0;
         special_multi = 0;
         UseTurret1();
@@ -108,12 +108,12 @@ public class controller_P2_3_1 : MonoBehaviour {
     void SetMulti()
     {
         isMulti = true;
-        isFrozen = true;
+        isFrozen = false;
         isBig = false;
         isMissile = false;
         audioR.Play();
         special_multi = 3;
-        special_frozen = 3;
+        special_frozen = 0;
         special_big = 0;
         special_missile = 0;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
@@ -138,12 +138,12 @@ public class controller_P2_3_1 : MonoBehaviour {
     void SetMissile()
     {
         isMissile = true;
-        isFrozen = true;
+        isFrozen = false;
         isBig = false;
         isMulti = false;
         special_big = 0;
         special_multi = 0;
-        special_frozen = 3;
+        special_frozen = 0;
         audioR.Play();
         special_missile = 3;
         gameObject.transform.GetChild(1).transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
