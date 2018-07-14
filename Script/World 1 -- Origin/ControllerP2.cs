@@ -266,7 +266,6 @@ public class ControllerP2 : MonoBehaviour
         }
 
         float h_axis = Input.GetAxis("J-Horizontal");
-
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");

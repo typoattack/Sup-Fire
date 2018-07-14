@@ -14,7 +14,7 @@ public class MultiTrigger_3_2 : MonoBehaviour {
     {
         Collider capCo = GetComponent<Collider>();
         capCo.enabled = false;
-        Destroy(gameObject, 1.5f);
+        Destroy(gameObject, 0.5f);
         Rigidbody rigid = GetComponent<Rigidbody>();
         rigid.AddForce((-transform.position + target.transform.position) * 50f);
     }
@@ -26,13 +26,17 @@ public class MultiTrigger_3_2 : MonoBehaviour {
         }
         else if (other.tag == "Bullet")
         {
-            bulletMove bullet = other.gameObject.GetComponent<bulletMove>();
+            bulletMove bullet = other.GetComponent<bulletMove>();
             target = bullet.comeFrom;
-            if (target)
-            {
-                target.SendMessage("SetMulti");
-                got(target);
-            }
+            target.SendMessage("SetMulti");
+            got(target);
+
+        }
+        else if (other.tag == "Player")
+        {
+            other.transform.parent.gameObject.SendMessage("SetMulti");
+            Destroy(gameObject);
+
         }
         else if (other.tag == "Missile")
         {
