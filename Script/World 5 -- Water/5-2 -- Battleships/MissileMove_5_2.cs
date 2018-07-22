@@ -25,6 +25,7 @@ public class MissileMove_5_2 : MonoBehaviour
     GameObject[] sparks;
     GameObject[] explosion;
     GameObject waterSplatter;
+    GameObject iceSplatter;
     GameObject[] delay;
     GameObject[] MissileTrail;
     GameObject newMissileTrail;
@@ -40,6 +41,7 @@ public class MissileMove_5_2 : MonoBehaviour
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
         waterSplatter = GameObject.Find("FX_WaterSplatter");
+        iceSplatter = GameObject.Find("FX_IceSplatter");
     }
     void Start()
     {
@@ -150,13 +152,15 @@ public class MissileMove_5_2 : MonoBehaviour
         {
             hitSound.pitch = 0.5f * 1.05946f * Random.Range(1, 4);
             hitSound.Play();
-            GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
+            //GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
+            GameObject newSplatters = Instantiate(iceSplatter, transform.position, new Quaternion()) as GameObject;
 
             CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
             //comeFrom.SendMessage("SetAmmo", 1f);
             comeFrom.SendMessage("SetAmmo", 1f);
             Destroy(gameObject);
-            Destroy(newSparks, 0.5f);
+            //Destroy(newSparks, 0.5f);
+            Destroy(newSplatters, 1.5f);
         }
         else if (other.tag == "sub")
         {
