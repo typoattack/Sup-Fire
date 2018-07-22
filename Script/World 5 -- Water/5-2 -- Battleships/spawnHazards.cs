@@ -40,7 +40,7 @@ public class spawnHazards : MonoBehaviour
         else target = navalMine;
 
         // Defines the min and max ranges for x and y
-        Vector3 pos = new Vector3(Random.Range(xMin, xMax), -5.0f, -0.75f);
+        Vector3 pos = new Vector3(Random.Range(xMin, xMax), -5.0f, -1.0f);
         targetSpawn.position = pos;
 
         // Creates the random object at the random 2D position.

@@ -146,6 +146,18 @@ public class MissileMove_5_2 : MonoBehaviour
             Destroy(gameObject);
             Destroy(newSplatters, 1.5f);
         }
+        else if (other.tag == "iceberg")
+        {
+            hitSound.pitch = 0.5f * 1.05946f * Random.Range(1, 4);
+            hitSound.Play();
+            GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
+
+            CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
+            //comeFrom.SendMessage("SetAmmo", 1f);
+            comeFrom.SendMessage("SetAmmo", 1f);
+            Destroy(gameObject);
+            Destroy(newSparks, 0.5f);
+        }
         else if (other.tag == "sub")
         {
             GameObject newExplosion = Instantiate(explosion[0], transform.position, transform.rotation) as GameObject;
