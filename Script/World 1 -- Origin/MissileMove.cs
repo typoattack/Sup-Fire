@@ -13,6 +13,7 @@ public class MissileMove : MonoBehaviour {
 
     public GameObject comeFrom;
     public GameObject target;
+    public LavaMove lavaSplatter;
 
     float angle;
     Rigidbody rigid;
@@ -127,12 +128,38 @@ public class MissileMove : MonoBehaviour {
             Destroy(newSplatters, 1.5f);
         }
 
+        else if (other.tag == "lava")
+        {
+            waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            waterSound.Play();
+
+            GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+
+            LavaMove newLava1 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+            LavaMove newLava2 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+
+            newLava1.gameObject.SetActive(true);
+            newLava1.transform.Rotate(new Vector3(0f, 0f, -45f));
+            newLava1.GetComponent<Rigidbody>().AddForce(0f, 18f, 0f);
+
+            newLava2.gameObject.SetActive(true);
+            newLava2.transform.Rotate(new Vector3(0f, 0f, 45f));
+            newLava2.GetComponent<Rigidbody>().AddForce(0f, 18f, 0f);
+
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", 1f);
+            }
+
+            Destroy(gameObject);
+            Destroy(newSplatters, 1.5f);
+
+        }
+
         ParticleSystem P = newMissileTrail.GetComponent<ParticleSystem>();
         var em = P.emission;
         em.enabled = false;
         Destroy(newMissileTrail, 3.0f);
-
-
-
-    }
+        }
+        
 }

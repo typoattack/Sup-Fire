@@ -10,6 +10,7 @@ public class bulletMove : MonoBehaviour {
     public bool isMulti;
     public bool isBig;
     public bool isFrozen;//
+    public LavaMove lavaSplatter;
 
     GameObject[] sparks;
     GameObject waterSplatter;
@@ -55,7 +56,7 @@ public class bulletMove : MonoBehaviour {
         //Debug.Log(transform);
 	}
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "wall"||other.tag=="container")
         {
@@ -100,34 +101,82 @@ public class bulletMove : MonoBehaviour {
             comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
             Destroy(gameObject);
             Destroy(newExplosion, 2.0f);
-                Destroy(newDelay, 2.0f);
-                if (!damagded)
-                {
-                    other.transform.parent.SendMessage("SetLife", isBig ? -2 : -1);
-                    damagded = !damagded;
-
-                }
-            }
-            else if (other.tag == "water")
+            Destroy(newDelay, 2.0f);
+            if (!damagded)
             {
-                waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
-                waterSound.Play();
-                GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
-                if (isBig)
-                {
-                    ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
-                    var main = SplattersParticle.main;
-                    main.startSize = 0.4f;
-                    main.startSpeed = 5f;
-                }
+                other.transform.parent.SendMessage("SetLife", isBig ? -2 : -1);
+                damagded = !damagded;
 
-                if (comeFrom.activeSelf)
-                {
-                    comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
-                }
+            }
 
-                Destroy(gameObject);
-                Destroy(newSplatters, 1.5f);
+        }
+        else if (other.tag == "water")
+        {
+            waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            waterSound.Play();
+            GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+            if (isBig)
+            {
+                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
+                var main = SplattersParticle.main;
+                main.startSize = 0.4f;
+                main.startSpeed = 5f;
+            }
+
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            }
+
+            Destroy(gameObject);
+            Destroy(newSplatters, 1.5f);
+        }
+
+        else if (other.tag == "lava")
+        {
+            waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            waterSound.Play();
+
+            GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+            
+            LavaMove newLava1 = Instantiate(lavaSplatter, new Vector3(transform.position.x , -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+            LavaMove newLava2 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+
+            newLava1.gameObject.SetActive(true);
+            newLava1.transform.Rotate(new Vector3(0f, 0f, isBig ? -20f : -45f));
+            newLava1.GetComponent<Rigidbody>().AddForce(0f, 16f, 0f);
+
+            newLava2.gameObject.SetActive(true);
+            newLava2.transform.Rotate(new Vector3(0f, 0f, isBig ? 20f : 45f));
+            newLava2.GetComponent<Rigidbody>().AddForce(0f, 16f, 0f);
+
+            if (isBig)
+            {
+                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
+                var main = SplattersParticle.main;
+                main.startSize = 0.4f;
+                main.startSpeed = 5f;
+
+                LavaMove newLava3 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+                LavaMove newLava4 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+
+                newLava3.gameObject.SetActive(true);
+                newLava3.transform.Rotate(new Vector3(0f, 0f, -80f));
+                newLava3.GetComponent<Rigidbody>().AddForce(0f, 20f, 0f);
+
+                newLava4.gameObject.SetActive(true);
+                newLava4.transform.Rotate(new Vector3(0f, 0f, 80f));
+                newLava4.GetComponent<Rigidbody>().AddForce(0f, 20f, 0f);
+            }
+
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            }
+
+            Destroy(gameObject);
+            Destroy(newSplatters, 1.5f);
+
         }
     }
 }

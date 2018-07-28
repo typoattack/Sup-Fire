@@ -37,7 +37,7 @@ public class LavaMove : MonoBehaviour {
         transform.Translate(Vector3.right * LavaSpeed * Time.deltaTime);
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
 
         if (other.tag == "wall")
@@ -67,6 +67,11 @@ public class LavaMove : MonoBehaviour {
                 other.transform.parent.SendMessage("SetLife", -1);
                 damagded = !damagded;
             }
+        }
+
+        else if (other.tag == "lava")
+        {
+            Destroy(gameObject);
         }
     }
 }
