@@ -435,13 +435,13 @@ public class ControllerP1underwater_joystick : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "wall")
+        if (collision.gameObject.tag == "wall" || collision.gameObject.tag == "container")
             isGrounded = true;
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "wall")
+        if (collision.gameObject.tag == "wall" || collision.gameObject.tag == "container")
             isGrounded = false;
     }
 
