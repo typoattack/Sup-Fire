@@ -2,24 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AcHeatMode : MonoBehaviour {
-    public Queue<float> timetable= new Queue<float>();
-    public Material Overheat;
-    public Material normal;
-    public Material nearloverheat;
+public class AcHeatMode : MonoBehaviour
+{
+    public Queue<float> timetable = new Queue<float>();
+
+    public Material temperature0;
+    public Material temperature1;
+    public Material temperature2;
+    public Material temperature3;
+    public Material temperature4;
+    
     public int temperature;
     private float Overheadtime;
     public float punishTime;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         ResetQueue();
         temperature = 0;
     }
-	
+
 
     void Add(float FireTime)
     {
-        
+
         float firstfire = timetable.Dequeue();
         timetable.Enqueue(FireTime);
         timetable.TrimExcess();
@@ -36,8 +42,9 @@ public class AcHeatMode : MonoBehaviour {
 
     }
 
-     void ResetQueue()
+    void ResetQueue()
     {
+        
         temperature = 0;
         timetable.Clear();
         timetable.Enqueue(0);
@@ -46,29 +53,34 @@ public class AcHeatMode : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        Debug.Log(temperature);
-        if (temperature >= 5)
+        switch (temperature)
         {
-            transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = Overheat;
-            gameObject.SendMessage("StopFire");
-            if (Time.time - Overheadtime > punishTime)
-            {
-                temperature = 0;
+            case (4):
+                transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature4;
+                gameObject.SendMessage("StopFire");
+                transform.GetChild(1).GetChild(1).GetChild(2).gameObject.SetActive(true);
+                if (Time.time - Overheadtime > punishTime)
+                {
+                    temperature = 0;
+                    gameObject.SendMessage("ResetAmmo");
+                }
+                break;
+            case (3):
+                transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature3;
+                break;
+            case (2):
+                transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature2;
+                break;
+            case (1):
+                transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature1;
+                break;
+            case (0):
+                transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature0;
+                transform.GetChild(1).GetChild(1).GetChild(2).gameObject.SetActive(false);
                 gameObject.SendMessage("ResetAmmo");
-            }
-        }
-        else if (temperature >= 2&&temperature<5)
-        {
-
-            transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = nearloverheat;
+                break;
 
         }
-        else
-        {
-            transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = normal;
 
-        }
     }
-
-
 }

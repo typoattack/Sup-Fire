@@ -20,7 +20,7 @@ public class bulletMove : MonoBehaviour {
     public AudioSource expSound;
     public AudioSource hitSound;
     public AudioSource waterSound;
-
+    
     private bool damagded = false;
     private bool ifHit = false;
 
@@ -33,7 +33,7 @@ public class bulletMove : MonoBehaviour {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
-
+  
     }
 
     void SetMulti(bool multi)
@@ -52,7 +52,7 @@ public class bulletMove : MonoBehaviour {
 
     void FixedUpdate () {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
-        //Debug.Log(transform);
+        
 	}
 
     private void OnTriggerStay(Collider other)
