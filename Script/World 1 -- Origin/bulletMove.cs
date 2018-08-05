@@ -11,6 +11,7 @@ public class bulletMove : MonoBehaviour {
     public bool isBig;
     public bool isFrozen;//
     public LavaMove lavaSplatter;
+    public float lavaSpwanLoc;
 
     GameObject[] sparks;
     GameObject waterSplatter;
@@ -56,7 +57,7 @@ public class bulletMove : MonoBehaviour {
         //Debug.Log(transform);
 	}
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.tag == "wall"||other.tag=="container")
         {
@@ -139,8 +140,8 @@ public class bulletMove : MonoBehaviour {
 
             GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
             
-            LavaMove newLava1 = Instantiate(lavaSplatter, new Vector3(transform.position.x , -4.5f, transform.position.z), new Quaternion()) as LavaMove;
-            LavaMove newLava2 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+            LavaMove newLava1 = Instantiate(lavaSplatter, new Vector3(transform.position.x , lavaSpwanLoc, transform.position.z), new Quaternion()) as LavaMove;
+            LavaMove newLava2 = Instantiate(lavaSplatter, new Vector3(transform.position.x, lavaSpwanLoc, transform.position.z), new Quaternion()) as LavaMove;
 
             newLava1.gameObject.SetActive(true);
             newLava1.transform.Rotate(new Vector3(0f, 0f, isBig ? -20f : -45f));
@@ -157,8 +158,8 @@ public class bulletMove : MonoBehaviour {
                 main.startSize = 0.4f;
                 main.startSpeed = 5f;
 
-                LavaMove newLava3 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
-                LavaMove newLava4 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+                LavaMove newLava3 = Instantiate(lavaSplatter, new Vector3(transform.position.x, lavaSpwanLoc, transform.position.z), new Quaternion()) as LavaMove;
+                LavaMove newLava4 = Instantiate(lavaSplatter, new Vector3(transform.position.x, lavaSpwanLoc, transform.position.z), new Quaternion()) as LavaMove;
 
                 newLava3.gameObject.SetActive(true);
                 newLava3.transform.Rotate(new Vector3(0f, 0f, -80f));

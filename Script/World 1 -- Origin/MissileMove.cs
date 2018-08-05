@@ -10,6 +10,7 @@ public class MissileMove : MonoBehaviour {
     public float initialSpeed;
     public float rotateSpeed;
     public float delayTime;
+    public float lavaSpwanLoc;
 
     public GameObject comeFrom;
     public GameObject target;
@@ -135,8 +136,8 @@ public class MissileMove : MonoBehaviour {
 
             GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
 
-            LavaMove newLava1 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
-            LavaMove newLava2 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+            LavaMove newLava1 = Instantiate(lavaSplatter, new Vector3(transform.position.x, lavaSpwanLoc, transform.position.z), new Quaternion()) as LavaMove;
+            LavaMove newLava2 = Instantiate(lavaSplatter, new Vector3(transform.position.x, lavaSpwanLoc, transform.position.z), new Quaternion()) as LavaMove;
 
             newLava1.gameObject.SetActive(true);
             newLava1.transform.Rotate(new Vector3(0f, 0f, -45f));
