@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class left_wall : MonoBehaviour {
+public class Left_Wall_AITEST : MonoBehaviour {
+
     private Rigidbody itself;
     public bool buff_frozen;
     public float WallSpeed;
     public float buff_begin_time;
     public float buff_exist_time;
-	// Use this for initialization
-	void Start () {
+    private float MoveSpeed;
+    // Use this for initialization
+    void Start()
+    {
         itself = gameObject.GetComponent<Rigidbody>();
-	}
+    }
 
     void testbuff()
     {
@@ -33,18 +36,22 @@ public class left_wall : MonoBehaviour {
 
     }
 
-    
+    void GetMovement(float x)
+    {
+        MoveSpeed = x;
+    }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         testbuff();
 
-        //float v_dir = Input.GetAxis("J-Vertical");
-        float v_dir = Input.GetAxis("J2-Vertical");
+      
         if (buff_frozen)
         {
-            v_dir = 0;
+            MoveSpeed = 0.5f;
         }
-        itself.velocity = new Vector3(0, WallSpeed * v_dir, 0);
+        itself.velocity = new Vector3(0, WallSpeed * MoveSpeed, 0);
+        
     }
 }

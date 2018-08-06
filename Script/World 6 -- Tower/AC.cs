@@ -41,6 +41,8 @@ public class AC : MonoBehaviour {
                 bg.GetComponent<MeshRenderer>().material = coolbg;
                 player1.SendMessage("CoolMode");
                 player2.SendMessage("CoolMode");
+                player1.SendMessage("ResetQueue");
+                player2.SendMessage("ResetQueue");
                 flag = true;
             }
         }
