@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
+public class ControllerP1_AITEST_ELEVTOR_LIGHT : MonoBehaviour {
 
     public Boundary1Stick boundary1stick;
 
@@ -69,6 +69,17 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
     private float BulletPos;
     private float BulletPosLastTime;
     public GameObject Wall;
+    public bool Version;
+
+
+    void LightsOn()
+    {
+        Version = true;
+    }
+    void LightsOff()
+    {
+        Version = false;
+    }
 
     void GetTargetPos(Vector3 x)
     {
@@ -86,19 +97,19 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
     {
         BulletPosLastTime = x;
     }
-    
+
     void MovementSet()
     {
-        if (Time.time - BulletPosLastTime< 1 && BulletPosLastTime != 0)
+        if (Time.time - BulletPosLastTime < 1 && BulletPosLastTime!=0)
         {
 
             if (transform.position.y <= -4f)
                 Movespeed = 1;
             else if (transform.position.y >= 1.2f)
                 Movespeed = -1;
-            else if (BulletPos - transform.position.y <= 1 && BulletPos - transform.position.y >=-1)
+            else if (BulletPos - transform.position.y <= 1 && BulletPos - transform.position.y >= -2)
                 Movespeed = 1;//move up 
-            else if (BulletPos - transform.position.y >= -2 && BulletPos - transform.position.y <-1)
+            else if (BulletPos - transform.position.y > 1 && BulletPos - transform.position.y < 2)
                 Movespeed = -1; ;//move down
         }
         else
@@ -110,22 +121,22 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
 
     int Aimtest(float targetpos)
     {
-
+        if (Version == false) { return Random.Range(30, 90); } 
         Vector3 velocity;
         if (isMissile)
             return 45;
 
-        for (int i = 15; i <= 90; i++)
+        for (int i = 15; i <=90; i++)
         {
             velocity = Quaternion.Euler(i, 90, 90) * Vector3.right * 10f * Time.deltaTime;
             Vector3 p = firepoint.transform.position;
-            while (p.y > -4.5&&p.y<3.5 && p.x <=6.78)
+            while (p.y > -4.5 && p.y < 3.5 && p.x <= 6.78)
             {
                 velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
                 p += velocity;
             }
             if (Mathf.Abs(p.y - targetpos) <= 1)
-                return i ;
+                return i;
 
         }
         return 45;
@@ -274,6 +285,7 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        
     }
 
 
@@ -299,13 +311,13 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
 
         //angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(Aimtest(targetYpos), new Vector3(0f, 0f, -1f));
-        //Debug.Log(Aimtest(targetYpos));
-       // recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+       // Debug.Log(Aimtest(targetYpos));
+        // recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
         //if (direction.magnitude >= 0.5)
         //{
-            transform.GetChild(activeTurret).rotation = rotation;
-            LastDirection = rotation;
+        transform.GetChild(activeTurret).rotation = rotation;
+        LastDirection = rotation;
         //}
         //else
         //{

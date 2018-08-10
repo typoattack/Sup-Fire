@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class AcHeatMode : MonoBehaviour
 {
-    public Queue<float> timetable = new Queue<float>();
+    private float time1;
+    private float time2;
 
     public Material temperature0;
     public Material temperature1;
@@ -18,43 +19,48 @@ public class AcHeatMode : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        ResetQueue();
+        Reset();
         temperature = 0;
     }
 
 
     void Add(float FireTime)
     {
+        time2 = FireTime;
+       
+       // timetable.TrimExcess();
 
-        float firstfire = timetable.Dequeue();
-        timetable.Enqueue(FireTime);
-        timetable.TrimExcess();
-        if (Mathf.Abs(firstfire - FireTime) <= 1f && (firstfire != 0))
+        if (time2-time1 <= 2f && (time1 != 0))
         {
 
             temperature += 1;
             Overheadtime = Time.time;
+          
         }
         else
-            temperature -= 1;
+        {
+            Overheadtime = Time.time;
+        }
         if (temperature <= 0)
             temperature = 0;
-
+        time1 = time2;
     }
 
-    void ResetQueue()
+    void Reset()
     {
         
         temperature = 0;
-        timetable.Clear();
-        timetable.Enqueue(0);
-        timetable.Enqueue(0);
+        time1 = 0;time2 = 0;
     }
 
     private void FixedUpdate()
     {
+        if (Time.time - Overheadtime >= 2f)
+            temperature = 0;
+
         switch (temperature)
         {
+             
             case (4):
                 transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature4;
                 gameObject.SendMessage("StopFire");
@@ -67,15 +73,19 @@ public class AcHeatMode : MonoBehaviour
                 break;
             case (3):
                 transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature3;
+        
                 break;
             case (2):
                 transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature2;
+    
                 break;
             case (1):
                 transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature1;
+
                 break;
             case (0):
                 transform.GetChild(1).GetChild(1).GetComponent<MeshRenderer>().material = temperature0;
+ 
                 transform.GetChild(1).GetChild(1).GetChild(2).gameObject.SetActive(false);
                 gameObject.SendMessage("ResetAmmo");
                 break;

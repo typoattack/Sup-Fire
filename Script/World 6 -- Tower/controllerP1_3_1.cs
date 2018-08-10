@@ -70,6 +70,7 @@ public class controllerP1_3_1 : MonoBehaviour {
     public bool heatmode;
     private Quaternion LastDirection;
     private bool isSpecial = false;
+    private bool fireflag;
     void flagcheck()
     {
         if (special_big == 0)
@@ -301,7 +302,7 @@ public class controllerP1_3_1 : MonoBehaviour {
         }
 
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
-        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
+        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1&& fireflag == true) //fire
 
         {
             isFireing = true;
@@ -516,11 +517,11 @@ public class controllerP1_3_1 : MonoBehaviour {
     }
     void StopFire()
     {
-        remainAmmo = 0;
+        fireflag = false;
 
     }
     void ResetAmmo()
     {
-        remainAmmo = 5;
+        fireflag = true;
     }
 }

@@ -519,6 +519,6 @@ public class controller_P2_3_1 : MonoBehaviour {
     }
     void ResetAmmo()
     {
-        fireflag = true;
+        fireflag = true ;
     }
 }

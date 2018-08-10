@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LIGHTCONTROL : MonoBehaviour
-{
+public class Lightcontrol_SENDSTATUS : MonoBehaviour {
+
     Vector3 poson;
     Vector3 posoff;
     public float lasttime;//lights off time;
     public float buff_start_time;
     public float swcd;//every 10s allow switch once
     public GameObject lights;
-
+    public GameObject target;
     // Use this for initialization
     void Start()
     {
@@ -24,10 +24,12 @@ public class LIGHTCONTROL : MonoBehaviour
     {
 
         transform.position = poson;
+        target.SendMessage("LightsOn");
     }
     void lightsoff()
     {
         transform.position = posoff;
+        target.SendMessage("LightsOff");
 
     }
 
@@ -38,7 +40,7 @@ public class LIGHTCONTROL : MonoBehaviour
         if (Time.time - buff_start_time >= lasttime)//lights on
         {
             lightson();
-            
+
         }
         else
             lightsoff();
@@ -47,7 +49,7 @@ public class LIGHTCONTROL : MonoBehaviour
             lights.SendMessage("setgreen");
         else
             lights.SendMessage("setred");
-        
+
 
 
     }

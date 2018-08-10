@@ -11,6 +11,7 @@ public class bullet_move_l10 : MonoBehaviour
     public bool isMulti;
     public bool isBig;
     public bool isFrozen;//
+    
     Rigidbody rigid;
     GameObject[] sparks;
     GameObject[] explosion;

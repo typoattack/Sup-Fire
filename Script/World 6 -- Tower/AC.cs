@@ -30,9 +30,9 @@ public class AC : MonoBehaviour {
                 transform.GetChild(4).GetComponent<MeshRenderer>().material = heat;
                 bg.GetComponent<MeshRenderer>().material = heatbg;
                 player1.SendMessage("HeatMode");
-                player1.SendMessage("ResetQueue");
+                player1.SendMessage("Reset");
                 player2.SendMessage("HeatMode");
-                player2.SendMessage("ResetQueue");
+                player2.SendMessage("Reset");
                 flag = false;
             }
             else
@@ -41,8 +41,8 @@ public class AC : MonoBehaviour {
                 bg.GetComponent<MeshRenderer>().material = coolbg;
                 player1.SendMessage("CoolMode");
                 player2.SendMessage("CoolMode");
-                player1.SendMessage("ResetQueue");
-                player2.SendMessage("ResetQueue");
+                player1.SendMessage("Reset");
+                player2.SendMessage("Reset");
                 flag = true;
             }
         }
