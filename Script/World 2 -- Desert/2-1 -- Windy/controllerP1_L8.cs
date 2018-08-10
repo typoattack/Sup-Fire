@@ -72,6 +72,8 @@ public class controllerP1_L8 : MonoBehaviour
     private bool SetScore = false;
     private bool isSpecial = false;
 
+    private float rotationX;
+
     void SetBig()
     {
         ResetBarrel();//fix bug
@@ -225,6 +227,18 @@ public class controllerP1_L8 : MonoBehaviour
 
     void FixedUpdate()
     {
+        rotationX = transform.eulerAngles.x;
+        if(rotationX > 30f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(10, transform.eulerAngles.y, transform.eulerAngles.z),
+                Time.deltaTime * 5f);
+        }
+        if(rotationX < -30f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(-10, transform.eulerAngles.y, transform.eulerAngles.z),
+                Time.deltaTime * 5f);
+        }
+
         wind = WindController.wind;
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         rigid.position = new Vector3

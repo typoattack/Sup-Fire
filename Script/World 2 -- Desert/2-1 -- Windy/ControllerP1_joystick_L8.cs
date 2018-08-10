@@ -74,6 +74,8 @@ public class ControllerP1_joystick_L8 : MonoBehaviour {
     private Quaternion LastDirection;
     private bool isSpecial = false;
 
+    private float rotationX;
+
     void SetBig()
     {
         isBig = true;
@@ -218,6 +220,18 @@ public class ControllerP1_joystick_L8 : MonoBehaviour {
 
     void FixedUpdate()
     {
+        rotationX = transform.eulerAngles.x;
+        if (rotationX > 30f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(10, transform.eulerAngles.y, transform.eulerAngles.z),
+                Time.deltaTime * 5f);
+        }
+        if (rotationX < -30f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(-10, transform.eulerAngles.y, transform.eulerAngles.z),
+                Time.deltaTime * 5f);
+        }
+
         wind = WindController.wind;
         rigid.position = new Vector3
         (
