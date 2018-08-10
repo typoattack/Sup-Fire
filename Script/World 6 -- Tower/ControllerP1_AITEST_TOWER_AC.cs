@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
+public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
 
     public Boundary1Stick boundary1stick;
 
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public BulletMove_3 bullet;
-    public MissileMove missile;
+    public bulletmove_3_1 bullet;
+    public Missilemove_3_1 missile;
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -54,31 +54,34 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public Vector3 recoil;
+    public float recoil;//in angular
     public float recoilIntensity;
+    private int updownrecoil;
+    private Vector3 left;
+    private Vector3 right;
 
     private GameObject player;
     private bool SetScore = false;
-
+    public bool heatmode;
     private Quaternion LastDirection;
     private bool isSpecial = false;
 
     private Vector3 movement;
     private float Movespeed;
-    private float targetYpos;
+    private float targetXpos;
     private float BulletPos;
     private float BulletPosLastTime;
-    public GameObject Wall;
+    private bool fireflag;
 
     void GetTargetPos(Vector3 x)
     {
-        targetYpos = x.y;
+        targetXpos = x.x;
 
     }
 
     void GetBulletPos(Vector3 x)
     {
-        BulletPos = x.y;
+        BulletPos = x.x;
 
 
     }
@@ -86,25 +89,26 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
     {
         BulletPosLastTime = x;
     }
-    
+
     void MovementSet()
     {
-        if (Time.time - BulletPosLastTime< 1 && BulletPosLastTime != 0)
+        if (Time.time - BulletPosLastTime < 2)
         {
 
-            if (transform.position.y <= -4f)
+            if (transform.position.x <= -7f)
                 Movespeed = 1;
-            else if (transform.position.y >= 1.2f)
+            else if (transform.position.x >= -2.1f)
                 Movespeed = -1;
-            else if (BulletPos - transform.position.y <= 1 && BulletPos - transform.position.y >=-1)
-                Movespeed = 1;//move up 
-            else if (BulletPos - transform.position.y >= -2 && BulletPos - transform.position.y <-1)
-                Movespeed = -1; ;//move down
+            else if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > 0.5)
+                Movespeed = -1;//move left 
+            else if (BulletPos - transform.position.x <= 1 && BulletPos - transform.position.x > -2)
+                Movespeed = 1; ;//move right
         }
         else
         {
             Movespeed = 0;
         }
+        
 
     }
 
@@ -113,28 +117,29 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
 
         Vector3 velocity;
         if (isMissile)
-            return 45;
+            return 0;
 
-        for (int i = 15; i <= 90; i++)
+        for (int i = 5; i < 60; i++)
         {
-            velocity = Quaternion.Euler(i, 90, 90) * Vector3.right * 10f * Time.deltaTime;
+            velocity = Quaternion.Euler(i, 90, 90) * Vector3.right * 8.8f * Time.deltaTime;
             Vector3 p = firepoint.transform.position;
-            while (p.y > -4.5&&p.y<3.5 && p.x <=6.78)
+            while (p.y > -3 && p.x < 7 && p.x > -7)
             {
                 velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
                 p += velocity;
             }
-            if (Mathf.Abs(p.y - targetpos) <= 1)
-                return i ;
+            if (Mathf.Abs(p.x - targetpos) <= 1)
+                return i;
 
         }
         return 45;
     }
 
 
+
+
     void SetBig()
     {
-        anim.Rebind();
         isBig = true;
         isMulti = false;
         isMissile = false;
@@ -149,7 +154,6 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
 
     void SetMulti()
     {
-        anim.Rebind();
         isBig = false;
         isMulti = true;
         isMissile = false;
@@ -163,7 +167,6 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
 
     void SetFrozen()//
     {
-        anim.Rebind();
         isBig = false;
         isMulti = false;
         isMissile = false;
@@ -179,7 +182,6 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
 
     void SetMissile()
     {
-        anim.Rebind();
         isBig = false;
         isMulti = false;
         isMissile = true;
@@ -269,12 +271,29 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
         transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
+    void recoiltest(Vector3 dir)
+    {
+        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x > 0)
+            updownrecoil = 0;
+        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x < 0)
+            updownrecoil = 1;
+        else
+            updownrecoil = 2;
+
+
+    }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
+        //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
+        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
+        left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
+        right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
     }
+
 
 
     void FixedUpdate()
@@ -285,41 +304,40 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
             Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
             Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
         );
-        //Vector3 pos = rigid.position;
+        // Vector3 pos = rigid.position;
 
-        //float v_dir = Input.GetAxis("J-V-Direct");
-        //float h_dir = Input.GetAxis("J-H-Direct");
-        //float v_dir = Input.GetAxis("J2-V-Direct");
-        //float h_dir = Input.GetAxis("J2-H-Direct");
 
-        //Vector3 direction = Vector3.zero;
 
-        //direction.x = -h_dir;
-        //direction.y = v_dir;
+        //  Vector3 direction = Vector3.zero;
+        //  direction.x = 1;
+        // direction.y = 1;
 
-        //angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-        Quaternion rotation = Quaternion.AngleAxis(Aimtest(targetYpos), new Vector3(0f, 0f, -1f));
-        //Debug.Log(Aimtest(targetYpos));
-       // recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        Quaternion rotation = Quaternion.AngleAxis(Aimtest(targetXpos), new Vector3(0f, 0f, -1f));
 
-        //if (direction.magnitude >= 0.5)
+
+        recoiltest(firepoint.transform.position - gameObject.transform.position);
+        //  if (direction.magnitude >= 0.5)
         //{
-            transform.GetChild(activeTurret).rotation = rotation;
-            LastDirection = rotation;
+        transform.GetChild(activeTurret).rotation = rotation;
+        LastDirection = rotation;
         //}
-        //else
-        //{
-        //    transform.GetChild(activeTurret).rotation = LastDirection;
-        //}
+        //  else
+        //   {
+        //     transform.GetChild(activeTurret).rotation = LastDirection;
+        //   }
 
-        MoveAnim.Play("body Animation");
         MovementSet();
-        Wall.SendMessage("GetMovement", Movespeed);
+        
+        if (Movespeed != 0)
+        {
+            MoveAnim.Play("body Animation");
+        }
+
         testbuff();
         if (buff_frozen)//
         {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
-            buff = 0.6f;
+            buff = 0.5f;
         }
         else
         {
@@ -327,8 +345,8 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
             buff = 1f;
         }
 
-
-        if (remainAmmo >= 1) //fire
+        rigid.velocity = new Vector3(buff * Accelrate * Movespeed, rigid.velocity.y, 0f);
+        if (remainAmmo >= 1&& fireflag == true) //fire
 
         {
             isFireing = true;
@@ -345,12 +363,13 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
             {
                 shotCounter = timeBetweenShots;
                 audioS.volume = 0.3f;
-
+                if (heatmode)
+                    gameObject.SendMessage("Add", Time.time);
                 if (isMulti)
                 {
                     special -= 1;
-                    BulletMove_3 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as BulletMove_3;
-                    BulletMove_3 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as BulletMove_3;
+                    bulletmove_3_1 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletmove_3_1;
+                    bulletmove_3_1 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletmove_3_1;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -365,7 +384,11 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    //rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    if (updownrecoil == 0)
+                        rigid.AddForce(1.5f * left, ForceMode.Impulse);
+                    else if (updownrecoil == 1)
+                        rigid.AddForce(1.5f * right, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -375,14 +398,14 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        Missilemove_3_1 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as Missilemove_3_1;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        BulletMove_3 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as BulletMove_3;
+                        bulletmove_3_1 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletmove_3_1;
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
@@ -390,13 +413,16 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
                             audioSB.volume = 0.5f;
                             special -= 1;
-                            newBullet.transform.localScale = new Vector3(1f, 0.1f, 1f);
+                            newBullet.transform.localScale = new Vector3(1f, 1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
                             //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(2 * left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(2 * right, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
@@ -405,13 +431,19 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         anim.Play("Gun Animation");
@@ -487,4 +519,25 @@ public class ControllerP1_AITEST_ELEVTOR : MonoBehaviour {
         Application.targetFrameRate = -1;
         gameObject.SetActive(false);
     }
+
+
+    void CoolMode()
+    {
+        heatmode = false;
+
+    }
+    void HeatMode()
+    {
+        heatmode = true;
+    }
+    void StopFire()
+    {
+        fireflag = false;
+
+    }
+    void ResetAmmo()
+    {
+        fireflag = true;
+    }
+
 }

@@ -75,6 +75,12 @@ public class ControllerP1_AITEST : MonoBehaviour
     private float targetXpos;
     private float BulletPos;
     private float BulletPosLastTime;
+    public float BulletXmax;
+    public float BulletXmin;
+    public float BulletYmax;
+    public float BulletYmin;
+    public float PlayerXmax;
+    public float PlayerXmin;
 
 
     void GetTargetPos(Vector3 x)
@@ -99,9 +105,9 @@ public class ControllerP1_AITEST : MonoBehaviour
         if (Time.time - BulletPosLastTime < 2)
         {
 
-            if (transform.position.x <= -7f)
+            if (transform.position.x <= PlayerXmin)
                 Movespeed = 1;
-            else if (transform.position.x >= -1.5)
+            else if (transform.position.x >= PlayerXmax)
                 Movespeed = -1;
             else if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > 0.5)
                 Movespeed = -1;//move left 
@@ -125,7 +131,7 @@ public class ControllerP1_AITEST : MonoBehaviour
         for (int i = 5; i < 60; i++) {
             velocity= Quaternion.Euler(i,90,90) * Vector3.right * 8.8f * Time.deltaTime;
             Vector3 p = firepoint.transform.position;
-            while (p.y > -3 && p.x < 7 && p.x > -7)
+            while (p.y > BulletYmin && p.x < BulletXmax && p.x > BulletXmin)
             {
                 velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
                 p += velocity;
