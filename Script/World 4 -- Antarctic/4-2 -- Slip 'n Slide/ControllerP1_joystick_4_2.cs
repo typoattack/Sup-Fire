@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
-
+/*
 [System.Serializable]
-public class Boundary2Stick_L2
+public class Boundary1Stick_2_5
 {
     public float xMin, xMax, yMin, yMax, zMin, zMax;
 }
+*/
+public class ControllerP1_joystick_4_2 : MonoBehaviour {
 
-public class ControllerP2_L2 : MonoBehaviour
-{
-    public Boundary2Stick_L2 boundary2stick;
+    //public Boundary1Stick_2_5 boundary1stick;
 
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletMove bullet;
-    public MissileMove missile;
+    public bulletMove_4_2 bullet;
+    public MissileMove_4_2 missile;
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -25,6 +25,10 @@ public class ControllerP2_L2 : MonoBehaviour
     public AudioSource audioR;
     public AudioSource audioM;
     public AudioSource waterSound;
+
+    private bool isGrounded;
+    private float h_axis;
+    private float v_axis;
 
     public int special;
 
@@ -62,25 +66,15 @@ public class ControllerP2_L2 : MonoBehaviour
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public float recoil;//in angular
+    public Vector3 recoil;
     public float recoilIntensity;
-    private int updownrecoil;
-    private Vector3 up;
-    private Vector3 down;
 
     private GameObject player;
     private GameObject waterSplatter;
     private bool SetScore = false;
     private bool hasFall = false;
-
     private Quaternion LastDirection;
     private bool isSpecial = false;
-
-    //L2, new parameters
-    public GameObject floe;
-    public float floeVelocity;
-    public float maxFloeImpact; // max delta velocity
-    //
 
     void SetBig()
     {
@@ -215,49 +209,28 @@ public class ControllerP2_L2 : MonoBehaviour
         transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
-    //L2, new function
-    void GetFloeVelocity(float v)
-    {
-        floeVelocity = v;
-    }
-    //
-    void recoiltest(Vector3 dir)
-    {
-        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x > 0)
-            updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x < 0)
-            updownrecoil = 1;
-        else
-            updownrecoil = 2;
-
-
-    }
-
-
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
+        //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
-        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
-        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
-        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
-        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
     }
 
 
     void FixedUpdate()
     {
+        /*
         rigid.position = new Vector3
         (
-            Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
-            Mathf.Clamp(rigid.position.y, boundary2stick.yMin, boundary2stick.yMax),
-            Mathf.Clamp(rigid.position.z, boundary2stick.zMin, boundary2stick.zMax)
+            Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
+            Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
+            Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
         );
+        */
         Vector3 pos = rigid.position;
 
-        float v_dir = Input.GetAxis("J-V-Direct");
-        float h_dir = Input.GetAxis("J-H-Direct");
+        float v_dir = Input.GetAxis("J2-V-Direct");
+        float h_dir = Input.GetAxis("J2-H-Direct");
 
         Vector3 direction = Vector3.zero;
 
@@ -266,29 +239,8 @@ public class ControllerP2_L2 : MonoBehaviour
 
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
-        recoiltest(firepoint.transform.position - gameObject.transform.position);
-        //L2, check if sink
-        if (pos.y < boundary2stick.yMin + 0.2) {
 
-            remainLife = 0;
-            if (!hasFall)
-            {
-                waterSound.Play();
-                waterSplatter = GameObject.Find("FX_WaterSplatter");
-                GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
-                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
-                var main = SplattersParticle.main;
-                main.startSize = 0.5f;
-                main.startSpeed = 5f;
-                Destroy(newSplatters, 1.5f);
-                hasFall = !hasFall;
-            }
-
-        }
-
-        //
-
-        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        recoil = recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;
 
         if (direction.magnitude >= 0.5)
         {
@@ -300,13 +252,15 @@ public class ControllerP2_L2 : MonoBehaviour
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
-        float h_axis = Input.GetAxis("J-Horizontal");
+        h_axis = Input.GetAxis("J2-Horizontal");
+        v_axis = Input.GetAxis("J2-Vertical");
 
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
         }
-        testbuff();//
+
+        testbuff();
         if (buff_frozen)//
         {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
@@ -318,11 +272,12 @@ public class ControllerP2_L2 : MonoBehaviour
             buff = 1f;
         }
 
-        //L2, velocity modified here
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis + floeVelocity, rigid.velocity.y, 0f);
-        //
+        //rigid.velocity = new Vector3(buff * Accelrate * h_axis, buff * Accelrate * v_axis, 0f);
+        Vector3 movement = new Vector3(buff * Accelrate * h_axis, buff * Accelrate * v_axis, 0f);
+        rigid.AddForce(movement);
 
-        if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
+        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
+
         {
             isFireing = true;
         }
@@ -342,8 +297,8 @@ public class ControllerP2_L2 : MonoBehaviour
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMove_4_2 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_4_2;
+                    bulletMove_4_2 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_4_2;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -358,10 +313,7 @@ public class ControllerP2_L2 : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    if (updownrecoil == 0)
-                        rigid.AddForce(1.5f*up, ForceMode.Impulse);
-                    else if (updownrecoil == 1)
-                        rigid.AddForce(1.5f*down, ForceMode.Impulse);
+                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -371,31 +323,28 @@ public class ControllerP2_L2 : MonoBehaviour
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMove_4_2 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_4_2;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMove_4_2 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_4_2;
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
-                            audioSB.volume = 0.5f;
+                            audioSB.volume = 1.0f;
                             special -= 1;
-                            newBullet.transform.localScale = new Vector3(1f, 0.08f, 1f);
+                            newBullet.transform.localScale = new Vector3(1f, 1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
-                            //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
+ //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(2*up, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(2*down, ForceMode.Impulse);
+                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
@@ -404,27 +353,20 @@ public class ControllerP2_L2 : MonoBehaviour
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
-
                         }
-                        anim.Play("Gun Animation");
                     }
+                    anim.Play("Gun Animation");
                 }
 
                 SetAmmo(-1);
+
                 if (!isMissile)
                 {
                     if (isBig)
@@ -441,9 +383,6 @@ public class ControllerP2_L2 : MonoBehaviour
                     audioM.pitch = Random.Range(0.8f, 1.2f);
                     audioM.Play();
                 }
-                //L2, add modify floe speed effect
-                floe.SendMessage("UpdateVelocity", -Mathf.Sin(angle / Mathf.Rad2Deg) * maxFloeImpact);
-                //
             }
         }
         else
@@ -462,17 +401,13 @@ public class ControllerP2_L2 : MonoBehaviour
 
         if (remainLife <= 0)
         {
-            //L2, stop update velocity from floe
-            floe.SendMessage("PlayerDie");
-            //
-
             StartCoroutine(DelayTime(0.3f));
             Time.timeScale = 0.2f;
             Application.targetFrameRate = 150;
             GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
             if (!SetScore)
             {
-                score[0].SendMessage("leftPlus");
+                score[0].SendMessage("rightPlus");
                 SetScore = !SetScore;
             }
         }
@@ -499,5 +434,24 @@ public class ControllerP2_L2 : MonoBehaviour
         Application.targetFrameRate = -1;
         gameObject.SetActive(false);
     }
-}
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "IcePlatform")
+        {
+            remainLife = 0;
+            if (!hasFall)
+            {
+                waterSound.Play();
+                waterSplatter = GameObject.Find("FX_WaterSplatter");
+                GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
+                var main = SplattersParticle.main;
+                main.startSize = 0.5f;
+                main.startSpeed = 5f;
+                Destroy(newSplatters, 1.5f);
+                hasFall = !hasFall;
+            }
+        }
+    }
+}

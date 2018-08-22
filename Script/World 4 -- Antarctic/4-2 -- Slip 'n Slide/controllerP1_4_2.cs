@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
-
+/*
 [System.Serializable]
-public class Boundary1Stick_L2
+public class Boundary1Mouse
 {
     public float xMin, xMax, yMin, yMax, zMin, zMax;
 }
-
-public class ControllerP1_joystick_L2 : MonoBehaviour
+*/
+public class controllerP1_4_2 : MonoBehaviour
 {
-
-    public Boundary1Stick_L2 boundary1stick;
+    //public Boundary1Mouse boundary1mouse;
 
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletMove bullet;
-    public MissileMove missile;
+    public bulletMove_4_2 bullet;
+    public MissileMove_4_2 missile;
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
@@ -62,29 +61,24 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
     private Rigidbody rigid;
     private float angle = 0f;
     private int activeTurret = 1;
-
-    public float recoil;//in angular
+    
+    public float recoil;
     public float recoilIntensity;
     private int updownrecoil;
-    private Vector3 up;
-    private Vector3 down;
+    private Vector3 left;
+    private Vector3 right;
+    
+    public Vector3 recoilVector;
 
     private GameObject player;
     private GameObject waterSplatter;
     private bool SetScore = false;
     private bool hasFall = false;
-
-    private Quaternion LastDirection;
     private bool isSpecial = false;
-
-    //L2, new parameters
-    public GameObject floe;
-    public float floeVelocity;
-    public float maxFloeImpact; // max delta velocity
-    //
 
     void SetBig()
     {
+        ResetBarrel();//fix bug
         isBig = true;
         isMulti = false;
         isMissile = false;
@@ -99,6 +93,7 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
 
     void SetMulti()
     {
+        ResetBarrel();//fix bug
         isBig = false;
         isMulti = true;
         isMissile = false;
@@ -112,6 +107,7 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
 
     void SetFrozen()//
     {
+        ResetBarrel();
         isBig = false;
         isMulti = false;
         isMissile = false;
@@ -127,6 +123,7 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
 
     void SetMissile()
     {
+        ResetBarrel();
         isBig = false;
         isMulti = false;
         isMissile = true;
@@ -138,9 +135,19 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         UseTurret3();
     }
 
+    //fix bug
+    void ResetBarrel() {
+        if (isMulti) gameObject.transform.GetChild(2).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+        else if (isMissile) gameObject.transform.GetChild(3).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+        else gameObject.transform.GetChild(1).GetChild(1).transform.localScale = new Vector3(1f, 1f, 1f);
+    }
+    //
+
     void Buff_Time(float buff_begin)//
     {
         buff_begin_time = buff_begin;
+
+
     }
 
     void testbuff()
@@ -168,7 +175,10 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
 
     void SetAmmo(float change)
     {
+
         remainAmmo += change;
+
+        
         if (remainAmmo > maxAmmo)
         {
             remainAmmo = maxAmmo;
@@ -177,7 +187,6 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
 
     private void UseTurret1()
     {
-        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(true);
         gameObject.transform.GetChild(2).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
@@ -185,12 +194,10 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         this.firepoint = transform.GetChild(1).GetChild(2).GetComponent<Transform>();
         this.SpeCount = transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
         this.anim = transform.GetChild(1).GetChild(1).GetComponent<Animator>();
-        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret2()
     {
-        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(2).gameObject.SetActive(true);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
@@ -199,12 +206,10 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         this.SpeCount = transform.GetChild(2).GetChild(1).GetChild(2).gameObject;
         this.anim = transform.GetChild(2).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
-        transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
     private void UseTurret3()
     {
-        anim.Rebind();
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(2).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(true);
@@ -213,15 +218,8 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         this.SpeCount = transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
         this.anim = transform.GetChild(3).GetChild(1).GetComponent<Animator>();
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
-        transform.GetChild(activeTurret).rotation = LastDirection;
     }
-
-    //L2, new function
-    void GetFloeVelocity(float v)
-    {
-        floeVelocity = v;
-    }
-    //
+    /*
     void recoiltest(Vector3 dir)
     {
         if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x > 0)
@@ -230,77 +228,41 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
             updownrecoil = 1;
         else
             updownrecoil = 2;
-
-
     }
+    */
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
         float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
         float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
-        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
-        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
+        left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
+        right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
     }
 
 
     void FixedUpdate()
     {
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        /*
         rigid.position = new Vector3
         (
-            Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
-            Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
-            Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
+            Mathf.Clamp(rigid.position.x, boundary1mouse.xMin, boundary1mouse.xMax),
+            Mathf.Clamp(rigid.position.y, boundary1mouse.yMin, boundary1mouse.yMax),
+            Mathf.Clamp(rigid.position.z, boundary1mouse.zMin, boundary1mouse.zMax)
         );
+        */
         Vector3 pos = rigid.position;
-
-        float v_dir = Input.GetAxis("J2-V-Direct");
-        float h_dir = Input.GetAxis("J2-H-Direct");
-
-        Vector3 direction = Vector3.zero;
-
-        direction.x = -h_dir;
-        direction.y = v_dir;
-
+        Vector3 direction = mousePos - pos;
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
-        recoiltest(firepoint.transform.position - gameObject.transform.position);
-        //L2, check if sink
-        if (pos.y < boundary1stick.yMin + 0.2) {
-            remainLife = 0;
-            if (!hasFall)
-            {
-                waterSound.Play();
-                waterSplatter = GameObject.Find("FX_WaterSplatter");
-                GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
-                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
-                var main = SplattersParticle.main;
-                main.startSize = 0.5f;
-                main.startSpeed = 5f;
-                Destroy(newSplatters, 1.5f);
-                hasFall = !hasFall;
-            }
-        }
-        //
+        transform.GetChild(activeTurret).rotation = rotation;
 
-       // recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
+        float h_axis = Input.GetAxis("Horizontal");
+        float v_axis = Input.GetAxis("Vertical");
 
-        if (direction.magnitude >= 0.5)
-        {
-            transform.GetChild(activeTurret).rotation = rotation;
-            LastDirection = rotation;
-        }
-        else
-        {
-            transform.GetChild(activeTurret).rotation = LastDirection;
-        }
-
-        float h_axis = Input.GetAxis("J2-Horizontal");
-
-        if (h_axis != 0)
-        {
-            MoveAnim.Play("body Animation");
-        }
+        recoilVector =  recoilIntensity * -direction.normalized;
+        //recoiltest(firepoint.transform.position - gameObject.transform.position);
 
         testbuff();
         if (buff_frozen)//
@@ -313,13 +275,16 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = normal;
             buff = 1f;
         }
+        //rigid.velocity = new Vector3(buff * Accelrate * h_axis, buff * Accelrate * v_axis, 0f);
+        Vector3 movement = new Vector3(buff * Accelrate * h_axis, buff * Accelrate * v_axis, 0f);
+        rigid.AddForce(movement);
 
-        //L2, velocity modified here
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis + floeVelocity, rigid.velocity.y, 0f);
-        //
+        if (h_axis != 0 || v_axis != 0)
+        {
+            MoveAnim.Play("body Animation");
+        }
 
-        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
-
+        if ((Input.GetMouseButton(0)|| Input.GetKey(KeyCode.Space)) && remainAmmo >= 1) //fire
         {
             isFireing = true;
         }
@@ -339,8 +304,8 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMove_4_2 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_4_2;
+                    bulletMove_4_2 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_4_2;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -355,28 +320,30 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    //rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    rigid.AddForce(1.5f * recoilVector, ForceMode.Impulse);
+                    /*
                     if (updownrecoil == 0)
-                        rigid.AddForce(1.5f*up, ForceMode.Impulse);
+                        rigid.AddForce(1.5f * left, ForceMode.Impulse);
                     else if (updownrecoil == 1)
-                        rigid.AddForce(1.5f*down, ForceMode.Impulse);
+                        rigid.AddForce(1.5f * right, ForceMode.Impulse);
+                    */
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
                 else
-                {
+                {   
 
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMove_4_2 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_4_2;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMove_4_2 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_4_2;
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
@@ -384,17 +351,19 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
                             audioSB.volume = 0.5f;
                             special -= 1;
-                            newBullet.transform.localScale = new Vector3(1f, 0.08f, 1f);
+                            newBullet.transform.localScale = new Vector3(1f, 0.1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
-                            //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
+ //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            // rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+                            rigid.AddForce(2.0f * recoilVector, ForceMode.Impulse);
+                            /*
                             if (updownrecoil == 0)
-                                rigid.AddForce(2*up, ForceMode.Impulse);
+                                rigid.AddForce(2 * left, ForceMode.Impulse);
                             else if (updownrecoil == 1)
-                                rigid.AddForce(2*down, ForceMode.Impulse);
+                                rigid.AddForce(2 * right, ForceMode.Impulse);
+                            */
                         }
                         else if (isFrozen)//
                         {
@@ -403,28 +372,32 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            rigid.AddForce(recoilVector, ForceMode.Impulse);
+                            /*
                             if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
+                                rigid.AddForce(left, ForceMode.Impulse);
                             else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
+                                rigid.AddForce(right, ForceMode.Impulse);
+                            */
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            // rigid.AddForce(recoil, ForceMode.Impulse);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(up, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
+                            rigid.AddForce(recoilVector, ForceMode.Impulse);
+                            /*
+                            if (updownrecoil == 0)
+                                rigid.AddForce(left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(right, ForceMode.Impulse);
+                            */
                         }
+                        anim.Play("Gun Animation");                    
                     }
-                    anim.Play("Gun Animation");
                 }
 
                 SetAmmo(-1);
-
                 if (!isMissile)
                 {
                     if (isBig)
@@ -436,15 +409,10 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
                         audioS.Play();
                     }
                 }
-                else
-                {
+                else {
                     audioM.pitch = Random.Range(0.8f, 1.2f);
                     audioM.Play();
                 }
-
-                //L2, add modify floe speed effect
-                floe.SendMessage("UpdateVelocity", -Mathf.Sin(angle / Mathf.Rad2Deg) * maxFloeImpact);
-                //
             }
         }
         else
@@ -455,28 +423,25 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         }
         AmmoCount.SendMessage("SetAmmo", Mathf.Floor(remainAmmo));
 
-        float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f / maxLife;
+        float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f/ maxLife;
 
         transform.GetChild(0).transform.localScale = new Vector3(1.5f * liftRatio, 0.3f, 0.5f);
 
         LifeCount.SendMessage("SetLife", remainLife);
 
-        if (remainLife <= 0)
+        if(remainLife <= 0)
         {
-            //L2, stop update velocity from floe
-            floe.SendMessage("PlayerDie");
-            //
-
             StartCoroutine(DelayTime(0.3f));
             Time.timeScale = 0.2f;
-            Application.targetFrameRate = 150;
             GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
             if (!SetScore)
             {
                 score[0].SendMessage("rightPlus");
                 SetScore = !SetScore;
             }
+
         }
+
         if (isSpecial && special <= 0)
         {
             isBig = false;
@@ -490,14 +455,32 @@ public class ControllerP1_joystick_L2 : MonoBehaviour
         }
 
         SpeCount.SendMessage("SetSpe", special);
-
     }
 
     IEnumerator DelayTime(float duration)
     {
         yield return new WaitForSeconds(duration);
         Time.timeScale = 1f;
-        Application.targetFrameRate = -1;
         gameObject.SetActive(false);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "IcePlatform")
+        {
+            remainLife = 0;
+            if (!hasFall)
+            {
+                waterSound.Play();
+                waterSplatter = GameObject.Find("FX_WaterSplatter");
+                GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
+                var main = SplattersParticle.main;
+                main.startSize = 0.5f;
+                main.startSpeed = 5f;
+                Destroy(newSplatters, 1.5f);
+                hasFall = !hasFall;
+            }
+        }
     }
 }
