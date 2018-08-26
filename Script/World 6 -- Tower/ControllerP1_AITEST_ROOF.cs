@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
-public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
+public class ControllerP1_AITEST_ROOF : MonoBehaviour {
 
     public Boundary1Stick boundary1stick;
 
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletmove_3_1 bullet;
+    public bullet_move_l10 bullet;
     public Missilemove_3_1 missile;
     public Transform firepoint;
     public float bulletSpeed;
@@ -63,7 +63,7 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
 
     private GameObject player;
     private bool SetScore = false;
-    public bool heatmode;
+
     private Quaternion LastDirection;
     private bool isSpecial = false;
 
@@ -72,7 +72,13 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
     private float targetXpos;
     private float BulletPos;
     private float BulletPosLastTime;
-    private bool fireflag;
+    public float BulletXmax;
+    public float BulletXmin;
+    public float BulletYmax;
+    public float BulletYmin;
+    public float PlayerXmax;
+    public float PlayerXmin;
+
 
     void GetTargetPos(Vector3 x)
     {
@@ -96,9 +102,9 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
         if (Time.time - BulletPosLastTime < 2)
         {
 
-            if (transform.position.x <= -7f)
+            if (transform.position.x <= PlayerXmin)
                 Movespeed = 1;
-            else if (transform.position.x >= -2.1f)
+            else if (transform.position.x >= PlayerXmax)
                 Movespeed = -1;
             else if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > 0.5)
                 Movespeed = -1;//move left 
@@ -109,7 +115,6 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
         {
             Movespeed = 0;
         }
-        
 
     }
 
@@ -124,7 +129,7 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
         {
             velocity = Quaternion.Euler(i, 90, 90) * Vector3.right * 8.8f * Time.deltaTime;
             Vector3 p = firepoint.transform.position;
-            while (p.y > -3 && p.x < 7 && p.x > -7)
+            while (p.y > BulletYmin && p.x < BulletXmax && p.x > BulletXmin)
             {
                 velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
                 p += velocity;
@@ -328,7 +333,7 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
         //   }
 
         MovementSet();
-        
+
         if (Movespeed != 0)
         {
             MoveAnim.Play("body Animation");
@@ -347,7 +352,7 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
         }
 
         rigid.velocity = new Vector3(buff * Accelrate * Movespeed, rigid.velocity.y, 0f);
-        if (remainAmmo >= 1&& fireflag == true) //fire
+        if (remainAmmo >= 1) //fire
 
         {
             isFireing = true;
@@ -364,24 +369,23 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
             {
                 shotCounter = timeBetweenShots;
                 audioS.volume = 0.3f;
-                if (heatmode)
-                    gameObject.SendMessage("Add", Time.time);
+
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletmove_3_1 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletmove_3_1;
-                    bulletmove_3_1 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletmove_3_1;
+                    bullet_move_l10 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bullet_move_l10;
+                    bullet_move_l10 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bullet_move_l10;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
                     newBullet1.transform.Rotate(new Vector3(0f, 0f, -5f));
-                    newBullet1.bulletSpeed = bulletSpeed;
+                   // newBullet1.bulletSpeed = bulletSpeed;
                     newBullet1.SendMessage("SetMulti", true);
 
                     newBullet2.gameObject.SetActive(true);
                     newBullet2.transform.Translate(new Vector3(-0.2f, 0f, 0f));
                     newBullet2.transform.Rotate(new Vector3(0f, 0f, 5f));
-                    newBullet2.bulletSpeed = bulletSpeed;
+                   // newBullet2.bulletSpeed = bulletSpeed;
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
@@ -406,9 +410,9 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
                     }
                     else
                     {
-                        bulletmove_3_1 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletmove_3_1;
+                        bullet_move_l10 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bullet_move_l10;
                         newBullet.gameObject.SetActive(true);
-                        newBullet.bulletSpeed = bulletSpeed;
+                      //  newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
@@ -522,23 +526,6 @@ public class ControllerP1_AITEST_TOWER_AC : MonoBehaviour {
     }
 
 
-    void CoolMode()
-    {
-        heatmode = false;
 
-    }
-    void HeatMode()
-    {
-        heatmode = true;
-    }
-    void StopFire()
-    {
-        fireflag = false;
-
-    }
-    void ResetAmmo()
-    {
-        fireflag = true;
-    }
 
 }
