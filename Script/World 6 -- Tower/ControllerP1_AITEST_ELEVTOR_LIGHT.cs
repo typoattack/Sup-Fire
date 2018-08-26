@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class ControllerP1_AITEST_ELEVTOR_LIGHT : MonoBehaviour {
 
