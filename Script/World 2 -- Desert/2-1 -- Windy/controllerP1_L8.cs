@@ -436,7 +436,7 @@ public class controllerP1_L8 : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Tornado")
-            rigid.AddForce(new Vector3(0f, 7.5f, 0f));
+            gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 7.5f, 0f));
     }
 
     private void OnCollisionEnter(Collision collision)
