@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
+public class ControllerP1_AITEST_ROOF : MonoBehaviour {
 
-    public Boundary1Stick_2_2 boundary1stick;
+    public Boundary1Stick boundary1stick;
 
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletMove_2_2 bullet;
-    public MissileMove_2_2 missile;
+    public bullet_move_l10 bullet;
+    public Missilemove_3_1 missile;
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
     public AudioSource audioSB;
     public AudioSource audioR;
     public AudioSource audioM;
-    private float wind;
 
     public int special;
 
@@ -55,8 +54,11 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public Vector3 recoil;
+    public float recoil;//in angular
     public float recoilIntensity;
+    private int updownrecoil;
+    private Vector3 left;
+    private Vector3 right;
 
     private GameObject player;
     private bool SetScore = false;
@@ -75,8 +77,7 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
     public float BulletYmin;
     public float PlayerXmax;
     public float PlayerXmin;
-    public float upforceRange;
-    public float upforceMagnitude;
+
 
     void GetTargetPos(Vector3 x)
     {
@@ -88,6 +89,7 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
     {
         BulletPos = x.x;
 
+
     }
     void GetBulletTime(float x)
     {
@@ -96,9 +98,9 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
 
     void MovementSet()
     {
-
-        if (Time.time - BulletPosLastTime <= 0.3f)
+        if (Time.time - BulletPosLastTime < 2)
         {
+
             if (transform.position.x <= PlayerXmin)
                 Movespeed = 1;
             else if (transform.position.x >= PlayerXmax)
@@ -106,16 +108,14 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
             else if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > 0.5)
                 Movespeed = -1;//move left 
             else if (BulletPos - transform.position.x <= 1 && BulletPos - transform.position.x > -2)
-                Movespeed = 1;//move right
-            else
-                Movespeed = 0;
+                Movespeed = 1; ;//move right
         }
         else
+        {
             Movespeed = 0;
-
+        }
 
     }
-
 
     int Aimtest(float targetpos)
     {
@@ -123,40 +123,25 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
         Vector3 velocity;
         if (isMissile)
             return 0;
-        Vector3 wind = new Vector3(WindController.wind * 10, 0, 0);
-        Vector3 windy = new Vector3(0,upforceMagnitude*10, 0);
-        for (int i = 0; i < 60; i++)
+
+        for (int i = 5; i < 60; i++)
         {
             velocity = Quaternion.Euler(i, 90, 90) * Vector3.right * 8.8f * Time.deltaTime;
             Vector3 p = firepoint.transform.position;
             while (p.y > BulletYmin && p.x < BulletXmax && p.x > BulletXmin)
             {
-                    if (p.x < upforceRange && p.y < 1.5)
-                    {
-                        velocity += Physics.gravity * Time.deltaTime * Time.deltaTime + wind * Time.deltaTime * Time.deltaTime;
-                    }
-                    if (p.x > -upforceRange && p.y < 1.5)
-                    {
-                        velocity += Physics.gravity * Time.deltaTime * Time.deltaTime - wind * Time.deltaTime * Time.deltaTime;
-                    }
-                    if (p.x < upforceRange && p.x > -upforceRange && p.y < 1.5)
-                    {
-                        // if (WindController.wind > 0f)
-                        velocity += Physics.gravity * Time.deltaTime * Time.deltaTime + windy * Time.deltaTime * Time.deltaTime;
-
-                        // if (WindController.wind < 0f)
-                        //  velocity += Physics.gravity * Time.deltaTime * Time.deltaTime - windy * Time.deltaTime * Time.deltaTime;
-                    }
-                    if (p.y >= 1.5)
-                        velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
-                    p += velocity;
-                }
-            if (Mathf.Abs(p.x - targetpos) <= 0.5)
+                velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
+                p += velocity;
+            }
+            if (Mathf.Abs(p.x - targetpos) <= 1)
                 return i;
 
         }
         return 45;
     }
+
+
+
 
     void SetBig()
     {
@@ -291,53 +276,63 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
         transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
+    void recoiltest(Vector3 dir)
+    {
+        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x > 0)
+            updownrecoil = 0;
+        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x < 0)
+            updownrecoil = 1;
+        else
+            updownrecoil = 2;
+
+
+    }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
         //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
-        wind = WindController.wind;
+        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
+        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
+        left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
+        right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
     }
+
 
 
     void FixedUpdate()
     {
-        wind = WindController.wind;
-        Debug.Log(wind);
         rigid.position = new Vector3
         (
             Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
             Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
             Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
         );
-     //   Vector3 pos = rigid.position;
+        // Vector3 pos = rigid.position;
 
-    //    float v_dir = Input.GetAxis("J2-V-Direct");
-      //  float h_dir = Input.GetAxis("J2-H-Direct");
 
-      //  Vector3 direction = Vector3.zero;
 
-      //  direction.x = -h_dir;
-       // direction.y = v_dir;
+        //  Vector3 direction = Vector3.zero;
+        //  direction.x = 1;
+        // direction.y = 1;
 
-      //  angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(Aimtest(targetXpos), new Vector3(0f, 0f, -1f));
 
-        recoil = firepoint.transform.position.y < gameObject.transform.position.y ?
-            new Vector3(0f, 0f, 0f) : recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;
 
-      //  if (direction.magnitude >= 0.5)
-      //  {
-            transform.GetChild(activeTurret).rotation = rotation;
-            LastDirection = rotation;
-      //  }
-      //  else
-      //  {
-      //      transform.GetChild(activeTurret).rotation = LastDirection;
-      //  }
+        recoiltest(firepoint.transform.position - gameObject.transform.position);
+        //  if (direction.magnitude >= 0.5)
+        //{
+        transform.GetChild(activeTurret).rotation = rotation;
+        LastDirection = rotation;
+        //}
+        //  else
+        //   {
+        //     transform.GetChild(activeTurret).rotation = LastDirection;
+        //   }
 
-        //float h_axis = Input.GetAxis("J2-Horizontal");
         MovementSet();
+
         if (Movespeed != 0)
         {
             MoveAnim.Play("body Animation");
@@ -347,7 +342,7 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
         if (buff_frozen)//
         {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
-            buff = 0.6f;
+            buff = 0.5f;
         }
         else
         {
@@ -356,8 +351,6 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
         }
 
         rigid.velocity = new Vector3(buff * Accelrate * Movespeed, rigid.velocity.y, 0f);
-        rigid.AddForce(Vector3.right * wind * 100);
-
         if (remainAmmo >= 1) //fire
 
         {
@@ -379,23 +372,27 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove_2_2 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_2_2;
-                    bulletMove_2_2 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_2_2;
+                    bullet_move_l10 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bullet_move_l10;
+                    bullet_move_l10 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bullet_move_l10;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
                     newBullet1.transform.Rotate(new Vector3(0f, 0f, -5f));
-                    newBullet1.bulletSpeed = bulletSpeed;
+                   // newBullet1.bulletSpeed = bulletSpeed;
                     newBullet1.SendMessage("SetMulti", true);
 
                     newBullet2.gameObject.SetActive(true);
                     newBullet2.transform.Translate(new Vector3(-0.2f, 0f, 0f));
                     newBullet2.transform.Rotate(new Vector3(0f, 0f, 5f));
-                    newBullet2.bulletSpeed = bulletSpeed;
+                   // newBullet2.bulletSpeed = bulletSpeed;
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    //rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    if (updownrecoil == 0)
+                        rigid.AddForce(1.5f * left, ForceMode.Impulse);
+                    else if (updownrecoil == 1)
+                        rigid.AddForce(1.5f * right, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -405,20 +402,20 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove_2_2 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_2_2;
+                        Missilemove_3_1 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as Missilemove_3_1;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove_2_2 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_2_2;
+                        bullet_move_l10 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bullet_move_l10;
                         newBullet.gameObject.SetActive(true);
-                        newBullet.bulletSpeed = bulletSpeed;
+                      //  newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
-                            audioSB.volume = 1.0f;
+                            audioSB.volume = 0.5f;
                             special -= 1;
                             newBullet.transform.localScale = new Vector3(1f, 1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
@@ -426,7 +423,10 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(2 * left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(2 * right, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
@@ -435,16 +435,23 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(left, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
+                        anim.Play("Gun Animation");
                     }
-                    anim.Play("Gun Animation");
                 }
 
                 SetAmmo(-1);
@@ -516,4 +523,8 @@ public class ControllerP1_AITEST_DESERT_UPDRAFT : MonoBehaviour {
         Application.targetFrameRate = -1;
         gameObject.SetActive(false);
     }
+
+
+
+
 }

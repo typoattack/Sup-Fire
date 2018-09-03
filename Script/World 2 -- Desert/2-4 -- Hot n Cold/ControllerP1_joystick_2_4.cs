@@ -257,9 +257,9 @@ public class ControllerP1_joystick_2_4 : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
-        //  if (isGrounded == true) h_axis = Input.GetAxis("J2-Horizontal");
-        // else h_axis = 0;
-        h_axis = Input.GetAxis("J2-Horizontal");
+        if (isGrounded == true) h_axis = Input.GetAxis("J2-Horizontal");
+        else h_axis = 0;
+
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");

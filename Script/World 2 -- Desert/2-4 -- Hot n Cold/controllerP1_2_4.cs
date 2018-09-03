@@ -246,9 +246,9 @@ public class controllerP1_2_4 : MonoBehaviour
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
         transform.GetChild(activeTurret).rotation = rotation;
 
-        //if(isGrounded == true) h_axis = Input.GetAxis("Horizontal");
-        // else h_axis = 0;
-        h_axis = Input.GetAxis("Horizontal");
+        if(isGrounded == true) h_axis = Input.GetAxis("Horizontal");
+        else h_axis = 0;
+
         recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
         testbuff();

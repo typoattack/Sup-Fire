@@ -256,9 +256,9 @@ public class ControllerP2_2_4 : MonoBehaviour
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
-        // if (isGrounded == true) h_axis = Input.GetAxis("J-Horizontal");
-        // else h_axis = 0;
-        h_axis = Input.GetAxis("J-Horizontal");
+        if (isGrounded == true) h_axis = Input.GetAxis("J-Horizontal");
+        else h_axis = 0;
+
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
@@ -276,7 +276,6 @@ public class ControllerP2_2_4 : MonoBehaviour
         }
 
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
-       
         //rigid.AddForce(Vector3.right * wind * 100);
 
         if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
