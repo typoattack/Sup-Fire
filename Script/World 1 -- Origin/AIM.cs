@@ -17,6 +17,8 @@ public class AIM : MonoBehaviour
     public float Ymax;
     public float Ymin;
     public int BulletSelection;//0:normal bullet;1: lava
+    public GameObject cube;
+    public bool _AIM;
     void Start()
     {
         temp = Time.time;
@@ -26,7 +28,8 @@ public class AIM : MonoBehaviour
         {
             velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
             p += velocity;
-
+            if (_AIM)
+                Instantiate(cube, p, Quaternion.identity);
         }
 
        

@@ -1,26 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EZCameraShake;
 
-
-
-public class ControllerP1_AITEST : MonoBehaviour
-{
-
-    public Boundary1Stick boundary1stick;
+public class ControllerP1_AITEST_DESERT_ACROSSTHECANYON : MonoBehaviour {
+    public Boundary1Stick_2_5 boundary1stick;
 
     public float Accelrate;
     public float MaxSpeed;
     public bool isFireing;
-    public bulletMove bullet;
-    public MissileMove missile;
+    public bulletMove_2_5 bullet;
+    public MissileMove_2_5 missile;
     public Transform firepoint;
     public float bulletSpeed;
     public AudioSource audioS;
     public AudioSource audioSB;
     public AudioSource audioR;
     public AudioSource audioM;
+    private float wind;
+
+    private bool isGrounded;
+    private float h_axis;
+    private float v_axis;
 
     public int special;
 
@@ -58,11 +58,8 @@ public class ControllerP1_AITEST : MonoBehaviour
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public float recoil;//in angular
+    public Vector3 recoil;
     public float recoilIntensity;
-    private int updownrecoil;
-    private Vector3 left;
-    private Vector3 right;
 
     private GameObject player;
     private bool SetScore = false;
@@ -70,11 +67,13 @@ public class ControllerP1_AITEST : MonoBehaviour
     private Quaternion LastDirection;
     private bool isSpecial = false;
 
-    public GameObject target;
+    
     private Vector3 movement;
-    private float Movespeed;
-    private float targetXpos;
-    private float BulletPos;
+    private float  XMovespeed;
+    private float YMovespeed;
+    private Vector3 target;
+    private Vector3 BulletPos;
+    private Vector3 BulletSpeed;
     private float BulletPosLastTime;
     public float BulletXmax;
     public float BulletXmin;
@@ -82,17 +81,31 @@ public class ControllerP1_AITEST : MonoBehaviour
     public float BulletYmin;
     public float PlayerXmax;
     public float PlayerXmin;
+    public float PlayerYmax;
+    public float PlayerYmin;
+    public float upforceRange;
+    public float upforceMagnitude;
+    private int hit;
 
 
+    void GetTargetPos(Vector3 x)
+    {
+        target = x;
+    }
 
- 
-
+    void HitDetect(int x)
+    {
+        hit = x;
+    }
 
     void GetBulletPos(Vector3 x)
     {
-        BulletPos = x.x;
-        
+        BulletPos = x;
+    }
+    void GetBulletSpeed(Vector3 x)
+    {
 
+        BulletSpeed = x;
     }
     void GetBulletTime(float x)
     {
@@ -101,48 +114,74 @@ public class ControllerP1_AITEST : MonoBehaviour
 
     void MovementSet()
     {
-        if (Time.time - BulletPosLastTime < 2)
+        if (transform.position.x <= PlayerXmin)
+            XMovespeed = 1;
+        else if (transform.position.x >= PlayerXmax)
+            XMovespeed = -1;
+        else if (transform.position.y >= PlayerYmax)
+            YMovespeed = -1;
+        else if (transform.position.y <= PlayerYmin)
+            YMovespeed = 1;
+        else if (Time.time - BulletPosLastTime < 1)
         {
 
-            if (transform.position.x <= PlayerXmin)
-                Movespeed = 1;
-            else if (transform.position.x >= PlayerXmax)
-                Movespeed = -1;
-            else if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > 0.5)
-                Movespeed = -1;//move left 
-            else if (BulletPos - transform.position.x <= 1 && BulletPos - transform.position.x > -2)
-                Movespeed = 1; ;//move right
+            
+            if (hit==1)
+            {
+               
+                XMovespeed =  BulletSpeed.y*10;
+                YMovespeed =  -BulletSpeed.x*10;
+
+            }
+            else if(hit==2)
+            {
+
+                XMovespeed = BulletSpeed.y * 10;
+                YMovespeed = BulletSpeed.x * 10;
+
+            }
+            //  else if (BulletPos.x - transform.position.x <= 1 && BulletPos.x - transform.position.x > -2)
+            //   Movespeed = 1; ;//move right
         }
         else
         {
-            Movespeed = 0;
+            hit = 0;
+            XMovespeed = 0;
+            YMovespeed = 0;
         }
-        
+
     }
 
-    int Aimtest( )
+    int Aimtest(Vector3 targetpos)
     {
-        targetXpos = target.transform.position.x;
+
         Vector3 velocity;
         if (isMissile)
             return 0;
-
-        for (int i = 5; i < 60; i++) {
-            velocity= Quaternion.Euler(i,90,90) * Vector3.right * 8.8f * Time.deltaTime;
+        Vector3 windy = new Vector3(0, upforceMagnitude, 0);
+        for (int i = 5; i < 175; i++)
+        {
+            velocity = Quaternion.Euler(i, 90, 90) * Vector3.right * 8.8f * Time.deltaTime;
             Vector3 p = firepoint.transform.position;
-            while (p.y > BulletYmin && p.x < BulletXmax && p.x > BulletXmin)
+            while (p.x < BulletXmax && p.x > BulletXmin&&p.y<BulletYmax&&p.y>BulletYmin)
             {
-                velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
+                if (p.x < upforceRange && p.x > -upforceRange)
+                {
+                    if (WindController.wind > 0)
+                        velocity += windy * Time.deltaTime * Time.deltaTime;
+                    else if (WindController.wind < 0)
+                        velocity -= windy * Time.deltaTime * Time.deltaTime;
+                }
                 p += velocity;
+
+                if (Mathf.Abs(p.x - targetpos.x) <= 0.5&& (Mathf.Abs(p.y - targetpos.y) <= 0.5))
+                    return i;
             }
-            if (Mathf.Abs(p.x - targetXpos) <= 1)
-                return i;
+          
 
         }
-        return 45;
+        return 90;
     }
-
-
 
 
     void SetBig()
@@ -278,64 +317,53 @@ public class ControllerP1_AITEST : MonoBehaviour
         transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
-    void recoiltest(Vector3 dir)
-    {
-        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x > 0)
-            updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -45 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 45 && dir.x < 0)
-            updownrecoil = 1;
-        else
-            updownrecoil = 2;
-
-
-    }
-
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
         //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
-        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
-        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
-        left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
-        right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
+        wind = WindController.wind;
     }
-
 
 
     void FixedUpdate()
     {
+        wind = WindController.wind;
         rigid.position = new Vector3
         (
             Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
             Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
             Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
         );
-       // Vector3 pos = rigid.position;
+     //   Vector3 pos = rigid.position;
 
-     
+     //   float v_dir = Input.GetAxis("J2-V-Direct");
+       // float h_dir = Input.GetAxis("J2-H-Direct");
+//
+     //   Vector3 direction = Vector3.zero;
 
-      //  Vector3 direction = Vector3.zero;
-      //  direction.x = 1;
-       // direction.y = 1;
-       
-        Quaternion rotation = Quaternion.AngleAxis(Aimtest(), new Vector3(0f, 0f, -1f));
-        
+      //  direction.x = -h_dir;
+      //  direction.y = v_dir;
 
-        recoiltest(firepoint.transform.position - gameObject.transform.position);
-      //  if (direction.magnitude >= 0.5)
-        //{
+       // angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.AngleAxis(Aimtest(target), new Vector3(0f, 0f, -1f));
+
+        recoil = recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;
+
+     //   if (direction.magnitude >= 0.5)
+     //   {
             transform.GetChild(activeTurret).rotation = rotation;
             LastDirection = rotation;
-        //}
-      //  else
-     //   {
-       //     transform.GetChild(activeTurret).rotation = LastDirection;
-     //   }
+        //   }
+        //  else
+        //   {
+        //       transform.GetChild(activeTurret).rotation = LastDirection;
+        //   }
 
+        //  h_axis = Input.GetAxis("J2-Horizontal");
+        //  v_axis = Input.GetAxis("J2-Vertical");
         MovementSet();
-
-        if (Movespeed != 0)
+        if (XMovespeed != 0||YMovespeed!=0)
         {
             MoveAnim.Play("body Animation");
         }
@@ -344,7 +372,7 @@ public class ControllerP1_AITEST : MonoBehaviour
         if (buff_frozen)//
         {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
-            buff = 0.5f;
+            buff = 0.6f;
         }
         else
         {
@@ -352,7 +380,8 @@ public class ControllerP1_AITEST : MonoBehaviour
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * Movespeed, rigid.velocity.y, 0f);
+        rigid.velocity = new Vector3(XMovespeed*buff*Accelrate, buff * Accelrate * YMovespeed, 0f);
+
         if ( remainAmmo >= 1) //fire
 
         {
@@ -374,8 +403,8 @@ public class ControllerP1_AITEST : MonoBehaviour
                 if (isMulti)
                 {
                     special -= 1;
-                    bulletMove newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
-                    bulletMove newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                    bulletMove_2_5 newBullet1 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_2_5;
+                    bulletMove_2_5 newBullet2 = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_2_5;
 
                     newBullet1.gameObject.SetActive(true);
                     newBullet1.transform.Translate(new Vector3(0.2f, 0f, 0f));
@@ -390,11 +419,7 @@ public class ControllerP1_AITEST : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    //rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
-                    if (updownrecoil == 0)
-                        rigid.AddForce(1.5f * left, ForceMode.Impulse);
-                    else if (updownrecoil == 1)
-                        rigid.AddForce(1.5f * right, ForceMode.Impulse);
+                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -404,20 +429,20 @@ public class ControllerP1_AITEST : MonoBehaviour
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove;
+                        MissileMove_2_5 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_2_5;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
                     }
                     else
                     {
-                        bulletMove newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove;
+                        bulletMove_2_5 newBullet = Instantiate(bullet, firepoint.position, firepoint.rotation) as bulletMove_2_5;
                         newBullet.gameObject.SetActive(true);
                         newBullet.bulletSpeed = bulletSpeed;
                         if (isBig)
                         {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
-                            audioSB.volume = 0.5f;
+                            audioSB.volume = 1.0f;
                             special -= 1;
                             newBullet.transform.localScale = new Vector3(1f, 1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
@@ -425,10 +450,7 @@ public class ControllerP1_AITEST : MonoBehaviour
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(2 * left, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(2 * right, ForceMode.Impulse);
+                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
@@ -437,23 +459,16 @@ public class ControllerP1_AITEST : MonoBehaviour
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(left, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            if (updownrecoil == 0)
-                                rigid.AddForce(left, ForceMode.Impulse);
-                            else if (updownrecoil == 1)
-                                rigid.AddForce(right, ForceMode.Impulse);
+                            rigid.AddForce(recoil, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
-                        anim.Play("Gun Animation");
                     }
+                    anim.Play("Gun Animation");
                 }
 
                 SetAmmo(-1);
@@ -526,7 +541,5 @@ public class ControllerP1_AITEST : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
-
-   
 }
+

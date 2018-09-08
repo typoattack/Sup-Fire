@@ -14,8 +14,9 @@ public class PositionSend : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (target!=null)
+        if (target??false)
         {
+
             if (HostSelection == 0)
             {
                 if (Time.time - temp >= 0.5)

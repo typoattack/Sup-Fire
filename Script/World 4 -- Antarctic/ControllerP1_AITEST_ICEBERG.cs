@@ -103,9 +103,16 @@ public class ControllerP1_AITEST_ICEBERG : MonoBehaviour {
     }
     void MovementSet()
     {
+
+        
+
         if (Time.time - BulletPosLastTime <= 2)
         {
-            if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > 0.5)
+            if (IcePos - transform.position.x >= 0.8)
+                Movespeed = 1;
+            else if (IcePos - transform.position.x <= -0.8)
+                Movespeed = -1;
+            else if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > 0.5)
                 Movespeed = -1;//move left 
             else if (BulletPos - transform.position.x <= 1 && BulletPos - transform.position.x > -1)
                 Movespeed = 1; ;//move right

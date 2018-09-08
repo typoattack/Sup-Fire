@@ -34,6 +34,7 @@ public class bulletMove_2_5 : MonoBehaviour {
         waterSplatter = GameObject.Find("FX_WaterSplatter");
     }
     void Start () {
+        wind = WindController.wind;
         rb = GetComponent<Rigidbody>();
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
@@ -58,7 +59,7 @@ public class bulletMove_2_5 : MonoBehaviour {
     
 
     void FixedUpdate () {
-        wind = WindController.wind;
+        
         //transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
         /*
         if (gameObject.transform.position.x < -upforceRange && gameObject.transform.position.y < 1.5)
