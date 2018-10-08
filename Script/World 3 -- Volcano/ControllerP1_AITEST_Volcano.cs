@@ -77,12 +77,8 @@ public class ControllerP1_AITEST_Volcano : MonoBehaviour
     private float BulletPosLastTime;
     public float lavalTime;
     private float lavalpos;
+    public GameObject target;
 
-    void GetTargetPos(Vector3 x)
-    {
-        targetXpos = x.x;
-
-    }
 
     void GetBulletPos(Vector3 x)
     {
@@ -158,7 +154,7 @@ public class ControllerP1_AITEST_Volcano : MonoBehaviour
                 velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
                 p += velocity;
             }
-            if (Mathf.Abs(p.x - targetpos) <= 1)
+            if (Mathf.Abs(p.x - targetpos) <=0.5)
                 return i;
 
         }
@@ -341,7 +337,7 @@ public class ControllerP1_AITEST_Volcano : MonoBehaviour
         //  Vector3 direction = Vector3.zero;
         //  direction.x = 1;
         // direction.y = 1;
-
+        targetXpos = target.transform.position.x;
         Quaternion rotation = Quaternion.AngleAxis(Aimtest(targetXpos), new Vector3(0f, 0f, -1f));
 
 

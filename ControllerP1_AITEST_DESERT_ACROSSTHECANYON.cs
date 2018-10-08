@@ -86,12 +86,8 @@ public class ControllerP1_AITEST_DESERT_ACROSSTHECANYON : MonoBehaviour {
     public float upforceRange;
     public float upforceMagnitude;
     private int hit;
+    public GameObject target1;
 
-
-    void GetTargetPos(Vector3 x)
-    {
-        target = x;
-    }
 
     void HitDetect(int x)
     {
@@ -154,7 +150,7 @@ public class ControllerP1_AITEST_DESERT_ACROSSTHECANYON : MonoBehaviour {
 
     int Aimtest(Vector3 targetpos)
     {
-
+       
         Vector3 velocity;
         if (isMissile)
             return 0;
@@ -335,17 +331,18 @@ public class ControllerP1_AITEST_DESERT_ACROSSTHECANYON : MonoBehaviour {
             Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
             Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
         );
-     //   Vector3 pos = rigid.position;
+        //   Vector3 pos = rigid.position;
 
-     //   float v_dir = Input.GetAxis("J2-V-Direct");
-       // float h_dir = Input.GetAxis("J2-H-Direct");
-//
-     //   Vector3 direction = Vector3.zero;
+        //   float v_dir = Input.GetAxis("J2-V-Direct");
+        // float h_dir = Input.GetAxis("J2-H-Direct");
+        //
+        //   Vector3 direction = Vector3.zero;
 
-      //  direction.x = -h_dir;
-      //  direction.y = v_dir;
+        //  direction.x = -h_dir;
+        //  direction.y = v_dir;
 
-       // angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        // angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        target = target1.transform.position;
         Quaternion rotation = Quaternion.AngleAxis(Aimtest(target), new Vector3(0f, 0f, -1f));
 
         recoil = recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;

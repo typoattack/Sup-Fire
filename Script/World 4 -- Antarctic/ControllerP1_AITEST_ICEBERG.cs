@@ -76,16 +76,13 @@ public class ControllerP1_AITEST_ICEBERG : MonoBehaviour {
     public float maxFloeImpact; // max delta velocity
                                 //
     private Vector3 movement;
+    public GameObject target;
     private float Movespeed;
     private float targetXpos;
     private float BulletPos;
     private float BulletPosLastTime;
     private float IcePos;
-    void GetTargetPos(Vector3 x)
-    {
-        targetXpos = x.x;
 
-    }
 
     void GetBulletPos(Vector3 x)
     {
@@ -150,7 +147,7 @@ public class ControllerP1_AITEST_ICEBERG : MonoBehaviour {
                 velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
                 p += velocity;
             }
-            if (Mathf.Abs(p.x - targetpos) <= 1)
+            if (Mathf.Abs(p.x - targetpos) <= 0.3)
                 return i;
 
         }
@@ -335,7 +332,9 @@ public class ControllerP1_AITEST_ICEBERG : MonoBehaviour {
         //Vector3 direction = Vector3.zero;
 
 
-      //  Debug.Log(Aimtest(targetXpos));
+        //  Debug.Log(Aimtest(targetXpos));
+        targetXpos = target.transform.position.x;
+       
         Quaternion rotation = Quaternion.AngleAxis(Aimtest(targetXpos), new Vector3(0f, 0f, -1f));
         recoiltest(firepoint.transform.position - gameObject.transform.position);
         //L2, check if sink

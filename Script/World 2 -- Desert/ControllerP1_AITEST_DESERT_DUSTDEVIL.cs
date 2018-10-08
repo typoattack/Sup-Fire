@@ -83,13 +83,7 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
     public float PlayerXmax;
     public float PlayerXmin;
 
-
-    void GetTargetPos(Vector3 x)
-    {
-        targetXpos = x.x;
-        targetYpos = x.y;
-
-    }
+    public GameObject target;
 
     void GetBulletPos(Vector3 x)
     {
@@ -311,17 +305,19 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
             Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
             Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
         );
-      //  Vector3 pos = rigid.position;
+        //  Vector3 pos = rigid.position;
 
-       // float v_dir = Input.GetAxis("J2-V-Direct");
-      //  float h_dir = Input.GetAxis("J2-H-Direct");
+        // float v_dir = Input.GetAxis("J2-V-Direct");
+        //  float h_dir = Input.GetAxis("J2-H-Direct");
 
-      //  Vector3 direction = Vector3.zero;
+        //  Vector3 direction = Vector3.zero;
 
-      //  direction.x = -h_dir;
-       // direction.y = v_dir;
+        //  direction.x = -h_dir;
+        // direction.y = v_dir;
 
-      //  angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        //  angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        targetXpos = target.transform.position.x;
+        targetYpos = target.transform.position.y;
         Quaternion rotation = Quaternion.AngleAxis(Aimtest(targetXpos,targetYpos), new Vector3(0f, 0f, -1f));
 
         recoil = firepoint.transform.position.y < gameObject.transform.position.y ?

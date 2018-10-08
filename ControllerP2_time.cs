@@ -1,14 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EZCameraShake;
 
+public class ControllerP2_time : MonoBehaviour {
 
-
-public class ControllerP1_AITEST : MonoBehaviour
-{
-
-    public Boundary1Stick boundary1stick;
+    public Boundary2Stick boundary2stick;
 
     public float Accelrate;
     public float MaxSpeed;
@@ -58,6 +54,7 @@ public class ControllerP1_AITEST : MonoBehaviour
     private float angle = 0f;
     private int activeTurret = 1;
 
+
     public float recoil;//in angular
     public float recoilIntensity;
     private int updownrecoil;
@@ -70,79 +67,10 @@ public class ControllerP1_AITEST : MonoBehaviour
     private Quaternion LastDirection;
     private bool isSpecial = false;
 
-    public GameObject target;
-    private Vector3 movement;
-    private float Movespeed;
-    private float targetXpos;
-    private float BulletPos;
-    private float BulletPosLastTime;
-    public float BulletXmax;
-    public float BulletXmin;
-    public float BulletYmax;
-    public float BulletYmin;
-    public float PlayerXmax;
-    public float PlayerXmin;
-
-
-
- 
-
-
-    void GetBulletPos(Vector3 x)
-    {
-        BulletPos = x.x;
-        
-
-    }
-    void GetBulletTime(float x)
-    {
-        BulletPosLastTime = x;
-    }
-
-    void MovementSet()
-    {
-        if (Time.time - BulletPosLastTime < 2)
-        {
-
-            if (transform.position.x <= PlayerXmin)
-                Movespeed = 1;
-            else if (transform.position.x >= PlayerXmax)
-                Movespeed = -1;
-            else if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > 0.5)
-                Movespeed = -1;//move left 
-            else if (BulletPos - transform.position.x <= 1 && BulletPos - transform.position.x > -2)
-                Movespeed = 1; ;//move right
-        }
-        else
-        {
-            Movespeed = 0;
-        }
-        
-    }
-
-    int Aimtest( )
-    {
-        targetXpos = target.transform.position.x;
-        Vector3 velocity;
-        if (isMissile)
-            return 0;
-
-        for (int i = 5; i < 60; i++) {
-            velocity= Quaternion.Euler(i,90,90) * Vector3.right * 8.8f * Time.deltaTime;
-            Vector3 p = firepoint.transform.position;
-            while (p.y > BulletYmin && p.x < BulletXmax && p.x > BulletXmin)
-            {
-                velocity += Physics.gravity * Time.deltaTime * Time.deltaTime;
-                p += velocity;
-            }
-            if (Mathf.Abs(p.x - targetXpos) <= 0.5)
-                return i;
-
-        }
-        return 45;
-    }
-
-
+    Queue<Vector3> time = new Queue<Vector3>();
+    Queue<float> hp = new Queue<float>();
+    public int accuracy;//number of deltime for flashback
+    private float maxlifecnt;
 
 
     void SetBig()
@@ -290,61 +218,87 @@ public class ControllerP1_AITEST : MonoBehaviour
 
     }
 
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
+        //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
         float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
         float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
         left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
         right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
-    }
+        maxlifecnt = maxLife;
 
+    }
 
 
     void FixedUpdate()
     {
+        
+        time.Enqueue(transform.position);
+     //   ammo.Enqueue(remainAmmo);
+        hp.Enqueue(remainLife);
+        if (Input.GetKeyUp(KeyCode.Joystick1Button0))
+        {
+
+            transform.position = time.Peek();
+            //   remainAmmo = ammo.Peek();
+            maxlifecnt--;
+            float val = hp.Peek();
+            remainLife = val > maxlifecnt ? maxlifecnt : val;
+            Debug.Log("j");
+        }
+       if (time.Count >= accuracy)
+        {
+            time.Dequeue();
+       //     ammo.Dequeue();
+            hp.Dequeue();
+
+        }
+
+
+
+
         rigid.position = new Vector3
         (
-            Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
-            Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
-            Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
+            Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
+            Mathf.Clamp(rigid.position.y, boundary2stick.yMin, boundary2stick.yMax),
+            Mathf.Clamp(rigid.position.z, boundary2stick.zMin, boundary2stick.zMax)
         );
-       // Vector3 pos = rigid.position;
+        Vector3 pos = rigid.position;
 
-     
+        float v_dir = Input.GetAxis("J-V-Direct");
+        float h_dir = Input.GetAxis("J-H-Direct");
 
-      //  Vector3 direction = Vector3.zero;
-      //  direction.x = 1;
-       // direction.y = 1;
-       
-        Quaternion rotation = Quaternion.AngleAxis(Aimtest(), new Vector3(0f, 0f, -1f));
-        
+        Vector3 direction = Vector3.zero;
 
+        direction.x = -h_dir;
+        direction.y = v_dir;
+
+        angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
         recoiltest(firepoint.transform.position - gameObject.transform.position);
-      //  if (direction.magnitude >= 0.5)
-        //{
+        if (direction.magnitude >= 0.5)
+        {
             transform.GetChild(activeTurret).rotation = rotation;
             LastDirection = rotation;
-        //}
-      //  else
-     //   {
-       //     transform.GetChild(activeTurret).rotation = LastDirection;
-     //   }
+        }
+        else
+        {
+            transform.GetChild(activeTurret).rotation = LastDirection;
+        }
 
-        MovementSet();
-
-        if (Movespeed != 0)
+        float h_axis = Input.GetAxis("J-Horizontal");
+        if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
         }
-
-        testbuff();
+        testbuff();//
         if (buff_frozen)//
         {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
-            buff = 0.5f;
+            buff = 0.6f;
         }
         else
         {
@@ -352,9 +306,9 @@ public class ControllerP1_AITEST : MonoBehaviour
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * Movespeed, rigid.velocity.y, 0f);
-        if ( remainAmmo >= 1) //fire
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
 
+        if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
             isFireing = true;
         }
@@ -390,7 +344,6 @@ public class ControllerP1_AITEST : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    //rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     if (updownrecoil == 0)
                         rigid.AddForce(1.5f * left, ForceMode.Impulse);
                     else if (updownrecoil == 1)
@@ -419,7 +372,7 @@ public class ControllerP1_AITEST : MonoBehaviour
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
                             audioSB.volume = 0.5f;
                             special -= 1;
-                            newBullet.transform.localScale = new Vector3(1f, 1f, 1f);
+                            newBullet.transform.localScale = new Vector3(1f, 0.1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
                             //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
@@ -451,13 +404,13 @@ public class ControllerP1_AITEST : MonoBehaviour
                             else if (updownrecoil == 1)
                                 rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
+
                         }
                         anim.Play("Gun Animation");
                     }
                 }
 
                 SetAmmo(-1);
-
                 if (!isMissile)
                 {
                     if (isBig)
@@ -498,7 +451,7 @@ public class ControllerP1_AITEST : MonoBehaviour
             GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
             if (!SetScore)
             {
-                score[0].SendMessage("rightPlus");
+                score[0].SendMessage("leftPlus");
                 SetScore = !SetScore;
             }
         }
@@ -515,7 +468,6 @@ public class ControllerP1_AITEST : MonoBehaviour
         }
 
         SpeCount.SendMessage("SetSpe", special);
-
     }
 
     IEnumerator DelayTime(float duration)
@@ -525,8 +477,4 @@ public class ControllerP1_AITEST : MonoBehaviour
         Application.targetFrameRate = -1;
         gameObject.SetActive(false);
     }
-
-
-
-   
 }
