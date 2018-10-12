@@ -71,7 +71,9 @@ public class ControllerP2_time : MonoBehaviour {
     Queue<float> hp = new Queue<float>();
     public int accuracy;//number of deltime for flashback
     private float maxlifecnt;
-
+    public ParticleSystem flash;
+    public GameObject clock1;
+    public GameObject clock2;
 
     void SetBig()
     {
@@ -241,8 +243,10 @@ public class ControllerP2_time : MonoBehaviour {
         hp.Enqueue(remainLife);
         if (Input.GetKeyUp(KeyCode.Joystick1Button0))
         {
-
+            Instantiate(flash, transform.position, Quaternion.identity);
             transform.position = time.Peek();
+            clock1.SendMessage("setflag", Time.time);
+            clock2.SendMessage("setflag", Time.time);
             //   remainAmmo = ammo.Peek();
             maxlifecnt--;
             float val = hp.Peek();
