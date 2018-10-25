@@ -16,7 +16,7 @@ public class cloud2move : MonoBehaviour {
         transform.position += new Vector3(-0.5f * Time.deltaTime, 0, 0);
         if (transform.position.x <= x0)
         {
-            transform.position = new Vector3(-x1, y, -1.2f);
+            transform.position = new Vector3(x1, y, -1.51f);
         }
 	}
 }
