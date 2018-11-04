@@ -11,6 +11,7 @@ public class cloudRotation : MonoBehaviour {
     public bool rotating;
     private bool got;
     private float angled;
+    private float platformHVelocity;
     void Start()
     {
         got = false;
@@ -39,7 +40,16 @@ public class cloudRotation : MonoBehaviour {
     {
         if (other.gameObject.tag == "Player")
         {
-            other.transform.parent.SendMessage("SetPlatformVelocity", aroundRadius * (1 / Mathf.Tan(angled * Mathf.Deg2Rad)) * Mathf.Cos(angled * Mathf.Deg2Rad));
+            platformHVelocity = aroundRadius * (Mathf.Cos(angled * Mathf.Deg2Rad))/2.86f;
+            other.transform.parent.SendMessage("SetPlatformVelocity", platformHVelocity);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            platformHVelocity = 0f;
+            other.transform.parent.SendMessage("SetPlatformVelocity", platformHVelocity);
         }
     }
 }
