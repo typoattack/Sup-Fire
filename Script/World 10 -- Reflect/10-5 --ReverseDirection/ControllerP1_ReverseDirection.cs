@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerP1_CostOfTime : MonoBehaviour {
+public class ControllerP1_ReverseDirection : MonoBehaviour {
 
     public Boundary1Stick boundary1stick;
 
@@ -28,7 +28,7 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
     public GameObject AmmoCount;
     public GameObject LifeCount;
     public GameObject SpeCount;
-
+    public GameObject SkillChargeCount;
 
     public float timeBetweenShots;
     private float shotCounter;
@@ -65,13 +65,14 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
 
     private Quaternion LastDirection;
     private bool isSpecial = false;
-
-    public  Queue<Vector3> time = new Queue<Vector3>();
-    public Queue<float> hp = new Queue<float>();
-    public int accuracy;//number of deltime for flashback
-    public float maxlifecnt;
-
-
+    public float reverse;//reverse parameter : -1:reverse 1:normal
+    private float skillcd;
+    public int skillcharge;
+    public GameObject target;
+    void SetPotion()
+    {
+        skillcharge++;
+    }
     void SetBig()
     {
         isBig = true;
@@ -216,7 +217,11 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
 
 
     }
+    void ReverseD()
+    {
+        reverse *= (-1);
 
+    }
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
@@ -226,23 +231,34 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
         float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
         left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
         right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
-        maxlifecnt = maxLife;
+        reverse = 1;
+        skillcd = 30;
 
     }
 
 
     void FixedUpdate()
     {
-        time.Enqueue(transform.position);
-        //   ammo.Enqueue(remainAmmo);
-        hp.Enqueue(remainLife);
-       
-        if (time.Count >= accuracy)
+        skillcd -= Time.deltaTime;
+        if (skillcd <= 0)
         {
-            time.Dequeue();
-            //     ammo.Dequeue();
-            hp.Dequeue();
+            skillcharge++;
+            skillcd = 30;
+        }
+        if (skillcharge <= 0)
+            skillcharge = 0;
+        if (skillcharge >= 3)
+            skillcharge = 3;
+        if (Input.GetKeyDown(KeyCode.Joystick2Button0) && skillcharge > 0)
+        {
+            target.SendMessage("ReverseD");
+            skillcharge--;
 
+        }
+        if (Input.GetKeyDown(KeyCode.Joystick2Button1) && skillcharge > 0)
+        {
+            ReverseD();
+            skillcharge--;
         }
 
         rigid.position = new Vector3
@@ -254,7 +270,7 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
         Vector3 pos = rigid.position;
 
         float v_dir = Input.GetAxis("J2-V-Direct");
-        float h_dir = Input.GetAxis("J2-H-Direct");
+        float h_dir = (reverse) * Input.GetAxis("J2-H-Direct");
 
         Vector3 direction = Vector3.zero;
 
@@ -275,7 +291,7 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
-        float h_axis = Input.GetAxis("J2-Horizontal");
+        float h_axis = (reverse) * Input.GetAxis("J2-Horizontal");
 
         if (h_axis != 0)
         {
@@ -425,7 +441,7 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
 
         }
         AmmoCount.SendMessage("SetAmmo", Mathf.Floor(remainAmmo));
-
+        SkillChargeCount.SendMessage("SetCharge", skillcharge);
         float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f / maxLife;
 
         transform.GetChild(0).transform.localScale = new Vector3(1.5f * liftRatio, 0.3f, 0.5f);

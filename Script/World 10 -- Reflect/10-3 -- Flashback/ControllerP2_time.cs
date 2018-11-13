@@ -67,14 +67,12 @@ public class ControllerP2_time : MonoBehaviour {
     private Quaternion LastDirection;
     private bool isSpecial = false;
 
-    Queue<Vector3> time = new Queue<Vector3>();
-    Queue<float> hp = new Queue<float>();
+    public Queue<Vector3> time = new Queue<Vector3>();
+    public Queue<float> hp = new Queue<float>();
     public int accuracy;//number of deltime for flashback
-    private float maxlifecnt;
-    public ParticleSystem flash;
-    public GameObject clock1;
-    public GameObject clock2;
-    private float internalcd;
+    public float maxlifecnt;
+  
+
 
     void SetBig()
     {
@@ -153,7 +151,7 @@ public class ControllerP2_time : MonoBehaviour {
     void SetLife(int change)
     {
         remainLife += change;
-        if (remainLife > maxLife)
+        if (remainLife >= maxLife)
         {
             remainLife = maxLife;
         }
@@ -232,7 +230,7 @@ public class ControllerP2_time : MonoBehaviour {
         left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
         right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
         maxlifecnt = maxLife;
-        internalcd = 0;
+      
     }
 
 
@@ -242,19 +240,6 @@ public class ControllerP2_time : MonoBehaviour {
         time.Enqueue(transform.position);
      //   ammo.Enqueue(remainAmmo);
         hp.Enqueue(remainLife);
-        if (Input.GetKeyDown(KeyCode.Joystick1Button0)&& (Time.time-internalcd>1)&&(maxlifecnt > 1))
-        {
-            internalcd = Time.time;
-            Instantiate(flash, transform.position, Quaternion.identity);
-            transform.position = time.Peek();
-            clock1.SendMessage("setflag", Time.time);
-            clock2.SendMessage("setflag", Time.time);
-            //   remainAmmo = ammo.Peek();
-            maxlifecnt--;
-            float val = hp.Peek();
-            remainLife = val > maxlifecnt ? maxlifecnt : val;
-            Debug.Log("j");
-        }
        if (time.Count >= accuracy)
         {
             time.Dequeue();
@@ -483,4 +468,5 @@ public class ControllerP2_time : MonoBehaviour {
         Application.targetFrameRate = -1;
         gameObject.SetActive(false);
     }
+
 }
