@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class foodTrigger : MonoBehaviour {
+public class FoodTrigger_10 : MonoBehaviour {
 
     public float cdTime;
     public float countDown;
-  
+    public int Num;
 
     void Update()
     {
@@ -18,7 +18,7 @@ public class foodTrigger : MonoBehaviour {
         {
             int childNum;
             countDown = cdTime;
-            childNum = Random.Range(0, 4);
+            childNum = Random.Range(0, Num);
 
             GameObject randomChild = transform.GetChild(childNum).gameObject;
             GameObject newChild = Instantiate(randomChild, new Vector3(0f, 7f, -0.5f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;

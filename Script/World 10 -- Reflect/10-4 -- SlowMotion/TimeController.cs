@@ -18,7 +18,7 @@ namespace UnityStandardAssets.ImageEffects {
 
         // Update is called once per frame
         void FixedUpdate() {
-            
+           
             if (Input.GetKeyDown(KeyCode.Joystick1Button1)&&t<=0&& player2.GetComponent<ControllerP2_SLowMotion>().remainLife>1)
             {
                 t = 2;

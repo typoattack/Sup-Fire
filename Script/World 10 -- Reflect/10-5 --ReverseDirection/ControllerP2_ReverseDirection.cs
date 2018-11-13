@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerP1_CostOfTime : MonoBehaviour {
+public class ControllerP2_ReverseDirection : MonoBehaviour {
 
-    public Boundary1Stick boundary1stick;
+    public Boundary2Stick boundary2stick;
 
     public float Accelrate;
     public float MaxSpeed;
@@ -28,7 +28,7 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
     public GameObject AmmoCount;
     public GameObject LifeCount;
     public GameObject SpeCount;
-
+    public GameObject SkillChargeCount;
 
     public float timeBetweenShots;
     private float shotCounter;
@@ -54,6 +54,7 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
     private float angle = 0f;
     private int activeTurret = 1;
 
+
     public float recoil;//in angular
     public float recoilIntensity;
     private int updownrecoil;
@@ -65,13 +66,14 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
 
     private Quaternion LastDirection;
     private bool isSpecial = false;
-
-    public  Queue<Vector3> time = new Queue<Vector3>();
-    public Queue<float> hp = new Queue<float>();
-    public int accuracy;//number of deltime for flashback
-    public float maxlifecnt;
-
-
+    public float reverse;//reverse parameter : -1:reverse 1:normal
+    private float skillcd;
+    public int skillcharge;
+    public GameObject target;
+    void SetPotion()
+    {
+        skillcharge++;
+    }
     void SetBig()
     {
         isBig = true;
@@ -216,45 +218,64 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
 
 
     }
+    void ReverseD()
+    {
+        reverse *= (-1);
+
+    }
 
     void Start()
     {
+
+
         rigid = this.GetComponent<Rigidbody>();
-        //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
+        //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
         float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
         float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
         left = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;//-1,0,0 right
         right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
-        maxlifecnt = maxLife;
+        reverse = 1;
+        skillcd = 30;
 
     }
 
 
     void FixedUpdate()
     {
-        time.Enqueue(transform.position);
-        //   ammo.Enqueue(remainAmmo);
-        hp.Enqueue(remainLife);
-       
-        if (time.Count >= accuracy)
+        skillcd -= Time.deltaTime;
+        if (skillcd <= 0)
         {
-            time.Dequeue();
-            //     ammo.Dequeue();
-            hp.Dequeue();
+            skillcharge++;
+            skillcd = 30;
+        }
+        if (skillcharge <= 0)
+            skillcharge = 0;
+        if (skillcharge >= 3)
+            skillcharge = 3;
+        // testreverse();//test reverse flag
+        if (Input.GetKeyDown(KeyCode.Joystick1Button0) && skillcharge > 0)
+        {
+            target.SendMessage("ReverseD");
+            skillcharge--;
 
+        }
+        if (Input.GetKeyDown(KeyCode.Joystick1Button1) && skillcharge > 0)
+        {
+            ReverseD();
+            skillcharge--;
         }
 
         rigid.position = new Vector3
         (
-            Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
-            Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
-            Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
+            Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
+            Mathf.Clamp(rigid.position.y, boundary2stick.yMin, boundary2stick.yMax),
+            Mathf.Clamp(rigid.position.z, boundary2stick.zMin, boundary2stick.zMax)
         );
         Vector3 pos = rigid.position;
 
-        float v_dir = Input.GetAxis("J2-V-Direct");
-        float h_dir = Input.GetAxis("J2-H-Direct");
+        float v_dir = Input.GetAxis("J-V-Direct");
+        float h_dir = (reverse) * Input.GetAxis("J-H-Direct");
 
         Vector3 direction = Vector3.zero;
 
@@ -263,7 +284,6 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
 
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
-
         recoiltest(firepoint.transform.position - gameObject.transform.position);
         if (direction.magnitude >= 0.5)
         {
@@ -275,14 +295,12 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
             transform.GetChild(activeTurret).rotation = LastDirection;
         }
 
-        float h_axis = Input.GetAxis("J2-Horizontal");
-
+        float h_axis = (reverse) * Input.GetAxis("J-Horizontal");
         if (h_axis != 0)
         {
             MoveAnim.Play("body Animation");
         }
-
-        testbuff();
+        testbuff();//
         if (buff_frozen)//
         {
             gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ice;
@@ -294,9 +312,9 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
             buff = 1f;
         }
 
-        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
-        if (Input.GetAxis("J2-Fire2") < 0 && remainAmmo >= 1) //fire
+        rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);//
 
+        if (Input.GetAxis("Fire1") < 0 && remainAmmo >= 1) //fire
         {
             isFireing = true;
         }
@@ -332,7 +350,6 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    //rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
                     if (updownrecoil == 0)
                         rigid.AddForce(1.5f * left, ForceMode.Impulse);
                     else if (updownrecoil == 1)
@@ -361,7 +378,7 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
                             audioSB.pitch = Random.Range(0.2f, 0.3f);
                             audioSB.volume = 0.5f;
                             special -= 1;
-                            newBullet.transform.localScale = new Vector3(1f, 1f, 1f);
+                            newBullet.transform.localScale = new Vector3(1f, 0.1f, 1f);
                             Animator a = newBullet.GetComponent<Animator>();
                             //                           ParticleSystem p = newBullet.GetComponent<ParticleSystem>();
                             a.enabled = false;
@@ -393,13 +410,13 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
                             else if (updownrecoil == 1)
                                 rigid.AddForce(right, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
+
                         }
                         anim.Play("Gun Animation");
                     }
                 }
 
                 SetAmmo(-1);
-
                 if (!isMissile)
                 {
                     if (isBig)
@@ -425,7 +442,8 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
 
         }
         AmmoCount.SendMessage("SetAmmo", Mathf.Floor(remainAmmo));
-
+        SkillChargeCount.SendMessage("SetCharge", skillcharge);
+       
         float liftRatio = ((maxLife - 1) / maxLife) * remainLife / maxLife + 1f / maxLife;
 
         transform.GetChild(0).transform.localScale = new Vector3(1.5f * liftRatio, 0.3f, 0.5f);
@@ -440,7 +458,7 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
             GameObject[] score = GameObject.FindGameObjectsWithTag("Score");
             if (!SetScore)
             {
-                score[0].SendMessage("rightPlus");
+                score[0].SendMessage("leftPlus");
                 SetScore = !SetScore;
             }
         }
@@ -457,7 +475,6 @@ public class ControllerP1_CostOfTime : MonoBehaviour {
         }
 
         SpeCount.SendMessage("SetSpe", special);
-
     }
 
     IEnumerator DelayTime(float duration)

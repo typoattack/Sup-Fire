@@ -16,14 +16,14 @@ public class Rotatewithflashback : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Time.time >= flashbacktime + 1||flashbacktime==0)
+        if (Time.time >= flashbacktime + 0.2f||flashbacktime==0)
         {
-            ang += angSpeed * Time.deltaTime;
+            ang += angSpeed * Time.deltaTime * (1 / Time.timeScale); ;
             transform.rotation = Quaternion.Euler(0, 0, ang);
         }
         else
         {
-            ang -=3* angSpeed * Time.deltaTime;
+            ang -=3* angSpeed * Time.deltaTime*(1/Time.timeScale);
             transform.rotation = Quaternion.Euler(0, 0, ang);
         }
     }
