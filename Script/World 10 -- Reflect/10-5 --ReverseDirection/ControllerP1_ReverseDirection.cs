@@ -69,6 +69,9 @@ public class ControllerP1_ReverseDirection : MonoBehaviour {
     private float skillcd;
     public int skillcharge;
     public GameObject target;
+    public GameObject star1a;
+    public GameObject star1b;
+
     void SetPotion()
     {
         skillcharge++;
@@ -238,7 +241,17 @@ public class ControllerP1_ReverseDirection : MonoBehaviour {
 
 
     void FixedUpdate()
-    {
+    {if (reverse == -1)
+        {
+            star1a.SetActive(true);
+            star1b.SetActive(true);
+        }
+        else
+        {
+            star1a.SetActive(false);
+            star1b.SetActive(false);
+        }
+
         skillcd -= Time.deltaTime;
         if (skillcd <= 0)
         {
@@ -249,6 +262,7 @@ public class ControllerP1_ReverseDirection : MonoBehaviour {
             skillcharge = 0;
         if (skillcharge >= 3)
             skillcharge = 3;
+        
         if (Input.GetKeyDown(KeyCode.Joystick2Button0) && skillcharge > 0)
         {
             target.SendMessage("ReverseD");
