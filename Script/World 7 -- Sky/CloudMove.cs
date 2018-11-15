@@ -30,4 +30,12 @@ public class CloudMove : MonoBehaviour {
             other.transform.parent.SendMessage("SetPlatformVelocity", velocity);
         }
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            other.transform.parent.SendMessage("SetPlatformVelocity", 0f);
+        }
+    }
 }

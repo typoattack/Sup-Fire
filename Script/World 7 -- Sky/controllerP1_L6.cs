@@ -241,7 +241,11 @@ public class controllerP1_L6 : MonoBehaviour
         transform.position = new Vector3(transform.position.x + platformVelocity * Time.deltaTime, transform.position.y, transform.position.z);
         if (rigid.position.y < -7) {
             rigid.position = new Vector3(rigid.position.x, 7f, rigid.position.z);
-            //rigid.velocity = Vector3.zero;
+        }
+        else if (rigid.position.y > 7.9f)
+        {
+            rigid.position = new Vector3(rigid.position.x, -6.3f, rigid.position.z);
+            rigid.velocity = new Vector3(0f, 2f, 0f);
         }
         if (gameObject.transform.position.x < -12)
         {
