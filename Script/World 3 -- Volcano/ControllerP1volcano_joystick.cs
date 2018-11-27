@@ -72,6 +72,7 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
 
     private Quaternion LastDirection;
     private bool isSpecial = false;
+    private GameObject explosion;
 
     void SetBig()
     {
@@ -226,6 +227,7 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
         up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
         down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
+        explosion = GameObject.Find("explosion");
     }
 
     void FixedUpdate()
@@ -451,5 +453,16 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         Time.timeScale = 1f;
         Application.targetFrameRate = -1;
         gameObject.SetActive(false);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "lava")
+        {
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation) as GameObject;
+            Destroy(newExplosion, 2.0f);
+            remainLife = 0;
+
+        }
     }
 }
