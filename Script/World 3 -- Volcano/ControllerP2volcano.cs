@@ -72,6 +72,7 @@ public class ControllerP2volcano : MonoBehaviour
 
     private Quaternion LastDirection;
     private bool isSpecial = false;
+    private GameObject explosion;
 
     void SetBig()
     {
@@ -208,9 +209,9 @@ public class ControllerP2volcano : MonoBehaviour
 
     void recoiltest(Vector3 dir)
     {
-         if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -60 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 30 &&dir.x>=0)
+         if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg - transform.rotation.x >= -60 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg - transform.rotation.x <= 30 && dir.x>=0)
         updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -60 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 30 &&dir.x<=0)
+        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg - transform.rotation.x >= -60 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg - transform.rotation.x <= 30 && dir.x<=0)
           updownrecoil = 1;
         else
             updownrecoil = 2;
@@ -227,6 +228,7 @@ public class ControllerP2volcano : MonoBehaviour
         float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
         up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
         down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
+        explosion = GameObject.Find("explosion");
     }
 
 
@@ -446,12 +448,24 @@ public class ControllerP2volcano : MonoBehaviour
         SpeCount.SendMessage("SetSpe", special);
 
     }
+    
     IEnumerator DelayTime(float duration)
     {
         yield return new WaitForSeconds(duration);
         Time.timeScale = 1f;
             Application.targetFrameRate = -1;
         gameObject.SetActive(false);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "lava")
+        {
+            GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation) as GameObject;
+            Destroy(newExplosion, 2.0f);
+            remainLife = 0;
+            
+        }
     }
 }
 
