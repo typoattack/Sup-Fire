@@ -55,7 +55,7 @@ public class IcicleMove : MonoBehaviour {
             CameraShaker.Instance.ShakeOnce(1f, 4f, 0f, 0.8f);
             if (other.tag == "wall" || other.tag == "container")
             {
-                FloeDestroy newStaticIcicle = Instantiate(staticIcicle, transform.position, transform.rotation) as FloeDestroy;
+                FloeDestroy newStaticIcicle = Instantiate(staticIcicle, transform.position+new Vector3(0,0,0.5f), transform.rotation) as FloeDestroy;
                 newStaticIcicle.gameObject.SetActive(true);
                 Destroy(gameObject);
                 //Destroy(newSparks, 0.5f);

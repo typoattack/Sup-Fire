@@ -16,14 +16,14 @@ public class IcicleDrop : MonoBehaviour {
     void Update() {
         if (cnt1 >= dropNumber)
         {  
-            Vector3 randompos =new Vector3 (Random.Range(-12.4f, -1.7f), 7.75f, -0.5f);
-            IcicleMove newIcicle = Instantiate(icicle,randompos, transform.rotation) as IcicleMove;
+            Vector3 randompos =new Vector3 (Random.Range(-12.4f, -1.7f), 7.75f, -1f);
+            IcicleMove newIcicle = Instantiate(icicle,randompos,transform.rotation) as IcicleMove;
             newIcicle.gameObject.SetActive(true);
             cnt1 = 0;
         }
         if (cnt2 >= dropNumber)
         {
-            Vector3 randompos = new Vector3(Random.Range(1.7f, 12.4f), 7.75f, -0.5f);
+            Vector3 randompos = new Vector3(Random.Range(1.7f, 10f), 7.75f, -1f);
             IcicleMove newIcicle = Instantiate(icicle, randompos, transform.rotation) as IcicleMove;
             newIcicle.gameObject.SetActive(true);
             cnt2 = 0;
