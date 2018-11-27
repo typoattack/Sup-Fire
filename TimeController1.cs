@@ -34,6 +34,7 @@ namespace UnityStandardAssets.ImageEffects
             {
                 t = 2;
                 Time.timeScale = 0.1f;
+                maincmera.GetComponent<ColorCorrectionCurves>().enabled=true;
                 maincmera.GetComponent<ColorCorrectionCurves>().saturation = 0;
                 layerrendercamera.GetComponent<Camera>().cullingMask = p2;
                 player2.GetComponent<ControllerP2_time>().maxlifecnt--;
@@ -50,6 +51,7 @@ namespace UnityStandardAssets.ImageEffects
                 t = 2;
                
                 Time.timeScale = 0.1f;
+                maincmera.GetComponent<ColorCorrectionCurves>().enabled = true;
                 maincmera.GetComponent<ColorCorrectionCurves>().saturation = 0;
                 layerrendercamera.GetComponent<Camera>().cullingMask = p1;
                 player1.GetComponent<ControllerP1_CostOfTime>().maxlifecnt--;
@@ -66,6 +68,7 @@ namespace UnityStandardAssets.ImageEffects
             if (t < 0)
             {
                 Time.timeScale = 1f;
+                maincmera.GetComponent<ColorCorrectionCurves>().enabled = false;
                 maincmera.GetComponent<ColorCorrectionCurves>().saturation = 1;
                 layerrendercamera.GetComponent<Camera>().cullingMask = p1andp2;
                 if (p2flash)
