@@ -178,5 +178,6 @@ public class bulletMove : MonoBehaviour {
             Destroy(newSplatters, 1.5f);
 
         }
+
     }
 }
