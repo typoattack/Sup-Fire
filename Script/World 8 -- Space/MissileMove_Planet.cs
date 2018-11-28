@@ -22,7 +22,7 @@ public class MissileMove_Planet : MonoBehaviour {
     GameObject[] explosion;
     GameObject waterSplatter;
     GameObject[] delay;
-    GameObject[] MissileTrail;
+    GameObject MissileTrail;
     GameObject newMissileTrail;
     //   bool hit = false;
 
@@ -46,9 +46,8 @@ public class MissileMove_Planet : MonoBehaviour {
 
         rigid.AddRelativeForce(Vector3.up * initialSpeed, ForceMode.Impulse);
 
-        MissileTrail = GameObject.FindGameObjectsWithTag("MissileTrail");
-        newMissileTrail = Instantiate(MissileTrail[0], transform.position, transform.rotation) as GameObject;
-        //        newMissileTrail.SetActive(false);
+        MissileTrail = GameObject.Find("MissileTrail");
+        newMissileTrail = Instantiate(MissileTrail, transform.position, transform.rotation) as GameObject;
         startTime = Time.time;
     }
 
@@ -64,8 +63,10 @@ public class MissileMove_Planet : MonoBehaviour {
             rigid.angularVelocity = new Vector3(0f, 0f, -angle * rotateSpeed);
         }
 
-
+        if (newMissileTrail)
+        {
         newMissileTrail.transform.position = transform.position - 1.5f * transform.up;
+        }
 
         if (Time.time - startTime > delayTime)
         {
@@ -132,10 +133,12 @@ public class MissileMove_Planet : MonoBehaviour {
             Destroy(newSplatters, 1.5f);
         }
 
-        ParticleSystem P = newMissileTrail.GetComponent<ParticleSystem>();
-        var em = P.emission;
-        em.enabled = false;
-        Destroy(newMissileTrail, 5.0f);
-
+        if (newMissileTrail)
+        {
+            ParticleSystem P = newMissileTrail.GetComponent<ParticleSystem>();
+            var em = P.emission;
+            em.enabled = false;
+            Destroy(newMissileTrail, 5.0f);}
+        
     }
 }

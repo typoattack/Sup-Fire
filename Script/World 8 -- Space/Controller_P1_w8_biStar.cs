@@ -114,7 +114,7 @@ public class Controller_P1_w8_biStar : MonoBehaviour {
 
     }
 
-    void SetMissile()
+    public void SetMissile()
     {
         isBig = false;
         isMulti = false;

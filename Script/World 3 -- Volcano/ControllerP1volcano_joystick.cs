@@ -61,7 +61,7 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public float recoil;//in angular
+    private float recoil;//in angular
     public float recoilIntensity;
     private int updownrecoil;
     private Vector3 up;
@@ -73,6 +73,7 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
     private Quaternion LastDirection;
     private bool isSpecial = false;
     private GameObject explosion;
+    public int recoilRange = 45;
 
     void SetBig()
     {
@@ -207,12 +208,13 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
-    void recoiltest(Vector3 dir)
+    void recoiltest()
     {
-        if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -20 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 70 && dir.x > 0)
-            updownrecoil = 0;
-        else if (Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg >= -40 && Mathf.Atan(dir.y / dir.x) * Mathf.Rad2Deg <= 50 && dir.x < 0)
+        float angled = transform.GetChild(activeTurret).localRotation.eulerAngles.z;
+        if (angled >= 90 - recoilRange && angled <= 90 + recoilRange)
             updownrecoil = 1;
+        else if (angled >= 270 - recoilRange && angled <= 270 + recoilRange)
+            updownrecoil = 0;
         else
             updownrecoil = 2;
     }
@@ -222,16 +224,18 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
-        //set recoil angle
-        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
-        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
-        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
-        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
         explosion = GameObject.Find("explosion");
     }
 
     void FixedUpdate()
     {
+        //set recoil angle
+        recoil = 360 - transform.localRotation.eulerAngles.x;
+        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
+        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
+        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
+        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
+
         rigid.position = new Vector3
         (
             Mathf.Clamp(rigid.position.x, boundary1stick.xMin, boundary1stick.xMax),
@@ -250,9 +254,7 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
 
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
-        recoiltest(firepoint.transform.position - gameObject.transform.position);
-        //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
-        // recoil = recoilIntensity * -direction.normalized;
+        recoiltest();
 
         if (direction.magnitude >= 0.5)
         {
@@ -447,6 +449,7 @@ public class ControllerP1volcano_joystick : MonoBehaviour {
         SpeCount.SendMessage("SetSpe", special);
 
     }
+
     IEnumerator DelayTime(float duration)
     {
         yield return new WaitForSeconds(duration);
