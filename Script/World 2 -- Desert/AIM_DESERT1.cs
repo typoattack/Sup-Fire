@@ -32,7 +32,7 @@ public class AIM_DESERT1 : MonoBehaviour {
             p += velocity;
             if (AIM)
             {
-                Instantiate(t, p, Quaternion.identity);
+                Instantiate(t, p + new Vector3(0f, 0f, 0.1f), Quaternion.identity);
             }
 
         }
