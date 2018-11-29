@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UFO_move : MonoBehaviour {
-    public GameObject missile;
     public float limit;
     public float cd;
     public float lasttime;

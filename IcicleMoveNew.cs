@@ -3,74 +3,82 @@ using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
 
+public class IcicleMoveNew : MonoBehaviour {
 
-public class IcicleMove : MonoBehaviour {
-    public float bulletSpeed;
-    public bool isFrozen;
-
+    
     GameObject[] sparks;
     GameObject waterSplatter;
     GameObject[] explosion;
     GameObject[] delay;
     GameObject[] hit;
-    public FloeDestroy staticIcicle;
     private GameObject iceSplatter;
-
     public AudioSource expSound;
     public AudioSource hitSound;
-    public AudioSource waterSound;
+   
 
     private bool damagded = false;
     private bool ifHit = false;
-    
+    private bool ifdestory = false;
+    private float temp;
+    public float cd;
     private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
         waterSplatter = GameObject.Find("FX_WaterSplatter");
     }
-    void Start () {
+    void Start()
+    {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
-        //transform.Rotate(0f, 90f, 90f);
+
 
     }
-    void SetFrozen(bool Frozen)//
+
+
+    void FixedUpdate()
     {
-        isFrozen = Frozen;
+        if (ifHit == true)
+        {
+            if (Time.time - temp >= cd&&temp>=0.5f)
+            { foreach (Transform child in transform)
+                {
+                    child.gameObject.SendMessage("setflag", true);
+                    child.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+                }
+            }
+
+
+        }
+
     }
 
-    void FixedUpdate () {
-        //transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
-        //Debug.Log(transform);
-	}
+
+
+
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "wall" || other.tag == "container" || other.tag == "icicle")
+
+        if (other.tag == "wall"&&ifHit==false)
         {
             hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
             //0.8-1.5 as normal, 0.5-0.8 as big, need more modification
             hitSound.Play();
             //GameObject newSparks = Instantiate(sparks[0], transform.position, transform.rotation) as GameObject;
-            CameraShaker.Instance.ShakeOnce(1f, 4f, 0f, 0.8f);
-            if (other.tag == "wall" || other.tag == "container")
-            {
-                FloeDestroy newStaticIcicle = Instantiate(staticIcicle, transform.position+new Vector3(0,0,0.5f), transform.rotation) as FloeDestroy;
-                newStaticIcicle.gameObject.SetActive(true);
-                Destroy(gameObject);
-                //Destroy(newSparks, 0.5f);
-            }
+
+            ifHit = true;
+            temp = Time.time;
+            foreach (Transform child in transform)
+                child.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+            gameObject.GetComponent<MeshCollider>().isTrigger = false;
+
         }
-        else if (other.tag == "Player")
+
+        else if (other.tag == "Player"&&ifHit==false)
         {
             GameObject newExplosion = Instantiate(explosion[0], other.transform.position, transform.rotation) as GameObject;
             GameObject newDelay = Instantiate(delay[0], transform.position, transform.rotation) as GameObject;
             newDelay.SetActive(true);
-            if (isFrozen)
-            {
-                other.transform.parent.SendMessage("Buff_Time", Time.time);
-
-            }
             expSound.pitch = Random.Range(0.7f, 1.5f);
             expSound.Play();
 
@@ -86,20 +94,13 @@ public class IcicleMove : MonoBehaviour {
             }
 
         }
-        else if (other.tag == "Bullet")
+        else if (other.gameObject.tag == "icicle" && ifHit == false)
         {
-            hitSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
-            hitSound.Play();
-            iceSplatter = GameObject.Find("FX_IceSplatter");
-            GameObject newSplatters = Instantiate(iceSplatter, transform.position, new Quaternion()) as GameObject;
-            ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
-            var main = SplattersParticle.main;
-            main.startSize = 0.5f;
-            main.startSpeed = 5f;
-            Destroy(newSplatters, 1.5f);
-            Destroy(gameObject);
+
             Destroy(other.gameObject);
         }
-      
+
+
     }
 }
+
