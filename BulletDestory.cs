@@ -20,7 +20,7 @@ public class BulletDestory : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "wall")
+        if (other.tag == "wall"||other.tag=="icicle")
             holder.SendMessage("PlayerMiss",player);
 
     }
