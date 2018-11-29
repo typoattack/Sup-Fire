@@ -135,8 +135,8 @@ public class MissileMove : MonoBehaviour {
 
             GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
 
-            LavaMove newLava1 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
-            LavaMove newLava2 = Instantiate(lavaSplatter, new Vector3(transform.position.x, -4.5f, transform.position.z), new Quaternion()) as LavaMove;
+            LavaMove newLava1 = Instantiate(lavaSplatter, new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z), new Quaternion()) as LavaMove;
+            LavaMove newLava2 = Instantiate(lavaSplatter, new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z), new Quaternion()) as LavaMove;
 
             newLava1.gameObject.SetActive(true);
             newLava1.transform.Rotate(new Vector3(0f, 0f, -45f));

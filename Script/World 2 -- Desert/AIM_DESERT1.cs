@@ -16,6 +16,7 @@ public class AIM_DESERT1 : MonoBehaviour {
     public float Ymax;
     public float Ymin;
     public int BulletSelection;
+    public float Scale = 1.0f;
     public GameObject t;
     public bool AIM;
 
@@ -26,10 +27,14 @@ public class AIM_DESERT1 : MonoBehaviour {
         Vector3 wind = new Vector3(WindController.wind * 10, 0, 0);
         velocity = transform.rotation * Vector3.right * BulletSpeed * Time.deltaTime;
         p = transform.position;
+        if (gameObject.GetComponent<bulletMove_L8>().isBig)
+        {
+            Scale *= 1.3f;
+        }
         while (p.y > Ymin && p.y < Ymax && p.x < Xmax && p.x > Xmin)
         {
-            velocity += Physics.gravity * Time.deltaTime * Time.deltaTime + wind * Time.deltaTime * Time.deltaTime;
-            p += velocity;
+            velocity += (Physics.gravity * Time.deltaTime * Time.deltaTime + wind * Time.deltaTime * Time.deltaTime) * Scale;
+            p += velocity * Scale;
             if (AIM)
             {
                 Instantiate(t, p + new Vector3(0f, 0f, 0.1f), Quaternion.identity);
