@@ -272,10 +272,10 @@ public class Controller_P2_5 : MonoBehaviour {
             angleDiff = 0f;
         }
 
-        if(angleDiff > 0)
+        if(angleDiff < 0)
         {
             angled -= buff * angularSpeed * Time.deltaTime % 360;
-        }else if (angleDiff < 0)
+        }else if (angleDiff > 0)
         {
             angled += buff * angularSpeed * Time.deltaTime % 360;
 
