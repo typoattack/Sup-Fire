@@ -35,11 +35,12 @@ public class TornadoController : MonoBehaviour {
     void SpawnTornadoes()
     {
         // Defines the min and max ranges for x and y
-        Vector3 pos = new Vector3(Random.Range(xMin, xMax), -2.98f, -0.56f);
+        Vector3 pos = new Vector3(Random.Range(xMin, xMax), -3.5f, -0.56f);
         tornadoSpawn.position = pos;
 
         // Creates the random object at the random 2D position.
-        Instantiate(DustDevil, pos, transform.rotation);
+        GameObject newSand =  Instantiate(DustDevil, pos, transform.rotation);
+        newSand.SetActive(true);
 
         // If I wanted to get the result of instantiate and fiddle with it, I might do this instead:
         //GameObject newGoods = (GameObject)Instantiate(goodsPrefab, pos)

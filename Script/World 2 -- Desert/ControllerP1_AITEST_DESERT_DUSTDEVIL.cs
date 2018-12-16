@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
 
@@ -58,16 +59,19 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public Vector3 recoil;
+    public float recoil;
     public float recoilIntensity;
+    private int updownrecoil;
+    private Vector3 up;
+    private Vector3 down;
 
     private GameObject player;
     private bool SetScore = false;
 
     private Quaternion LastDirection;
     private bool isSpecial = false;
-
-    private float rotationX;
+    public int recoilRange = 45;
+    public float windForce = 5.0f;
 
     private Vector3 movement;
     private float Movespeed;
@@ -275,10 +279,21 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
         transform.GetChild(activeTurret).rotation = LastDirection;
     }
 
+    void recoiltest()
+    {
+        float angled = transform.GetChild(activeTurret).localRotation.eulerAngles.z;
+        if (angled >= 90 - recoilRange && angled <= 90 + recoilRange)
+            updownrecoil = 1;
+        else if (angled >= 270 - recoilRange && angled <= 270 + recoilRange)
+            updownrecoil = 0;
+        else
+            updownrecoil = 2;
+    }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
-        //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
+        //transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
         LastDirection = new Quaternion(0f, 90f, 0f, 1f);
         wind = WindController.wind;
     }
@@ -286,17 +301,12 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
 
     void FixedUpdate()
     {
-        rotationX = transform.eulerAngles.x;
-        if (rotationX > 30f)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(10, transform.eulerAngles.y, transform.eulerAngles.z),
-                Time.deltaTime * 5f);
-        }
-        if (rotationX < -30f)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(-10, transform.eulerAngles.y, transform.eulerAngles.z),
-                Time.deltaTime * 5f);
-        }
+        //set recoil angle
+        recoil = 360 - transform.localRotation.eulerAngles.x;
+        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
+        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
+        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
+        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
 
         wind = WindController.wind;
         rigid.position = new Vector3
@@ -305,36 +315,16 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
             Mathf.Clamp(rigid.position.y, boundary1stick.yMin, boundary1stick.yMax),
             Mathf.Clamp(rigid.position.z, boundary1stick.zMin, boundary1stick.zMax)
         );
-        //  Vector3 pos = rigid.position;
 
-        // float v_dir = Input.GetAxis("J2-V-Direct");
-        //  float h_dir = Input.GetAxis("J2-H-Direct");
-
-        //  Vector3 direction = Vector3.zero;
-
-        //  direction.x = -h_dir;
-        // direction.y = v_dir;
-
-        //  angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         targetXpos = target.transform.position.x;
         targetYpos = target.transform.position.y;
         Quaternion rotation = Quaternion.AngleAxis(Aimtest(targetXpos,targetYpos), new Vector3(0f, 0f, -1f));
 
-        recoil = firepoint.transform.position.y < gameObject.transform.position.y ?
-            new Vector3(0f, 0f, 0f) : recoilIntensity * -(firepoint.transform.position - gameObject.transform.position).normalized;
+        recoiltest();
 
-      //  if (direction.magnitude >= 0.5)
-     //   {
-            transform.GetChild(activeTurret).rotation = rotation;
-            LastDirection = rotation;
-        //  }
-        //  else
-        //  {
-        //      transform.GetChild(activeTurret).rotation = LastDirection;
-        //  }
+        transform.GetChild(activeTurret).rotation = rotation;
+        LastDirection = rotation;
 
-        //  if (isGrounded == true) h_axis = Input.GetAxis("J2-Horizontal");
-        // else h_axis = 0;
         MovementSet();
         if (Movespeed != 0)
         {
@@ -393,7 +383,10 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    if (updownrecoil == 0)
+                        rigid.AddForce(1.5f * up, ForceMode.Impulse);
+                    else if (updownrecoil == 1)
+                        rigid.AddForce(1.5f * down, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -424,7 +417,10 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(2 * up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(2 * down, ForceMode.Impulse);
                         }
                         else if (isFrozen)//
                         {
@@ -433,12 +429,19 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                     }
@@ -518,7 +521,7 @@ public class ControllerP1_AITEST_DESERT_DUSTDEVIL : MonoBehaviour {
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Tornado")
-            rigid.AddForce(new Vector3(0f, 5f, 0f));
+            rigid.AddForce(new Vector3(0f, windForce, 0f));
     }
 
     private void OnCollisionEnter(Collision collision)

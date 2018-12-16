@@ -65,14 +65,19 @@ public class controllerP1_L8 : MonoBehaviour
     private float angle = 0f;
     private int activeTurret = 1;
 
-    public Vector3 recoil;
+    public float recoil;
     public float recoilIntensity;
+    private int updownrecoil;
+    private Vector3 up;
+    private Vector3 down;
 
     private GameObject player;
     private bool SetScore = false;
-    private bool isSpecial = false;
 
-    private float rotationX;
+    private Quaternion LastDirection;
+    private bool isSpecial = false;
+    public int recoilRange = 45;
+    public float windForce = 5.0f;
 
     void SetBig()
     {
@@ -218,6 +223,17 @@ public class controllerP1_L8 : MonoBehaviour
         this.transform.GetChild(1).GetChild(1).GetChild(1).gameObject.SetActive(false);
     }
 
+    void recoiltest()
+    {
+        float angled = transform.GetChild(activeTurret).localRotation.eulerAngles.z;
+        if (angled >= 90 - recoilRange && angled <= 90 + recoilRange)
+            updownrecoil = 1;
+        else if (angled >= 270 - recoilRange && angled <= 270 + recoilRange)
+            updownrecoil = 0;
+        else
+            updownrecoil = 2;
+    }
+
     void Start()
     {
         rigid = this.GetComponent<Rigidbody>();
@@ -227,17 +243,12 @@ public class controllerP1_L8 : MonoBehaviour
 
     void FixedUpdate()
     {
-        rotationX = transform.eulerAngles.x;
-        if(rotationX > 30f)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(10, transform.eulerAngles.y, transform.eulerAngles.z),
-                Time.deltaTime * 5f);
-        }
-        if(rotationX < -30f)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(-10, transform.eulerAngles.y, transform.eulerAngles.z),
-                Time.deltaTime * 5f);
-        }
+        //set recoil angle
+        recoil = 360 - transform.localRotation.eulerAngles.x;
+        float posY = 1 * Mathf.Sin(recoil * Mathf.Deg2Rad);
+        float posX = 1 * Mathf.Cos(recoil * Mathf.Deg2Rad);
+        up = new Vector3(-posX, -posY, 0f).normalized * recoilIntensity;
+        down = new Vector3(posX, posY, 0).normalized * recoilIntensity;
 
         wind = WindController.wind;
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -249,14 +260,13 @@ public class controllerP1_L8 : MonoBehaviour
         );
         Vector3 pos = rigid.position;
         Vector3 direction = mousePos - pos;
+        recoiltest();
         angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, new Vector3(0f, 0f, -1f));
         transform.GetChild(activeTurret).rotation = rotation;
 
         if(isGrounded == true) h_axis = Input.GetAxis("Horizontal");
         else h_axis = 0;
-
-        recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
 
         testbuff();
         if (buff_frozen)//
@@ -312,7 +322,10 @@ public class controllerP1_L8 : MonoBehaviour
                     newBullet2.SendMessage("SetMulti", true);
 
                     //CameraShaker.Instance.ShakeOnce(1.5f, 4f, 0f, 1.5f);
-                    rigid.AddForce(1.5f * recoil, ForceMode.Impulse);
+                    if (updownrecoil == 0)
+                        rigid.AddForce(1.5f * up, ForceMode.Impulse);
+                    else if (updownrecoil == 1)
+                        rigid.AddForce(1.5f * down, ForceMode.Impulse);
                     audioS.pitch = Random.Range(1f, 5f);
                     anim.Play("Double gun Animation");
                 }
@@ -343,7 +356,10 @@ public class controllerP1_L8 : MonoBehaviour
                             a.enabled = false;
                             newBullet.SendMessage("SetBig", true);
                             //CameraShaker.Instance.ShakeOnce(2.5f, 4f, 0f, 3f);
-                            rigid.AddForce(2.0f * recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(2 * up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(2 * down, ForceMode.Impulse);
 
                         }
                         else if (isFrozen)//
@@ -353,13 +369,20 @@ public class controllerP1_L8 : MonoBehaviour
                             newBullet.transform.GetChild(0).gameObject.SetActive(true);
                             newBullet.GetComponent<ParticleSystemRenderer>().material = ice;
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
                         }
                         else
                         {
                             //CameraShaker.Instance.ShakeOnce(1.25f, 4f, 0f, 1.5f);
                             audioS.pitch = Random.Range(1f, 5f);
-                            rigid.AddForce(recoil, ForceMode.Impulse);
+                            if (updownrecoil == 0)
+                                rigid.AddForce(up, ForceMode.Impulse);
+                            else if (updownrecoil == 1)
+                                rigid.AddForce(down, ForceMode.Impulse);
 
                         }
                         anim.Play("Gun Animation");                    
@@ -436,7 +459,7 @@ public class controllerP1_L8 : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Tornado")
-            gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 7.5f, 0f));
+            rigid.AddForce(new Vector3(0f, windForce, 0f));
     }
 
     private void OnCollisionEnter(Collision collision)
