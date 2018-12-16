@@ -13,6 +13,7 @@ public class MissileMove_L8 : MonoBehaviour {
 
     public GameObject comeFrom;
     public GameObject target;
+    public float windForce = 5.0f;
 
     float angle;
     Rigidbody rigid;
@@ -29,7 +30,6 @@ public class MissileMove_L8 : MonoBehaviour {
 
     public AudioSource expSound;
     public AudioSource hitSound;
-    public AudioSource waterSound;
 
     float startTime;
 
@@ -117,18 +117,8 @@ public class MissileMove_L8 : MonoBehaviour {
             Destroy(newDelay, 2.0f);
 
         }
-        else if (other.tag == "water")
-        {
-            waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
-            waterSound.Play();
-            if (comeFrom.activeSelf)
-            {
-                comeFrom.SendMessage("SetAmmo", 1f);
-            }
-            GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
-            Destroy(gameObject);
-            Destroy(newSplatters, 1.5f);
-        }
+        if (other.tag == "Tornado")
+            rigid.AddForce(new Vector3(0f, windForce, 0f));
 
         ParticleSystem P = newMissileTrail.GetComponent<ParticleSystem>();
         var em = P.emission;

@@ -389,7 +389,6 @@ public class ControllerP2_L8 : MonoBehaviour
                             else if (updownrecoil == 1)
                                 rigid.AddForce(down, ForceMode.Impulse);
                             audioS.pitch = Random.Range(1f, 5f);
-
                         }
                         anim.Play("Gun Animation");
                     }
