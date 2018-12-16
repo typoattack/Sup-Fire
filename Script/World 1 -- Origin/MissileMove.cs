@@ -30,6 +30,7 @@ public class MissileMove : MonoBehaviour {
     public AudioSource expSound;
     public AudioSource hitSound;
     public AudioSource waterSound;
+    public float windForce = 0.0f;
 
     float startTime;
 
@@ -69,7 +70,8 @@ public class MissileMove : MonoBehaviour {
         {
             rigid.AddForce(transform.up * (Time.time - startTime) * bulletSpeed);
         }
-        
+        rigid.AddForce(new Vector3(0f, windForce, 0f));
+
     }
 
     private void OnTriggerEnter(Collider other)

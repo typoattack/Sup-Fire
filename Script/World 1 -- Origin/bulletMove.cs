@@ -21,10 +21,11 @@ public class bulletMove : MonoBehaviour {
     public AudioSource expSound;
     public AudioSource hitSound;
     public AudioSource waterSound;
+    public float windForce = 0.0f;
 
     private bool damagded = false;
     private bool ifHit = false;
-
+    private Rigidbody rigid;
     private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
@@ -34,6 +35,7 @@ public class bulletMove : MonoBehaviour {
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
+        rigid = GetComponent<Rigidbody>();
 
     }
 
@@ -53,8 +55,8 @@ public class bulletMove : MonoBehaviour {
 
     void FixedUpdate () {
         transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
-        //Debug.Log(transform);
-	}
+        rigid.AddForce(new Vector3(0f, windForce, 0f));
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -178,6 +180,5 @@ public class bulletMove : MonoBehaviour {
             Destroy(newSplatters, 1.5f);
 
         }
-
     }
 }
