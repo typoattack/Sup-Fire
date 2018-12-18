@@ -49,4 +49,12 @@ public class multiTrigger_2_5 : MonoBehaviour {
 
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
+    }
 }

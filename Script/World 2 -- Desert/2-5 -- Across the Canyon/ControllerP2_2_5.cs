@@ -212,7 +212,7 @@ public class ControllerP2_2_5 : MonoBehaviour
     {
         rigid = this.GetComponent<Rigidbody>();
         //transform.GetChild(1).transform.Rotate(0f, 90f, 0f);
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        LastDirection = new Quaternion(-90f, 90f, 0f, 1f);
         wind = WindController.wind;
     }
 
@@ -317,7 +317,7 @@ public class ControllerP2_2_5 : MonoBehaviour
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove_2_5 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_2_5;
+                        MissileMove_2_5 newMissile = Instantiate(missile, firepoint.position + new Vector3(0f, 0f, 0.2f), firepoint.rotation) as MissileMove_2_5;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");

@@ -49,4 +49,12 @@ public class missileTrigger_2_5 : MonoBehaviour {
             got(target);
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
+    }
 }

@@ -46,8 +46,14 @@ public class bigTrigger_2_5 : MonoBehaviour {
             target = missile.comeFrom;
             target.SendMessage("SetBig");
             got(target);
-
         }
-       
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
     }
 }

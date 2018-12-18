@@ -212,7 +212,7 @@ public class ControllerP1_joystick_2_5 : MonoBehaviour {
     {
         rigid = this.GetComponent<Rigidbody>();
         //        transform.GetChild(1).transform.Rotate(0f, -90f, 0f);
-        LastDirection = new Quaternion(0f, 90f, 0f, 1f);
+        LastDirection = new Quaternion(90f, 90f, 0f, 1f);
         wind = WindController.wind;
     }
 

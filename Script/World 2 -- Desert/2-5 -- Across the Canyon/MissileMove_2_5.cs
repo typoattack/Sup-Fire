@@ -32,7 +32,7 @@ public class MissileMove_2_5 : MonoBehaviour {
     public AudioSource expSound;
     public AudioSource hitSound;
     public AudioSource waterSound;
-
+    bool hit = false;
     float startTime;
 
     private void Awake()
@@ -118,11 +118,11 @@ public class MissileMove_2_5 : MonoBehaviour {
 
             CameraShaker.Instance.ShakeOnce(3f, 20f, 0f, 1f);
 
- //           if (!hit)
+            if (!hit)
             {
                 other.transform.parent.SendMessage("SetLife", -1);
                 comeFrom.SendMessage("SetAmmo", 1f);
- //               hit = true;
+                hit = true;
             }
 
             Destroy(gameObject);

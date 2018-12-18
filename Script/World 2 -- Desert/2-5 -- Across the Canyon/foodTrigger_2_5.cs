@@ -30,11 +30,11 @@ public class foodTrigger_2_5 : MonoBehaviour {
             GameObject randomChild = transform.GetChild(childNum).gameObject;
             //GameObject newChild = Instantiate(randomChild, new Vector3(0f, 0f, -0.5f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
             if (wind > 0f)
-                newChild = Instantiate(randomChild, new Vector3(0f, -3.6f, -0.5f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
+                newChild = Instantiate(randomChild, new Vector3(0f, -3.6f, -0.56f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
             if (wind < 0f)
-                newChild = Instantiate(randomChild, new Vector3(0f, 2.75f, -0.5f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
+                newChild = Instantiate(randomChild, new Vector3(0f, 2.75f, -0.56f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
             if (wind == 0f)
-                newChild = Instantiate(randomChild, new Vector3(0f, 0.0f, -0.5f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
+                newChild = Instantiate(randomChild, new Vector3(0f, 0.0f, -0.56f), new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
             newChild.SetActive(true);
         }
     }
