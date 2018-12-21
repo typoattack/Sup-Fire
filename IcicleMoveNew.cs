@@ -17,17 +17,14 @@ public class IcicleMoveNew : MonoBehaviour {
    
 
     private bool damagded = false;
-    private bool ifHit = false;
+    public bool ifHit = false;
     private bool ifdestory = false;
     private float temp;
     public float cd;
-    private void Awake()
-    {
-        sparks = GameObject.FindGameObjectsWithTag("sparks");
-        waterSplatter = GameObject.Find("FX_WaterSplatter");
-    }
+
     void Start()
     {
+        sparks = GameObject.FindGameObjectsWithTag("sparks");
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
 
@@ -39,12 +36,19 @@ public class IcicleMoveNew : MonoBehaviour {
     {
         if (ifHit == true)
         {
-            if (Time.time - temp >= cd&&temp>=0.5f)
-            { foreach (Transform child in transform)
+            if (Time.time - temp >= cd && temp >= 0.5f)
+            {
+                gameObject.GetComponent<MeshCollider>().isTrigger = true;
+                foreach (Transform child in transform)
                 {
                     child.gameObject.SendMessage("setflag", true);
                     child.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+
                 }
+            }
+            else
+            {
+                gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
             }
 
 
@@ -69,7 +73,8 @@ public class IcicleMoveNew : MonoBehaviour {
             ifHit = true;
             temp = Time.time;
             foreach (Transform child in transform)
-                child.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+             child.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+      
             gameObject.GetComponent<MeshCollider>().isTrigger = false;
 
         }
@@ -96,7 +101,6 @@ public class IcicleMoveNew : MonoBehaviour {
         }
         else if (other.gameObject.tag == "icicle" && ifHit == false)
         {
-
             Destroy(other.gameObject);
         }
 
