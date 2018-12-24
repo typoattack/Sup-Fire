@@ -30,7 +30,7 @@ public class FloeDestroy : MonoBehaviour {
                 GameObject newSplatters = Instantiate(iceSplatter, transform.position, new Quaternion()) as GameObject;
                 ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
                 var main = SplattersParticle.main;
-                main.startSize = 0.5f;
+                main.startSize = 0.2f;
                 main.startSpeed = 5f;
                 Destroy(newSplatters, 1.5f);
                 Destroy(gameObject);
