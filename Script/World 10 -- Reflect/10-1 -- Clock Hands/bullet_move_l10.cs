@@ -71,19 +71,22 @@ public class bullet_move_l10 : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        float temp = 0f;
+        float tempPosX = 0f;
+        float tempVelX = 0f;
         if (other.gameObject.tag == "Portal")
         {
-            if(gameObject.transform.position.x > 0f)
+            if(other.gameObject.name == "PortalBlue")
             {
-                temp = gameObject.transform.position.x + 0.25f;
+                tempPosX = gameObject.transform.position.x + 0.5f;
+                tempVelX = -Mathf.Abs(rigid.velocity.x);
             }
             else
             {
-                temp = gameObject.transform.position.x - 0.25f;
+                tempPosX = gameObject.transform.position.x - 0.5f;
+                tempVelX = Mathf.Abs(rigid.velocity.x);
             }
-            gameObject.transform.position = new Vector3(-temp, -gameObject.transform.position.y - 2.0f, gameObject.transform.position.z);
-            rigid.velocity = new Vector3(rigid.velocity.x, -rigid.velocity.y, rigid.velocity.z);
+            gameObject.transform.position = new Vector3(-tempPosX, -gameObject.transform.position.y - 2.0f, gameObject.transform.position.z);
+            rigid.velocity = new Vector3(tempVelX, -rigid.velocity.y, rigid.velocity.z);
         }
     }
     private void OnTriggerStay(Collider other)
