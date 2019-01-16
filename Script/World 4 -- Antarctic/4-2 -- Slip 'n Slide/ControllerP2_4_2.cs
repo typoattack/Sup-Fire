@@ -320,7 +320,7 @@ public class ControllerP2_4_2 : MonoBehaviour
                     if (isMissile)
                     {
                         special -= 1;
-                        MissileMove_4_2 newMissile = Instantiate(missile, firepoint.position, firepoint.rotation) as MissileMove_4_2;
+                        MissileMove_4_2 newMissile = Instantiate(missile, firepoint.position + new Vector3(0f, -0f, 0.2f), firepoint.rotation) as MissileMove_4_2;
                         newMissile.gameObject.SetActive(true);
                         //CameraShaker.Instance.ShakeOnce(2f, 4f, 0f, 1.5f);
                         anim.Play("Missile Launcher Animation");
