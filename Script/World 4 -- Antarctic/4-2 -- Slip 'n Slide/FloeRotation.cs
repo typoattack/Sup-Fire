@@ -9,6 +9,6 @@ public class FloeRotation : MonoBehaviour {
     void FixedUpdate()
 
     {
-        transform.Rotate(0, angularSpeed, 0);
+        transform.Rotate(0, 0, angularSpeed);
     }
 }
