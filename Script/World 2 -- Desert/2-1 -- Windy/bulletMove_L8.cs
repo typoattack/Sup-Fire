@@ -19,6 +19,7 @@ public class bulletMove_L8 : MonoBehaviour {
 
     public AudioSource expSound;
     public AudioSource hitSound;
+    public AudioSource waterSound;
     public float windForce = 5.0f;
 
 
@@ -111,6 +112,27 @@ public class bulletMove_L8 : MonoBehaviour {
                 other.transform.parent.SendMessage("SetLife", isBig ? -2 : -1);
                 damagded = !damagded;
             }
+        }
+        else if (other.tag == "water")
+        {
+            waterSound.pitch = 0.1f * 1.05946f * Random.Range(8, 15);
+            waterSound.Play();
+            GameObject newSplatters = Instantiate(waterSplatter, transform.position, new Quaternion()) as GameObject;
+            if (isBig)
+            {
+                ParticleSystem SplattersParticle = newSplatters.GetComponent<ParticleSystem>();
+                var main = SplattersParticle.main;
+                main.startSize = 0.4f;
+                main.startSpeed = 5f;
+            }
+
+            if (comeFrom.activeSelf)
+            {
+                comeFrom.SendMessage("SetAmmo", isMulti ? 0.5f : 1f);
+            }
+
+            Destroy(gameObject);
+            Destroy(newSplatters, 1.5f);
         }
         if (other.tag == "Tornado")
             rb.AddForce(new Vector3(0f, windForce, 0f));
