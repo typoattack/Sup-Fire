@@ -18,6 +18,7 @@ public class MissileMove : MonoBehaviour {
     float angle;
     Rigidbody rigid;
 
+    private float wind;
 
     GameObject[] sparks;
     GameObject[] explosion;
@@ -30,7 +31,7 @@ public class MissileMove : MonoBehaviour {
     public AudioSource expSound;
     public AudioSource hitSound;
     public AudioSource waterSound;
-    public float windForce = 0.0f;
+    public float windForce = 5.0f;
 
     float startTime;
 
@@ -50,6 +51,11 @@ public class MissileMove : MonoBehaviour {
         newMissileTrail = Instantiate(MissileTrail[0], transform.position, transform.rotation) as GameObject;
 //        newMissileTrail.SetActive(false);
         startTime = Time.time;
+        if (GameObject.Find("WindController"))
+        {
+            wind = WindController.wind;
+        }
+        else wind = 0f;
     }
 
     void FixedUpdate()
@@ -70,7 +76,8 @@ public class MissileMove : MonoBehaviour {
         {
             rigid.AddForce(transform.up * (Time.time - startTime) * bulletSpeed);
         }
-        rigid.AddForce(new Vector3(0f, windForce, 0f));
+        //rigid.AddForce(new Vector3(0f, windForce, 0f));
+        rigid.AddForce(Vector3.right * wind);
 
     }
 
@@ -157,6 +164,8 @@ public class MissileMove : MonoBehaviour {
             Destroy(newSplatters, 1.5f);
 
         }
+        if (other.tag == "Tornado")
+            rigid.AddForce(new Vector3(0f, windForce, 0f));
 
         ParticleSystem P = newMissileTrail.GetComponent<ParticleSystem>();
         var em = P.emission;

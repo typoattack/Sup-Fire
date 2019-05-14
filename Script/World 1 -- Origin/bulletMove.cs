@@ -21,21 +21,30 @@ public class bulletMove : MonoBehaviour {
     public AudioSource expSound;
     public AudioSource hitSound;
     public AudioSource waterSound;
-    public float windForce = 0.0f;
+    public float windForce = 5.0f;
 
     private bool damagded = false;
     private bool ifHit = false;
+
     private Rigidbody rigid;
+    private float wind;
+
     private void Awake()
     {
         sparks = GameObject.FindGameObjectsWithTag("sparks");
         waterSplatter = GameObject.Find("FX_WaterSplatter");
     }
     void Start () {
+        rigid = GetComponent<Rigidbody>();
         explosion = GameObject.FindGameObjectsWithTag("explosion");
         delay = GameObject.FindGameObjectsWithTag("delay");
         transform.Rotate(0f, 90f, 90f);
-        rigid = GetComponent<Rigidbody>();
+        rigid.velocity = transform.right * bulletSpeed;
+        if (GameObject.Find("WindController"))
+        {
+            wind = WindController.wind;
+        }
+        else wind = 0f;
 
     }
 
@@ -54,8 +63,9 @@ public class bulletMove : MonoBehaviour {
     }
 
     void FixedUpdate () {
-        transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
-        rigid.AddForce(new Vector3(0f, windForce, 0f));
+        //transform.Translate(Vector3.right * bulletSpeed * Time.deltaTime);
+        //rigid.AddForce(new Vector3(0f, windForce, 0f));
+        rigid.AddForce(Vector3.right * wind);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -180,5 +190,7 @@ public class bulletMove : MonoBehaviour {
             Destroy(newSplatters, 1.5f);
 
         }
+        if (other.tag == "Tornado")
+            rigid.AddForce(new Vector3(0f, windForce, 0f));
     }
 }
