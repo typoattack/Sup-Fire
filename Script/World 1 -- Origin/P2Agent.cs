@@ -19,6 +19,10 @@ public class P2Agent : Agent
     public AudioSource audioSB;
     public AudioSource audioR;
     public AudioSource audioM;
+    private float wind;
+
+    private bool isGrounded;
+    private float h_axis;
 
     public int special;
 
@@ -68,6 +72,7 @@ public class P2Agent : Agent
 
     private Quaternion LastDirection;
     private bool isSpecial = false;
+    public float windForce = 5.0f;
 
     public GameObject target;
     public float targetLife;
@@ -75,6 +80,7 @@ public class P2Agent : Agent
     private float BulletPosLastTime;
 
     public bool resetAgent = false;
+    private Vector3 initialPos;
 
     void SetBig()
     {
@@ -232,6 +238,12 @@ public class P2Agent : Agent
         right = new Vector3(posX, posY, 0).normalized * recoilIntensity;//1,0,0 left
         targetLife = GameObject.Find("Player1").GetComponent<ControllerP1_AITEST>().maxLife;
         lifeCount = maxLife;
+        initialPos = rigid.transform.position;
+        if (GameObject.Find("WindController"))
+        {
+            wind = WindController.wind;
+        }
+        else wind = 0f;
     }
 
     void GetBulletPos(Vector3 x)
@@ -262,7 +274,7 @@ public class P2Agent : Agent
     {
         rigid.angularVelocity = Vector3.zero;
         rigid.velocity = Vector3.zero;
-        rigid.transform.position = new Vector3(4f, -3.311f, -0.56f);
+        rigid.transform.position = initialPos;
         resetAgent = false;
         lifeCount = maxLife;
     }
@@ -271,7 +283,7 @@ public class P2Agent : Agent
     {
         if (resetAgent == true)
         {
-            AddReward(-5f);
+            //AddReward(-5f);
             Done();
         }
 
@@ -281,13 +293,14 @@ public class P2Agent : Agent
             AddReward(targetLife - targetCurrentLife);
             targetLife = targetCurrentLife;
         }
-
+        else targetLife = targetCurrentLife;
+        /*
         if (remainLife < lifeCount)
         {
             AddReward(remainLife - lifeCount);
             lifeCount = remainLife;
         }
-
+        */
         rigid.position = new Vector3
         (
             Mathf.Clamp(rigid.position.x, boundary2stick.xMin, boundary2stick.xMax),
@@ -313,7 +326,18 @@ public class P2Agent : Agent
         transform.GetChild(activeTurret).rotation = rotation;
         //AddReward(1f / 3000f);
 
-        float h_axis = vectorAction[3];
+        if (isGrounded == true) h_axis = vectorAction[3];
+        else h_axis = 0;
+
+        if (h_axis != 0)
+        {
+            MoveAnim.Play("body Animation");
+            //AddReward(1f / 3000f);
+        }
+        else
+        {
+            //AddReward(-1f / 3000f);
+        }
 
         //recoil = direction.y < 0f ? new Vector3(0f, 0f, 0f) : recoilIntensity * -direction.normalized;
         recoiltest(firepoint.transform.position - gameObject.transform.position);
@@ -330,20 +354,17 @@ public class P2Agent : Agent
             buff = 1f;
         }
         rigid.velocity = new Vector3(buff * Accelrate * h_axis, rigid.velocity.y, 0f);
-        if (h_axis != 0)
-        {
-            MoveAnim.Play("body Animation");
-            AddReward(1f / 3000f);
-        }
+        rigid.AddForce(Vector3.right * wind * 100);
 
         if ((vectorAction[0] < 0) && remainAmmo >= 1) //fire
         {
             isFireing = true;
-            AddReward(1f / 3000f);
+            //AddReward(1f / 3000f);
         }
         else
         {
             isFireing = false;
+            //AddReward(-1f / 3000f);
         }
 
         if (isFireing)
@@ -353,6 +374,7 @@ public class P2Agent : Agent
             {
                 shotCounter = timeBetweenShots;
                 audioS.volume = 0.3f;
+                AddReward(1f / 3000f);
 
                 if (isMulti)
                 {
@@ -506,18 +528,22 @@ public class P2Agent : Agent
 
         SpeCount.SendMessage("SetSpe", special);
     }
-    /*
-    private void OnTriggerEnter(Collider other)
+   
+    private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "bullet")
-            resetAgent = true;
+        if (other.tag == "Tornado")
+            rigid.AddForce(new Vector3(0f, windForce, 0f));
+    }
 
-    }
-    
-    IEnumerator DelayTime(float duration)
+    private void OnCollisionEnter(Collision collision)
     {
-        yield return new WaitForSeconds(duration);
-        Time.timeScale = 1f;
+        if (collision.gameObject.tag == "wall" || collision.gameObject.tag == "water")
+            isGrounded = true;
     }
-    */
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "wall" || collision.gameObject.tag == "water")
+            isGrounded = false;
+    }
 }
