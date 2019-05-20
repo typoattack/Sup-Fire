@@ -492,6 +492,7 @@ public class ControllerP1_AITEST : MonoBehaviour
 
         if (remainLife <= 0)
         {
+            /*
             StartCoroutine(DelayTime(0.3f));
             Time.timeScale = 0.2f;
             Application.targetFrameRate = 150;
@@ -501,6 +502,8 @@ public class ControllerP1_AITEST : MonoBehaviour
                 score[0].SendMessage("rightPlus");
                 SetScore = !SetScore;
             }
+            */
+            remainLife = maxLife;
         }
         if (isSpecial && special <= 0)
         {
@@ -517,7 +520,7 @@ public class ControllerP1_AITEST : MonoBehaviour
         SpeCount.SendMessage("SetSpe", special);
 
     }
-
+    /*
     IEnumerator DelayTime(float duration)
     {
         yield return new WaitForSeconds(duration);
@@ -525,7 +528,7 @@ public class ControllerP1_AITEST : MonoBehaviour
         Application.targetFrameRate = -1;
         gameObject.SetActive(false);
     }
-
+    */
 
 
    

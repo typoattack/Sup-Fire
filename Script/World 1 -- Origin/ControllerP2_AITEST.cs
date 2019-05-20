@@ -72,7 +72,7 @@ public class ControllerP2_AITEST : MonoBehaviour
 
     public GameObject target;
     private Vector3 movement;
-    private float Movespeed;
+    public float Movespeed;
     private float targetXpos;
     private float BulletPos;
     private float BulletPosLastTime;
@@ -108,10 +108,10 @@ public class ControllerP2_AITEST : MonoBehaviour
                 Movespeed = 1;
             else if (transform.position.x >= PlayerXmax)
                 Movespeed = -1;
-            else if (BulletPos - transform.position.x >= 0.5 && BulletPos - transform.position.x < 2)
-                Movespeed = 1;//move left 
-            else if (BulletPos - transform.position.x >= -2 && BulletPos - transform.position.x < 0.5)
-                Movespeed = -1; ;//move right
+            else if (BulletPos - transform.position.x <= 2 && BulletPos - transform.position.x > -1) //2 to 0.5 in front
+                Movespeed = -1;//move left 
+            else if (BulletPos - transform.position.x <= -0.5 && BulletPos - transform.position.x > -2) //1 to -2 behind
+                Movespeed = 1; ;//move right
         }
         else
         {

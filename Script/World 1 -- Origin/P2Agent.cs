@@ -374,7 +374,7 @@ public class P2Agent : Agent
             {
                 shotCounter = timeBetweenShots;
                 audioS.volume = 0.3f;
-                AddReward(1f / 3000f);
+                //AddReward(1f / 3000f);
 
                 if (isMulti)
                 {
